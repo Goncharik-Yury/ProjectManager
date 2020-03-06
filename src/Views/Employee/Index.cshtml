@@ -1,0 +1,49 @@
+﻿@model List<Employee>
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <h2>Employees</h2>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Lastname
+            </th>
+            <th>
+                Firstname
+            </th>
+            <th>
+                Middlename
+            </th>
+            <th>
+                Position
+            </th>
+        </tr>
+        @foreach (Employee employee in Model)
+        {
+            <tr>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(modelItem => employee.Id)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(modelItem => employee.LastName)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(modelItem => employee.FirstName)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(modelItem => employee.MiddleName)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(modelItem => employee.Position)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
