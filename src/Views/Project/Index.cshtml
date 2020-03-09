@@ -1,0 +1,52 @@
+﻿@model List<Project>
+
+@{
+    ViewData["Title"] = "Tasks main page";
+}
+
+<div>
+    <h2>tasks</h2>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                ShortName
+            </th>
+            <th>
+                Description
+            </th>
+        </tr>
+        @foreach (Project project in Model)
+        {
+            <tr>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(q => project.Id)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(q => project.Name)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(q => project.ShortName)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(q => project.Description)
+                </td>
+
+                <td class="col-sm-10">
+                    <partial name="_EditButtonPartial" , model="@project.Id" />
+                </td>
+                <td class="col-sm-10">
+                    <partial name="_DeleteButtonPartial" , model="@project.Id" />
+                </td>
+            </tr>
+        }
+    </table>
+
+    <partial name="_CreateButtonPartial" />
+</div>
