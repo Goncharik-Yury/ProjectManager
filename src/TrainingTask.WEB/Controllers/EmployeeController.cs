@@ -12,11 +12,11 @@ namespace TrainingTask.Controllers
 {
     public class EmployeeController : Controller
     {
-        DBEmployeeManipulator dbManipulator = new DBEmployeeManipulator();
+        readonly DBEmployeeManipulator dbManipulator = new DBEmployeeManipulator();
 
         public ActionResult Index()
-        {            
-            return View(ViewModelConverter.EmployeeDTOtoViewModel(dbManipulator.GetEmployeesList()));
+        {
+            return View(ConverterViewModel.EmployeeDTOtoViewModel(dbManipulator.GetEmployeesList()));
         }
 
         public ActionResult Create()
@@ -26,24 +26,30 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(EmployeeDTO employee)
+        public ActionResult Create(EmployeeViewModel employee)
         {
-            if (!ModelState.IsValid)
-                return View(employee);
-            try
+            //if (string.IsNullOrEmpty(employee.LastName))
+            //{
+            //    ModelState.AddModelError("LastName", "Некорректное имя");
+            //}
+            if (ModelState.IsValid)
             {
-                dbManipulator.CreateEmployee(employee);
+                try
+                {
+                    DBEmployeeManipulator.CreateEmployee(ConverterViewModel.EmployeeViewModelToDTO(employee));
+                }
+                catch
+                {
+                    throw;
+                }
+                return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                throw;
-            }
-            return RedirectToAction(nameof(Index));
+            return View(employee);
         }
 
         public ActionResult Edit(int id)
         {
-            return View(ViewModelConverter.EmployeeDTOtoViewModel(dbManipulator.GetEmployeeById(id))[0]);
+            return View(ConverterViewModel.EmployeeDTOtoViewModel(dbManipulator.GetEmployeeById(id))[0]);
         }
 
         [HttpPost]
@@ -52,7 +58,7 @@ namespace TrainingTask.Controllers
         {
             try
             {
-                dbManipulator.EditEmployee(employee.Id, employee);
+                DBEmployeeManipulator.EditEmployee(employee.Id, employee);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -69,7 +75,7 @@ namespace TrainingTask.Controllers
         {
             try
             {
-                dbManipulator.DeleteEmployee(id);
+                DBEmployeeManipulator.DeleteEmployee(id);
 
                 return RedirectToAction(nameof(Index));
             }

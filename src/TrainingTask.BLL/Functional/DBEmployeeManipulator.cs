@@ -23,7 +23,7 @@ namespace TrainingTask.BLL.Functional
             return DTOConverter.EmployeeToDTO((List<Employee>)DBGetData(SqlQueryString));
         }
 
-        public bool CreateEmployee(EmployeeDTO employee)
+        public static bool CreateEmployee(EmployeeDTO employee)
         {
             string SqlQueryString = $"INSERT INTO Employee (LastName, FirstName, Patronymic , Position) VALUES ('{employee.LastName}', '{employee.FirstName}', '{employee.Patronymic }', '{employee.Position}')";
 
@@ -31,7 +31,7 @@ namespace TrainingTask.BLL.Functional
             return true;
         }
 
-        public bool DeleteEmployee(int id)
+        public static bool DeleteEmployee(int id)
         {
             string SqlQueryString = $"DELETE FROM Employee WHERE id = {id}";
 
@@ -39,7 +39,7 @@ namespace TrainingTask.BLL.Functional
             return true;
         }
 
-        public bool EditEmployee(int id, EmployeeDTO employee)
+        public static bool EditEmployee(int id, EmployeeDTO employee)
         {
             string SqlQueryString = $"UPDATE Employee SET Lastname = '{employee.LastName}', Firstname = '{employee.FirstName}', Patronymic  = '{employee.Patronymic }', Position = '{employee.Position}' WHERE id = {id}";
 

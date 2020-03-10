@@ -15,13 +15,14 @@ namespace TrainingTask.BLL.Functional
             //EmployeeDTO converted = new EmployeeDTO();
             foreach (var item in employeesList)
             {
-                EmployeeDTO listItem = new EmployeeDTO();
-
-                listItem.Id = item.Id;
-                listItem.LastName = item.LastName;
-                listItem.FirstName = item.FirstName;
-                listItem.Patronymic = item.Patronymic;
-                listItem.Position = item.Position;
+                EmployeeDTO listItem = new EmployeeDTO
+                {
+                    Id = item.Id,
+                    LastName = item.LastName,
+                    FirstName = item.FirstName,
+                    Patronymic = item.Patronymic,
+                    Position = item.Position
+                };
 
                 Converted.Add(listItem);
             }
@@ -35,12 +36,13 @@ namespace TrainingTask.BLL.Functional
 
             foreach (var item in projectsList)
             {
-                ProjectDTO listItem = new ProjectDTO();
-
-                listItem.Id = item.Id;
-                listItem.Name = item.Name;
-                listItem.ShortName = item.ShortName;
-                listItem.Description = item.Description;
+                ProjectDTO listItem = new ProjectDTO
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    ShortName = item.ShortName,
+                    Description = item.Description
+                };
 
                 Converted.Add(listItem);
             }
@@ -54,15 +56,16 @@ namespace TrainingTask.BLL.Functional
 
             foreach (var item in ProjectTasksList)
             {
-                ProjectTaskDTO listItem = new ProjectTaskDTO();
-
-                listItem.Id = item.Id;
-                listItem.Name = item.Name;
-                listItem.TimeToComplete = item.TimeToComplete;
-                listItem.BeginDate = item.BeginDate;
-                listItem.EndDate = item.EndDate;
-                listItem.Status = item.Status;
-                listItem.ExecutorId = item.ExecutorId;
+                ProjectTaskDTO listItem = new ProjectTaskDTO
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    TimeToComplete = item.TimeToComplete,
+                    BeginDate = item.BeginDate,
+                    EndDate = item.EndDate,
+                    Status = item.Status,
+                    ExecutorId = item.ExecutorId
+                };
 
                 Converted.Add(listItem);
             }

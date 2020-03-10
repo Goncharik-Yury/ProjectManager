@@ -13,10 +13,10 @@ namespace TrainingTask.Controllers
 {
     public class ProjectTaskController : Controller
     {
-        DBProjectTaskManipulator dbManipulator = new DBProjectTaskManipulator();
+        readonly DBProjectTaskManipulator dbManipulator = new DBProjectTaskManipulator();
         public ActionResult Index()
         {
-            return View(ViewModelConverter.ProjectTaskDTOtoViewModel(dbManipulator.GetProjectTasksList()));
+            return View(ConverterViewModel.ProjectTaskDTOtoViewModel(dbManipulator.GetProjectTasksList()));
         }
 
         public ActionResult Details(int id)
@@ -31,17 +31,22 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProjectTaskDTO projectTask)
+        public ActionResult Create(ProjectTaskViewModel projectTask)
         {
-            try
+            if (ModelState.IsValid)
             {
-                dbManipulator.CreateProjectTask(projectTask);
+                try
+                {
+                    ProjectTaskDTO projectTaskDTO = ConverterViewModel.ProjectTaskViewModelToDTO(projectTask);
+                    DBProjectTaskManipulator.CreateProjectTask(projectTaskDTO);
+                }
+                catch
+                {
+                    throw;
+                }
+                return RedirectToAction("Index");
             }
-            catch
-            {
-                throw;
-            }
-            return RedirectToAction("Index");
+            return View(projectTask);
         }
 
         public ActionResult Edit(int id)
@@ -51,18 +56,23 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ProjectTaskDTO task)
+        public ActionResult Edit(int id, ProjectTaskViewModel projectTask)
         {
-            try
+            if (ModelState.IsValid)
             {
-                dbManipulator.EditTask(task.Id, task);
+                try
+                {
+                    ProjectTaskDTO projectTaskDTO = ConverterViewModel.ProjectTaskViewModelToDTO(projectTask);
+                    DBProjectTaskManipulator.EditProjectTask(projectTask.Id, projectTaskDTO);
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    throw;
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(projectTask);
         }
 
         [HttpPost]
@@ -71,7 +81,7 @@ namespace TrainingTask.Controllers
         {
             try
             {
-                dbManipulator.DeleteTask(id);
+                DBProjectTaskManipulator.DeleteProjectTask(id);
 
                 return RedirectToAction(nameof(Index));
             }

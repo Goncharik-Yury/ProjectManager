@@ -11,24 +11,25 @@ namespace TrainingTask.DAL.Functional
         private static string GetConnectionString()
         {
             SqlConnectionStringBuilder builder =
-            new SqlConnectionStringBuilder();
-
-            builder.DataSource = @"(LocalDB)\MSSQLLocalDB";
-            builder.AttachDBFilename = @"C:\SeleSt\Programs\Projects\Database\TestTaskDatabase.mdf";
-            builder.IntegratedSecurity = true;
-            builder.ConnectTimeout = 30;
+            new SqlConnectionStringBuilder
+            {
+                DataSource = @"(LocalDB)\MSSQLLocalDB",
+                AttachDBFilename = @"C:\SeleSt\Programs\Projects\Database\TestTaskDatabase.mdf",
+                IntegratedSecurity = true,
+                ConnectTimeout = 30
+            };
 
             return builder.ToString();
         }
 
-        protected bool DBDoAction(string sqlQueryString)
+        protected static bool DBDoAction(string sqlQueryString)
         {
             using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
             {
                 try
                 {
                     DBConnection.Open();
-                    SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
+                    using SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
                     CommandToExecute.ExecuteNonQuery();
                 }
                 catch { throw; }
@@ -42,13 +43,13 @@ namespace TrainingTask.DAL.Functional
             {
                 DBConnection.Open();
                 SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
-                SqlDataReader DataReader = CommandToExecute.ExecuteReader();
 
+                SqlDataReader DataReader = CommandToExecute.ExecuteReader();
                 return DataParse(DataReader);
+
             }
         }
 
         protected abstract object DataParse(SqlDataReader dataReader);
-        //protected abstract object DataParseList(SqlDataReader dataReader);
     }
 }
