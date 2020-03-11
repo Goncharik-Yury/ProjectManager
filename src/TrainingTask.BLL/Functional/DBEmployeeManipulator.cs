@@ -13,7 +13,7 @@ namespace TrainingTask.BLL.Functional
         public List<EmployeeDTO> GetEmployeesList()
         {
             string SqlQueryString = $"SELECT * FROM Employee";
-            
+
             return DTOConverter.EmployeeToDTO((List<Employee>)DBGetData(SqlQueryString));
         }
 
@@ -52,13 +52,14 @@ namespace TrainingTask.BLL.Functional
             List<Employee> employees = new List<Employee>();
             while (dataReader.Read())
             {
-                employees.Add(new Employee(
-                    (int)dataReader.GetValue(0),
-                    dataReader.GetValue(1).ToString(),
-                    dataReader.GetValue(2).ToString(),
-                    dataReader.GetValue(3).ToString(),
-                    dataReader.GetValue(4).ToString()
-                    ));
+                employees.Add(new Employee
+                {
+                    Id = (int)dataReader.GetValue(0),
+                    LastName = dataReader.GetValue(1).ToString(),
+                    FirstName = dataReader.GetValue(2).ToString(),
+                    Patronymic = dataReader.GetValue(3).ToString(),
+                    Position = dataReader.GetValue(4).ToString()
+                });
             }
             return employees;
         }

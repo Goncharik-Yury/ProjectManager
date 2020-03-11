@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TrainingTask.DAL\TrainingTask.DAL.csproj" />
+    <ProjectReference Include="..\TrainingTask.DAL\Infrastructure.csproj" />
   </ItemGroup>
 
 

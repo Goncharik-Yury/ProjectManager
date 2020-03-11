@@ -1,4 +1,8 @@
-﻿@*@model UserInfo*@
+﻿@inject ITest TestService
 @{
     ViewData["Title"] = "Home Page";
 }
+
+<div>
+    @TestService.MyMethod()
+</div>

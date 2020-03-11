@@ -49,7 +49,8 @@ namespace TrainingTask.Controllers
 
         public ActionResult Edit(int id)
         {
-            return View(ConverterViewModel.EmployeeDTOtoViewModel(dbManipulator.GetEmployeeById(id))[0]);
+            EmployeeViewModel model = ConverterViewModel.EmployeeDTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
+            return View(model);
         }
 
         [HttpPost]

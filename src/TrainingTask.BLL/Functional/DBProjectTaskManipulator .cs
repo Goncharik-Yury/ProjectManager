@@ -16,6 +16,12 @@ namespace TrainingTask.BLL.Functional
             var ProjectTasksList = (List<ProjectTask>)DBGetData(SqlQueryString);
             return DTOConverter.ProjectTaskToDTO(ProjectTasksList);
         }
+        public List<ProjectTaskDTO> GetProjectTasksbyId(int id)
+        {
+            string SqlQueryString = $"SELECT * FROM ProjectTask WHERE Id = {id}";
+            var ProjectTasksList = (List<ProjectTask>)DBGetData(SqlQueryString);
+            return DTOConverter.ProjectTaskToDTO(ProjectTasksList);
+        }
 
         public static bool CreateProjectTask(ProjectTaskDTO projectTask)
         {
@@ -46,15 +52,16 @@ namespace TrainingTask.BLL.Functional
             List<ProjectTask> tasksList = new List<ProjectTask>();
             while (dataReader.Read())
             {
-                tasksList.Add(new ProjectTask(
-                    (int)dataReader.GetValue(0),
-                    (string)dataReader.GetValue(1),
-                    (int)dataReader.GetValue(2),
-                    (DateTime)dataReader.GetValue(3),
-                    (DateTime)dataReader.GetValue(4),
-                    dataReader.GetValue(5).ToString(),
-                    (int)dataReader.GetValue(6)
-                    ));
+                tasksList.Add(new ProjectTask()
+                {
+                    Id = (int)dataReader.GetValue(0),
+                    Name = (string)dataReader.GetValue(1),
+                    TimeToComplete = (int)dataReader.GetValue(2),
+                    BeginDate = (DateTime)dataReader.GetValue(3),
+                    EndDate = (DateTime)dataReader.GetValue(4),
+                    Status = dataReader.GetValue(5).ToString(),
+                    ExecutorId = (int)dataReader.GetValue(6)
+                });
             }
             return tasksList;
         }

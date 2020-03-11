@@ -53,12 +53,13 @@ namespace TrainingTask.BLL.Functional
             List<Project> projectsList = new List<Project>();
             while (dataReader.Read())
             {
-                projectsList.Add(new Project(
-                    (int)dataReader.GetValue(0),
-                    (string)dataReader.GetValue(1),
-                    (string)dataReader.GetValue(2),
-                    (string)dataReader.GetValue(3)
-                    ));
+                projectsList.Add(new Project
+                {
+                    Id = (int)dataReader.GetValue(0),
+                    Name = (string)dataReader.GetValue(1),
+                    ShortName = (string)dataReader.GetValue(2),
+                    Description = (string)dataReader.GetValue(3)
+                });
             }
             return projectsList;
         }

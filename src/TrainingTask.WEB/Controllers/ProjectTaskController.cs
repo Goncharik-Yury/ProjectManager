@@ -51,7 +51,8 @@ namespace TrainingTask.Controllers
 
         public ActionResult Edit(int id)
         {
-            return View();
+            ProjectTaskViewModel model = ConverterViewModel.ProjectTaskDTOtoViewModel(dbManipulator.GetProjectTasksbyId(id))[0];
+            return View(model);
         }
 
         [HttpPost]
