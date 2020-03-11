@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TrainingTask.DAL.Functional
+namespace TrainingTask.Infrastructure.Functional
 {
     public abstract class DBManipulator
     {

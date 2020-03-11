@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TrainingTask.WEB.Models;
-using TrainingTask.BLL.Functional;
-using TrainingTask.BLL.DTO;
-using TrainingTask.WEB.Functional;
+using TrainingTask.Web.Models;
+using TrainingTask.ApplicationCore.Functional;
+using TrainingTask.ApplicationCore.DTO;
+using TrainingTask.Web.Functional;
 
 namespace TrainingTask.Controllers
 {

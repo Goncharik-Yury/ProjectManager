@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace TrainingTask.WEB
+namespace TrainingTask.Web
 {
     public class Program
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace TrainingTask.WEB.Models
+namespace TrainingTask.Web.Models
 {
     public class ProjectTaskViewModel
     {

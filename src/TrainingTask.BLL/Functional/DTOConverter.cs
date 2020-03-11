@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TrainingTask.BLL.DTO;
-using TrainingTask.DAL.Models;
+using TrainingTask.ApplicationCore.DTO;
+using TrainingTask.Infrastructure.Models;
 
-namespace TrainingTask.BLL.Functional
+namespace TrainingTask.ApplicationCore.Functional
 {
     public static class DTOConverter
     {

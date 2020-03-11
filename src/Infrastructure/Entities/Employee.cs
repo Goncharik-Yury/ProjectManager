@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace TrainingTask.DAL.Models
+namespace TrainingTask.Infrastructure.Models
 {
     public class Employee
     {

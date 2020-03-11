@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TrainingTask.WEB.Services;
+using TrainingTask.Web.Services;
 
-namespace TrainingTask.WEB
+namespace TrainingTask.Web
 {
     public class Startup
     {

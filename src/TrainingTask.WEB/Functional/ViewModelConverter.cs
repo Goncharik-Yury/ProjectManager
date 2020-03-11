@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TrainingTask.BLL.DTO;
-using TrainingTask.WEB.Models;
+using TrainingTask.ApplicationCore.DTO;
+using TrainingTask.Web.Models;
 
-namespace TrainingTask.WEB.Functional
+namespace TrainingTask.Web.Functional
 {
     public static class ConverterViewModel
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TrainingTask.WEB.Services
+namespace TrainingTask.Web.Services
 {
     public class Test01Service : ITest
     {

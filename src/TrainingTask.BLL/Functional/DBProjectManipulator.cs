@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using TrainingTask.BLL.DTO;
-using TrainingTask.DAL.Functional;
-using TrainingTask.DAL.Models;
+using TrainingTask.ApplicationCore.DTO;
+using TrainingTask.Infrastructure.Functional;
+using TrainingTask.Infrastructure.Models;
 
-namespace TrainingTask.BLL.Functional
+namespace TrainingTask.ApplicationCore.Functional
 {
     public class DBProjectManipulator : DBManipulator
     {
