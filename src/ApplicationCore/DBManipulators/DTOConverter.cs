@@ -4,14 +4,13 @@ using System.Linq;
 using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Infrastructure.Models;
 
-namespace TrainingTask.ApplicationCore.Functional
+namespace TrainingTask.ApplicationCore.DBManipulators
 {
     public static class DTOConverter
     {
         public static List<EmployeeDTO> EmployeeToDTO(List<Employee> employeesList)
         {
             List<EmployeeDTO> Converted = new List<EmployeeDTO>();
-            //EmployeeDTO converted = new EmployeeDTO();
             foreach (var item in employeesList)
             {
                 EmployeeDTO listItem = new EmployeeDTO

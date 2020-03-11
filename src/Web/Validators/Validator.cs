@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace TrainingTask.ApplicationCore.Validation
+namespace TrainingTask.ApplicationCore.Validators
 {
     public static class Validator
     {

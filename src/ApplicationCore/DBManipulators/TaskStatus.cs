@@ -10,16 +10,5 @@ namespace TrainingTask
             {"Completed", "Completed"},
             {"Delayed", "Delayed"},
         };
-        //static string[] statuses = new string[] { "NotStarted", "InProgress", "Completed", "Delayed" };
-
     }
-    //public enum TaskStatus
-    //{
-    //    NotStarted,
-    //    InProgress,
-    //    Completed,
-    //    Delayed
-    //}
-
-    
 }

@@ -4,10 +4,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.Models;
-using TrainingTask.ApplicationCore.Functional;
-using TrainingTask.ApplicationCore.DTO;
-using TrainingTask.Web.Functional;
-using TrainingTask.ApplicationCore.Validation;
+using TrainingTask.ApplicationCore.DBManipulators;
+using TrainingTask.ApplicationCore.Validators;
+using TrainingTask.Web.Converters;
 
 namespace TrainingTask.Controllers
 {
@@ -17,7 +16,7 @@ namespace TrainingTask.Controllers
 
         public ActionResult Index()
         {
-            return View(ConverterViewModel.EmployeeDTOtoViewModel(dbManipulator.GetEmployeesList()));
+            return View(EmployeeConverter.EmployeeDTOtoViewModel(dbManipulator.GetEmployeesList()));
         }
 
         public ActionResult Create()
@@ -34,7 +33,7 @@ namespace TrainingTask.Controllers
             {
                 try
                 {
-                    DBEmployeeManipulator.CreateEmployee(ConverterViewModel.EmployeeViewModelToDTO(employee));
+                    DBEmployeeManipulator.CreateEmployee(EmployeeConverter.EmployeeViewModelToDTO(employee));
                 }
                 catch
                 {
@@ -47,7 +46,7 @@ namespace TrainingTask.Controllers
 
         public ActionResult Edit(int id)
         {
-            EmployeeViewModel model = ConverterViewModel.EmployeeDTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
+            EmployeeViewModel model = EmployeeConverter.EmployeeDTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
             return View(model);
         }
 
@@ -60,7 +59,7 @@ namespace TrainingTask.Controllers
             {
                 try
                 {
-                    DBEmployeeManipulator.EditEmployee(employee.Id, ConverterViewModel.EmployeeViewModelToDTO(employee));
+                    DBEmployeeManipulator.EditEmployee(employee.Id, EmployeeConverter.EmployeeViewModelToDTO(employee));
 
                     return RedirectToAction(nameof(Index));
                 }

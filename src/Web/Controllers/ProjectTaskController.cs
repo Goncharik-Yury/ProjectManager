@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.Models;
-using TrainingTask.ApplicationCore.Functional;
+using TrainingTask.ApplicationCore.DBManipulators;
 using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Web.Functional;
-using TrainingTask.ApplicationCore.Validation;
+using TrainingTask.ApplicationCore.Validators;
 
 namespace TrainingTask.Controllers
 {
@@ -17,7 +16,7 @@ namespace TrainingTask.Controllers
         readonly DBProjectTaskManipulator dbManipulator = new DBProjectTaskManipulator();
         public ActionResult Index()
         {
-            return View(ConverterViewModel.ProjectTaskDTOtoViewModel(dbManipulator.GetProjectTasksList()));
+            return View(ProjectTaskConverter.ProjectTaskDTOtoViewModel(dbManipulator.GetProjectTasksList()));
         }
 
         public ActionResult Details(int id)
@@ -39,7 +38,7 @@ namespace TrainingTask.Controllers
             {
                 try
                 {
-                    ProjectTaskDTO projectTaskDTO = ConverterViewModel.ProjectTaskViewModelToDTO(projectTask);
+                    ProjectTaskDTO projectTaskDTO = ProjectTaskConverter.ProjectTaskViewModelToDTO(projectTask);
                     DBProjectTaskManipulator.CreateProjectTask(projectTaskDTO);
                 }
                 catch
@@ -53,7 +52,7 @@ namespace TrainingTask.Controllers
 
         public ActionResult Edit(int id)
         {
-            ProjectTaskViewModel model = ConverterViewModel.ProjectTaskDTOtoViewModel(dbManipulator.GetProjectTasksbyId(id))[0];
+            ProjectTaskViewModel model = ProjectTaskConverter.ProjectTaskDTOtoViewModel(dbManipulator.GetProjectTasksbyId(id))[0];
             return View(model);
         }
 
@@ -66,7 +65,7 @@ namespace TrainingTask.Controllers
             {
                 try
                 {
-                    ProjectTaskDTO projectTaskDTO = ConverterViewModel.ProjectTaskViewModelToDTO(projectTask);
+                    ProjectTaskDTO projectTaskDTO = ProjectTaskConverter.ProjectTaskViewModelToDTO(projectTask);
                     DBProjectTaskManipulator.EditProjectTask(projectTask.Id, projectTaskDTO);
 
                     return RedirectToAction(nameof(Index));

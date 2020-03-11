@@ -9,7 +9,7 @@ namespace TrainingTask.ApplicationCore.DTO
         public int TimeToComplete { get; set; }
         public DateTime BeginDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string Status { get; set; } // TODO: change to TaskStatus type
+        public string Status { get; set; }
         public int ExecutorId { get; set; }
     }
 }

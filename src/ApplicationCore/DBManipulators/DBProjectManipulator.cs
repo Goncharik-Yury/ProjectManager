@@ -6,7 +6,7 @@ using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Infrastructure.Functional;
 using TrainingTask.Infrastructure.Models;
 
-namespace TrainingTask.ApplicationCore.Functional
+namespace TrainingTask.ApplicationCore.DBManipulators
 {
     public class DBProjectManipulator : DBManipulator
     {

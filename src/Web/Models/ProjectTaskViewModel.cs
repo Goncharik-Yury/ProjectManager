@@ -19,7 +19,7 @@ namespace TrainingTask.Web.Models
         public DateTime EndDate { get; set; }
         [Required(ErrorMessage = "Choose the status of project")]
         [MaxLength(50, ErrorMessage = "Status should not be longer than 50 simbols")]
-        public string Status { get; set; } // TODO: change to TaskStatus type
+        public string Status { get; set; }
         public int ExecutorId { get; set; }
     }
 }

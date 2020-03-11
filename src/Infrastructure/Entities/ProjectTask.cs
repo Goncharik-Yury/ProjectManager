@@ -15,7 +15,7 @@ namespace TrainingTask.Infrastructure.Models
         public DateTime BeginDate { get; set; }
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
-        public string Status { get; set; } // TODO: change to TaskStatus type
+        public string Status { get; set; }
         public int ExecutorId { get; set; }
     }
 }

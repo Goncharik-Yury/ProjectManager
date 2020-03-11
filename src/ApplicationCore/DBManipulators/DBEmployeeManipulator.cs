@@ -6,7 +6,7 @@ using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Infrastructure.Functional;
 using TrainingTask.Infrastructure.Models;
 
-namespace TrainingTask.ApplicationCore.Functional
+namespace TrainingTask.ApplicationCore.DBManipulators
 {
     public class DBEmployeeManipulator : DBManipulator
     {
@@ -63,28 +63,6 @@ namespace TrainingTask.ApplicationCore.Functional
             }
             return employees;
         }
-
-        //protected override object DataParseList(SqlDataReader dataReader)
-        //{
-        //    List<Employee> employees = new List<Employee>();
-        //    while (true)
-        //    {
-        //        employees.Add((Employee)DataParseSingle(dataReader));
-        //    }
-        //    return employees;
-        //}
-
-        //protected override object DataParseSingle(SqlDataReader dataReader)
-        //{
-        //    dataReader.Read();
-        //    return new Employee(
-        //            (int)dataReader.GetValue(0),
-        //            dataReader.GetValue(1).ToString(),
-        //            dataReader.GetValue(2).ToString(),
-        //            dataReader.GetValue(3).ToString(),
-        //            dataReader.GetValue(4).ToString()
-        //            );
-        //}
     }
 
 }
