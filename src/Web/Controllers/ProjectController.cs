@@ -8,6 +8,7 @@ using TrainingTask.Web.Models;
 using TrainingTask.ApplicationCore.Functional;
 using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Web.Functional;
+using TrainingTask.ApplicationCore.Validation;
 
 namespace TrainingTask.Controllers
 {
@@ -28,6 +29,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProjectViewModel project)
         {
+            ProjectValidate(project);
             if (ModelState.IsValid)
             {
                 try
@@ -54,6 +56,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, ProjectViewModel project)
         {
+            ProjectValidate(project);
             if (ModelState.IsValid)
             {
                 try
@@ -84,6 +87,26 @@ namespace TrainingTask.Controllers
             catch
             {
                 return View(nameof(Index));
+            }
+        }
+
+        private void ProjectValidate(ProjectViewModel project)
+        {
+            const string TooLongString = "Too long";
+            const string InvalidValue = "Invalid value";
+            const int MaxLength = 50;
+
+            if (!Validator.NameIsValid(project.Name))
+            {
+                ModelState.AddModelError("Name", InvalidValue);
+            }
+            if (!Validator.LengthIsValid(project.Name, MaxLength))
+            {
+                ModelState.AddModelError("Name", TooLongString);
+            }
+            if (!Validator.NameIsValid(project.ShortName))
+            {
+                ModelState.AddModelError("ShortName", InvalidValue);
             }
         }
     }

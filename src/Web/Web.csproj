@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Views\Project\Create.cshtml" />
-    <None Include="Views\Project\Edit.cshtml" />
-    <None Include="Views\Project\Index.cshtml" />
     <None Include="Views\ProjectTask\Create.cshtml" />
     <None Include="Views\ProjectTask\Edit.cshtml" />
     <None Include="Views\ProjectTask\Index.cshtml" />
+    <None Include="Views\Project\Create.cshtml" />
+    <None Include="Views\Project\Edit.cshtml" />
+    <None Include="Views\Project\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

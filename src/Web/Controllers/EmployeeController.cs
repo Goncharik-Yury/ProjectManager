@@ -7,6 +7,7 @@ using TrainingTask.Web.Models;
 using TrainingTask.ApplicationCore.Functional;
 using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Web.Functional;
+using TrainingTask.ApplicationCore.Validation;
 
 namespace TrainingTask.Controllers
 {
@@ -28,10 +29,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(EmployeeViewModel employee)
         {
-            //if (string.IsNullOrEmpty(employee.LastName))
-            //{
-            //    ModelState.AddModelError("LastName", "Некорректное имя");
-            //}
+            EmployeeValidate(employee);
             if (ModelState.IsValid)
             {
                 try
@@ -55,19 +53,24 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, EmployeeDTO employee)
+        public ActionResult Edit(int id, EmployeeViewModel employee)
         {
-            try
+            EmployeeValidate(employee);
+            if (ModelState.IsValid)
             {
-                DBEmployeeManipulator.EditEmployee(employee.Id, employee);
+                try
+                {
+                    DBEmployeeManipulator.EditEmployee(employee.Id, ConverterViewModel.EmployeeViewModelToDTO(employee));
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    throw;
+                }
+
             }
-            catch
-            {
-                throw;
-                //return View();
-            }
+            return View(employee);
         }
 
         [HttpPost]
@@ -83,6 +86,30 @@ namespace TrainingTask.Controllers
             catch
             {
                 return View(nameof(Index));
+            }
+        }
+
+        private void EmployeeValidate(EmployeeViewModel employee)
+        {
+            const string TooLongString = "Too long";
+            const string InvalidValue = "Invalid value";
+            const int MaxLength = 50;
+
+            if (!Validator.NameIsValid(employee.LastName))
+            {
+                ModelState.AddModelError("LastName", InvalidValue);
+            }
+            if (!Validator.LengthIsValid(employee.LastName, MaxLength))
+            {
+                ModelState.AddModelError("LastName", TooLongString);
+            }
+            if (!Validator.NameIsValid(employee.FirstName))
+            {
+                ModelState.AddModelError("FirstName", InvalidValue);
+            }
+            if (!Validator.LengthIsValid(employee.FirstName, MaxLength))
+            {
+                ModelState.AddModelError("FirstName", TooLongString);
             }
         }
     }

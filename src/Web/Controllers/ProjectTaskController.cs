@@ -8,6 +8,7 @@ using TrainingTask.Web.Models;
 using TrainingTask.ApplicationCore.Functional;
 using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Web.Functional;
+using TrainingTask.ApplicationCore.Validation;
 
 namespace TrainingTask.Controllers
 {
@@ -33,6 +34,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProjectTaskViewModel projectTask)
         {
+            ProjectTaskValidate(projectTask);
             if (ModelState.IsValid)
             {
                 try
@@ -59,6 +61,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, ProjectTaskViewModel projectTask)
         {
+            ProjectTaskValidate(projectTask);
             if (ModelState.IsValid)
             {
                 try
@@ -90,6 +93,39 @@ namespace TrainingTask.Controllers
             {
                 return View(nameof(Index));
             }
+        }
+
+        private void ProjectTaskValidate(ProjectTaskViewModel projectTask)
+        {
+            const string TooLongString = "Too long";
+            const string InvalidValue = "Invalid value";
+            const int MaxLength = 50;
+
+            if (!Validator.NameIsValid(projectTask.Name))
+            {
+                ModelState.AddModelError("Name", InvalidValue);
+            }
+            if (!Validator.LengthIsValid(projectTask.Name, MaxLength))
+            {
+                ModelState.AddModelError("Name", TooLongString);
+            }
+            if (!Validator.NameIsValid(projectTask.Status))
+            {
+                ModelState.AddModelError("Status", InvalidValue);
+            }
+            if (!Validator.LengthIsValid(projectTask.Status, MaxLength))
+            {
+                ModelState.AddModelError("Status", TooLongString);
+            }
+            if (!Validator.DateIsValid(projectTask.BeginDate))
+            {
+                ModelState.AddModelError("BeginDate", InvalidValue);
+            }
+            if (!Validator.DateIsValid(projectTask.EndDate))
+            {
+                ModelState.AddModelError("EndDate", InvalidValue);
+            }
+
         }
     }
 }

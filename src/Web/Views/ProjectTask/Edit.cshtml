@@ -38,6 +38,11 @@
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="ExecutorId" class="control-label"></label>
+                <input asp-for="ExecutorId" class="form-control" />
+                <span asp-validation-for="ExecutorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <partial name="_SaveButtonPartial" />
                 <partial name="_CancelButtonPartial" />
             </div>
