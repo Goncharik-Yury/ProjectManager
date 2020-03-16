@@ -9,7 +9,7 @@ namespace TrainingTask.Web.Converters
 {
     public static class ProjectConverter
     {
-        public static List<ProjectViewModel> ProjectDTOtoViewModel(List<ProjectDTO> convert)
+        public static List<ProjectViewModel> DTOtoViewModel(List<ProjectDTO> convert)
         {
             List<ProjectViewModel> converted = new List<ProjectViewModel>();
             foreach (var item in convert)
@@ -21,14 +21,13 @@ namespace TrainingTask.Web.Converters
                     ShortName = item.ShortName,
                     Description = item.Description
                 };
-
                 converted.Add(listItem);
             }
 
             return converted;
         }
 
-        public static ProjectDTO ProjectViewModelToDTO(ProjectViewModel convert)
+        public static ProjectDTO ViewModelToDTO(ProjectViewModel convert)
         {
             ProjectDTO Project = new ProjectDTO
             {

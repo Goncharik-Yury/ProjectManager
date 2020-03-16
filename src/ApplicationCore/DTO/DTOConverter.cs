@@ -4,7 +4,7 @@ using System.Linq;
 using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Infrastructure.Models;
 
-namespace TrainingTask.ApplicationCore.DBManipulators
+namespace TrainingTask.ApplicationCore.DTO
 {
     public static class DTOConverter
     {

@@ -10,19 +10,29 @@ using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Web.Functional;
 using TrainingTask.ApplicationCore.Validators;
 using TrainingTask.Web.Converters;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace TrainingTask.Controllers
 {
     public class ProjectController : Controller
     {
+        private ILogger Logger;
+        public ProjectController(ILogger fileLogger)
+        {
+            Logger = fileLogger;
+            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+        }
         readonly DBProjectManipulator dbManipulator = new DBProjectManipulator();
         public ActionResult Index()
         {
-            return View(ProjectConverter.ProjectDTOtoViewModel(dbManipulator.GetProjectsList()));
+            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            return View(ProjectConverter.DTOtoViewModel(dbManipulator.GetProjectsList()));
         }
 
         public ActionResult Create()
         {
+            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             return View();
         }
 
@@ -30,26 +40,33 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProjectViewModel project)
         {
-            ProjectValidate(project);
-            if (ModelState.IsValid)
+            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            try
             {
-                try
+                if (project == null)
+                    throw new NullReferenceException();
+                ProjectValidate(project);
+                if (ModelState.IsValid)
                 {
-                    ProjectDTO projectDTO = ProjectConverter.ProjectViewModelToDTO(project);
+                    ProjectDTO projectDTO = ProjectConverter.ViewModelToDTO(project);
                     dbManipulator.CreateProject(projectDTO);
                 }
-                catch
+                else
                 {
-                    throw;
+                    return View(project);
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(project);
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.Message);
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         public ActionResult Edit(int id)
         {
-            ProjectViewModel model = ProjectConverter.ProjectDTOtoViewModel(dbManipulator.GetProjectById(id))[0];
+            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            ProjectViewModel model = ProjectConverter.DTOtoViewModel(dbManipulator.GetProjectById(id))[0];
             return View(model);
         }
 
@@ -57,38 +74,42 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, ProjectViewModel project)
         {
-            ProjectValidate(project);
-            if (ModelState.IsValid)
+            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            try
             {
-                try
+                if (project == null) throw new NullReferenceException();
+                ProjectValidate(project);
+                if (ModelState.IsValid)
                 {
-                    ProjectDTO projectDTO = ProjectConverter.ProjectViewModelToDTO(project);
+                    ProjectDTO projectDTO = ProjectConverter.ViewModelToDTO(project);
                     dbManipulator.EditProject(project.Id, projectDTO);
-
-                    return RedirectToAction(nameof(Index));
                 }
-                catch
+                else
                 {
-                    throw;
+                    return View(project);
                 }
             }
-            return View(project);
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.Message);
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
+            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
                 dbManipulator.DeleteProject(id);
-
-                return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View(nameof(Index));
+                Logger.LogError(ex.Message);
             }
+            return RedirectToAction(nameof(Index));
         }
 
         private void ProjectValidate(ProjectViewModel project)

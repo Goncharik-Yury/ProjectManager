@@ -14,7 +14,7 @@ namespace TrainingTask.Infrastructure.Functional
             new SqlConnectionStringBuilder
             {
                 DataSource = @"(LocalDB)\MSSQLLocalDB",
-                AttachDBFilename = @"C:\SeleSt\Programs\Projects\Database\TestTaskDatabase.mdf",
+                AttachDBFilename = @"C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf",
                 IntegratedSecurity = true,
                 ConnectTimeout = 30
             };

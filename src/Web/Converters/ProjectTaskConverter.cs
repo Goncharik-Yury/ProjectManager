@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TrainingTask.ApplicationCore.DTO;
@@ -8,9 +9,10 @@ namespace TrainingTask.Web.Functional
 {
     public static class ProjectTaskConverter
     {
-        public static List<ProjectTaskViewModel> ProjectTaskDTOtoViewModel(List<ProjectTaskDTO> convert)
+        public static List<ProjectTaskViewModel> DTOtoViewModel(List<ProjectTaskDTO> convert)
         {
             List<ProjectTaskViewModel> converted = new List<ProjectTaskViewModel>();
+
             foreach (var item in convert)
             {
                 ProjectTaskViewModel listItem = new ProjectTaskViewModel
@@ -30,7 +32,7 @@ namespace TrainingTask.Web.Functional
             return converted;
         }
 
-        public static ProjectTaskDTO ProjectTaskViewModelToDTO(ProjectTaskViewModel convert)
+        public static ProjectTaskDTO ViewModelToDTO(ProjectTaskViewModel convert)
         {
             ProjectTaskDTO converted = new ProjectTaskDTO
             {
