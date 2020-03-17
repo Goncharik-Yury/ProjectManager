@@ -8,9 +8,9 @@ using TrainingTask.Infrastructure.Models;
 
 namespace TrainingTask.ApplicationCore.DBManipulators
 {
-    public class DBProjectTaskManipulator : DBManipulator
+    public class DBManipulatorProjectTask : DBManipulator
     {
-        public List<ProjectTaskDTO> GetProjectTasksList()
+        public List<ProjectTaskDTO> GetAllProjectTasksList()
         {
             string SqlQueryString = "SELECT * FROM ProjectTask";
             var ProjectTasksList = (List<ProjectTask>)DBGetData(SqlQueryString);
@@ -23,9 +23,16 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             return DTOConverter.ProjectTaskToDTO(ProjectTasksList);
         }
 
+        //public List<ProjectTaskDTO> GetProjectTasksList(int projectId)
+        //{
+        //    string SqlQueryString = "SELECT * FROM ProjectTask where ProjectTask.ProjectId = 2";
+        //    var ProjectTasksList = (List<ProjectTask>)DBGetData(SqlQueryString);
+        //    return DTOConverter.ProjectTaskToDTO(ProjectTasksList);
+        //}
+
         public static bool CreateProjectTask(ProjectTaskDTO projectTask)
         {
-            string SqlQueryString = $"INSERT INTO ProjectTask (Name, TimeToComplete, BeginDate, EndDate, Status, ExecutorId) VALUES ('{projectTask.Name}', '{projectTask.TimeToComplete}', '{projectTask.BeginDate}', '{projectTask.EndDate}', '{projectTask.Status}', '{projectTask.ExecutorId}')";
+            string SqlQueryString = $"INSERT INTO ProjectTask (Name, TimeToComplete, BeginDate, EndDate, Status, ProjectId) VALUES ('{projectTask.Name}', '{projectTask.TimeToComplete}', '{projectTask.BeginDate}', '{projectTask.EndDate}', '{projectTask.Status}', '{projectTask.ProjectId}')";
 
             DBDoAction(SqlQueryString);
             return true;
@@ -60,7 +67,7 @@ namespace TrainingTask.ApplicationCore.DBManipulators
                     BeginDate = (DateTime)dataReader.GetValue(3),
                     EndDate = (DateTime)dataReader.GetValue(4),
                     Status = dataReader.GetValue(5).ToString(),
-                    ExecutorId = (int)dataReader.GetValue(6)
+                    ProjectId = (int)dataReader.GetValue(6)
                 });
             }
             return tasksList;

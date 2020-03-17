@@ -4,13 +4,13 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+@*<h1>Edit</h1>*@
 
 <h4>ProjectTask</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit" method="post">
+        <form asp-action="CreateOrEdit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -38,14 +38,18 @@
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ExecutorId" class="control-label"></label>
-                <input asp-for="ExecutorId" class="form-control" />
-                <span asp-validation-for="ExecutorId" class="text-danger"></span>
+                <label asp-for="ProjectId" class="control-label"></label>
+                <input asp-for="ProjectId" class="form-control" />
+                <span asp-validation-for="ProjectId" class="text-danger"></span>
+            </div>
+            <div>
+                <input type="hidden" asp-for="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
             </div>
             <div class="form-group">
-                <partial name="_SaveButtonPartial" />
-                <partial name="_CancelButtonPartial" />
+                <partial name="Buttons\_SaveButtonPartial" />
+                <partial name="Buttons\_CancelButtonPartial" />
             </div>
+
         </form>
     </div>
 </div>

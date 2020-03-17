@@ -19,5 +19,12 @@ namespace TrainingTask.Web.Models
         [Display(Name = "Description")]
         [MaxLength(3999, ErrorMessage = "Description should not be longer than 3999 simbols")]
         public string Description { get; set; }
+        public bool IsCreateNotEdit { get; set; }
+    }
+
+    public class ProjectViewModel2
+    {
+        public List<ProjectViewModel> Projects { get; set; }
+        public List<ProjectTaskViewModel> ProjectTasks { get; set; }
     }
 }

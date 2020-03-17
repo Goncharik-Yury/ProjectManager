@@ -20,7 +20,8 @@ namespace TrainingTask.Web.Models
         [Required(ErrorMessage = "Choose the status of project")]
         [MaxLength(50, ErrorMessage = "Status should not be longer than 50 simbols")]
         public string Status { get; set; }
-        public int ExecutorId { get; set; }
+        public int ProjectId { get; set; }
+        public bool IsCreateNotEdit { get; set; }
     }
 
     //public class ProjectTaskViewModel
@@ -33,6 +34,6 @@ namespace TrainingTask.Web.Models
     //    [DataType(DataType.Date)]
     //    public DateTime EndDate { get; set; }
     //    public string Status { get; set; }
-    //    public int ExecutorId { get; set; }
+    //    public int ProjectId { get; set; }
     //}
 }

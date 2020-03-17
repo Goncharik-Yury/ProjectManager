@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-
-namespace TrainingTask.Infrastructure.Models
+﻿namespace TrainingTask.Infrastructure.Models
 {
     public class Employee
     {
@@ -12,5 +7,6 @@ namespace TrainingTask.Infrastructure.Models
         public string FirstName { get; set; }
         public string Patronymic { get; set; }
         public string Position { get; set; }
+        public int ProjectTaskId { get; set; }
     }
 }

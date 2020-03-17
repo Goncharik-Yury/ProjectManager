@@ -15,7 +15,7 @@ namespace TrainingTask.Controllers
     public class EmployeeController : Controller
     {
 
-        readonly DBEmployeeManipulator dbManipulator = new DBEmployeeManipulator();
+        readonly DBManipulatorEmployee dbManipulator = new DBManipulatorEmployee();
 
         private ILogger Logger;
         public EmployeeController(ILogger logger)
@@ -30,15 +30,9 @@ namespace TrainingTask.Controllers
             return View(EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeesList()));
         }
 
-        public ActionResult Create()
-        {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            return View();
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(EmployeeViewModel employee)
+        public ActionResult CreateOrEdit(EmployeeViewModel employee)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -51,8 +45,15 @@ namespace TrainingTask.Controllers
                 Logger.LogTrace("Checking if ModelState IsValid");
                 if (ModelState.IsValid)
                 {
-                    Logger.LogTrace("Adding employee to database");
-                    DBEmployeeManipulator.CreateEmployee(EmployeeConverter.ViewModelToDTO(employee));
+                    Logger.LogTrace("CreateOrEdit employee in database");
+                    if (employee.IsCreateNotEdit)
+                    {
+                        DBManipulatorEmployee.CreateEmployee(EmployeeConverter.ViewModelToDTO(employee));
+                    }
+                    else
+                    {
+                        DBManipulatorEmployee.EditEmployee(employee.Id, EmployeeConverter.ViewModelToDTO(employee));
+                    }
                 }
                 else
                 {
@@ -69,37 +70,20 @@ namespace TrainingTask.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult CreateOrEdit(int id = -1)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            EmployeeViewModel model = EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, EmployeeViewModel employee)
-        {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            try
+            if (id < 0)
             {
-                if (employee == null)
-                    throw new NullReferenceException();
-                EmployeeValidate(employee);
-                if (ModelState.IsValid)
-                {
-                    DBEmployeeManipulator.EditEmployee(employee.Id, EmployeeConverter.ViewModelToDTO(employee));
-                }
-                else
-                {
-                    return View(employee);
-                }
+                ViewBag.IsCreateNotEdit = true;
+                return View();
             }
-            catch (Exception ex)
+            else
             {
-                Logger.LogError(ex.Message);
+                ViewBag.IsCreateNotEdit = false;
+                EmployeeViewModel model = EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
+                return View(model);
             }
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -109,7 +93,7 @@ namespace TrainingTask.Controllers
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                DBEmployeeManipulator.DeleteEmployee(id);
+                DBManipulatorEmployee.DeleteEmployee(id);
             }
             catch (Exception ex)
             {

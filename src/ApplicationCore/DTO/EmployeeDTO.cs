@@ -8,5 +8,6 @@ namespace TrainingTask.ApplicationCore.DTO
         public string FirstName { get; set; }
         public string Patronymic { get; set; }
         public string Position { get; set; }
+        public int ProjectTaskId { get; set; }
     }
 }

@@ -5,27 +5,27 @@
 }
 
 <div>
-    <h2>tasks</h2>
+    <h2>Project Tasks</h2>
     <hr />
     <table class="table">
         <tr>
             <th>
-                Id
+                @Html.DisplayNameFor(m => m[0].Id)
             </th>
             <th>
-                Name
+                @Html.DisplayNameFor(m => m[0].Name)
             </th>
             <th>
-                TimeToComplete
+                @Html.DisplayNameFor(m => m[0].TimeToComplete)
             </th>
             <th>
-                BeginDate
+                @Html.DisplayNameFor(m => m[0].BeginDate)
             </th>
             <th>
-                EndDate
+                @Html.DisplayNameFor(m => m[0].EndDate)
             </th>
             <th>
-                Status
+                @Html.DisplayNameFor(m => m[0].Status)
             </th>
         </tr>
         @foreach (ProjectTaskViewModel projectTask in Model)
@@ -51,14 +51,14 @@
                 </td>
 
                 <td class="col-sm-10">
-                    <partial name="_EditButtonPartial" , model="@projectTask.Id" />
+                    <partial name="Buttons\_EditButtonPartial" , model="@projectTask.Id" />
                 </td>
                 <td class="col-sm-10">
-                    <partial name="_DeleteButtonPartial" , model="@projectTask.Id" />
+                    <partial name="Buttons\_DeleteButtonPartial" , model="@projectTask.Id" />
                 </td>
             </tr>
         }
     </table>
 
-    <partial name="_CreateButtonPartial" />
+    <partial name="Buttons\_CreateButtonPartial" />
 </div>

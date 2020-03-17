@@ -55,7 +55,7 @@ namespace TrainingTask.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Project}/{action=Index}/{id?}");
             });
 
 

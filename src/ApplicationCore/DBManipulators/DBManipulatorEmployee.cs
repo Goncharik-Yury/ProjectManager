@@ -8,7 +8,7 @@ using TrainingTask.Infrastructure.Models;
 
 namespace TrainingTask.ApplicationCore.DBManipulators
 {
-    public class DBEmployeeManipulator : DBManipulator
+    public class DBManipulatorEmployee : DBManipulator
     {
         public List<EmployeeDTO> GetEmployeesList()
         {

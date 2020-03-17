@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace TrainingTask.Infrastructure.Models
 {
@@ -16,6 +14,6 @@ namespace TrainingTask.Infrastructure.Models
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
         public string Status { get; set; }
-        public int ExecutorId { get; set; }
+        public int ProjectId { get; set; }
     }
 }

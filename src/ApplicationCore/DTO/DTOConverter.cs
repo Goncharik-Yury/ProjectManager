@@ -62,7 +62,7 @@ namespace TrainingTask.ApplicationCore.DTO
                     BeginDate = item.BeginDate,
                     EndDate = item.EndDate,
                     Status = item.Status,
-                    ExecutorId = item.ExecutorId
+                    ProjectId = item.ProjectId
                 };
 
                 Converted.Add(listItem);

@@ -20,7 +20,8 @@ namespace TrainingTask.Web.Converters
                     LastName = item.LastName,
                     FirstName = item.FirstName,
                     Patronymic = item.Patronymic,
-                    Position = item.Position
+                    Position = item.Position,
+                    ProjectTaskId = item.ProjectTaskId
                 };
 
                 converted.Add(listItem);
@@ -37,7 +38,8 @@ namespace TrainingTask.Web.Converters
                 LastName = convert.LastName,
                 FirstName = convert.FirstName,
                 Patronymic = convert.Patronymic,
-                Position = convert.Position
+                Position = convert.Position,
+                ProjectTaskId = convert.ProjectTaskId
             };
 
             return converted;

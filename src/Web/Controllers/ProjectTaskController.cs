@@ -21,22 +21,32 @@ namespace TrainingTask.Controllers
             Logger = fileLogger;
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
         }
-        readonly DBProjectTaskManipulator dbManipulator = new DBProjectTaskManipulator();
+        readonly DBManipulatorProjectTask dbManipulator = new DBManipulatorProjectTask();
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            return View(ProjectTaskConverter.DTOtoViewModel(dbManipulator.GetProjectTasksList()));
+            return View(ProjectTaskConverter.DTOtoViewModel(dbManipulator.GetAllProjectTasksList()));
         }
 
-        public ActionResult Create()
+        public ActionResult CreateOrEdit(int id = -1)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            return View();
+            if (id < 0)
+            {
+                ViewBag.IsCreateNotEdit = true;
+                return View();
+            }
+            else
+            {
+                ViewBag.IsCreateNotEdit = false;
+                ProjectTaskViewModel model = ProjectTaskConverter.DTOtoViewModel(dbManipulator.GetProjectTasksbyId(id))[0];
+                return View(model);
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProjectTaskViewModel projectTask)
+        public ActionResult CreateOrEdit(ProjectTaskViewModel projectTask)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -47,42 +57,14 @@ namespace TrainingTask.Controllers
                 if (ModelState.IsValid)
                 {
                     ProjectTaskDTO projectTaskDTO = ProjectTaskConverter.ViewModelToDTO(projectTask);
-                    DBProjectTaskManipulator.CreateProjectTask(projectTaskDTO);
-                }
-                else
-                {
-                    return View(projectTask);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex.Message);
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
-        public ActionResult Edit(int id)
-        {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            ProjectTaskViewModel model = ProjectTaskConverter.DTOtoViewModel(dbManipulator.GetProjectTasksbyId(id))[0];
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ProjectTaskViewModel projectTask)
-        {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            try
-            {
-                if (projectTask == null)
-                    throw new NullReferenceException();
-                ProjectTaskValidate(projectTask);
-                if (ModelState.IsValid)
-                {
-
-                    ProjectTaskDTO projectTaskDTO = ProjectTaskConverter.ViewModelToDTO(projectTask);
-                    DBProjectTaskManipulator.EditProjectTask(projectTask.Id, projectTaskDTO);
+                    if (projectTask.IsCreateNotEdit)
+                    {
+                        DBManipulatorProjectTask.CreateProjectTask(projectTaskDTO);
+                    }
+                    else
+                    {
+                        DBManipulatorProjectTask.EditProjectTask(projectTask.Id, projectTaskDTO);
+                    }
                 }
                 else
                 {
@@ -104,7 +86,7 @@ namespace TrainingTask.Controllers
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                DBProjectTaskManipulator.DeleteProjectTask(id);
+                DBManipulatorProjectTask.DeleteProjectTask(id);
             }
             catch (Exception ex)
             {

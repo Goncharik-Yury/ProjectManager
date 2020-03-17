@@ -26,6 +26,8 @@ namespace TrainingTask.Web.Models
         [MaxLength(50, ErrorMessage = "Position should not be longer than 50 simbols")]
 
         public string Position { get; set; }
+        public int ProjectTaskId { get; set; }
+        public bool IsCreateNotEdit { get; set; }
     }
     //public class EmployeeViewModel
     //{
@@ -38,5 +40,6 @@ namespace TrainingTask.Web.Models
     //    public string Patronymic { get; set; }
 
     //    public string Position { get; set; }
+    //public int ProjectTaskId { get; set; }
     //}
 }

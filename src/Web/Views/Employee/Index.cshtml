@@ -9,28 +9,29 @@
     <hr />
     <table class="table">
         <tr>
+            @*<th>
+                @Html.DisplayNameFor(m => m[0].Id)
+            </th>*@
             <th>
-                Id
+                @Html.DisplayNameFor(m => m[0].LastName)
             </th>
             <th>
-                Lastname
+                @Html.DisplayNameFor(m => m[0].FirstName)
             </th>
             <th>
-                Firstname
+                @Html.DisplayNameFor(m => m[0].Patronymic)
+
             </th>
             <th>
-                Patronymic 
-            </th>
-            <th>
-                Position
+                @Html.DisplayNameFor(m => m[0].Position)
             </th>
         </tr>
         @foreach (EmployeeViewModel employee in Model)
         {
             <tr>
-                <td class="col-sm-10">
+                @*<td class="col-sm-10">
                     @Html.DisplayFor(q => employee.Id)
-                </td>
+                </td>*@
                 <td class="col-sm-10">
                     @Html.DisplayFor(q => employee.LastName)
                 </td>
@@ -44,14 +45,14 @@
                     @Html.DisplayFor(q => employee.Position)
                 </td>
                 <td class="col-sm-10">
-                    <partial name="_EditButtonPartial" , model="@employee.Id" />
+                    <partial name="Buttons\_EditButtonPartial" , model="@employee.Id" />
                 </td>
                 <td class="col-sm-10">
-                    <partial name="_DeleteButtonPartial" , model="@employee.Id" />
+                    <partial name="Buttons\_DeleteButtonPartial" , model="@employee.Id" />
                 </td>
             </tr>
         }
     </table>
     
-    <partial name="_CreateButtonPartial" />
+    <partial name="Buttons\_CreateButtonPartial" />
 </div>

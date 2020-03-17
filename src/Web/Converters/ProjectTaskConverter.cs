@@ -23,7 +23,7 @@ namespace TrainingTask.Web.Functional
                     BeginDate = item.BeginDate,
                     EndDate = item.EndDate,
                     Status = item.Status,
-                    ExecutorId = item.ExecutorId
+                    ProjectId = item.ProjectId
                 };
 
                 converted.Add(listItem);
@@ -42,7 +42,7 @@ namespace TrainingTask.Web.Functional
                 BeginDate = convert.BeginDate,
                 EndDate = convert.EndDate,
                 Status = convert.Status,
-                ExecutorId = convert.ExecutorId
+                ProjectId = convert.ProjectId
             };
 
             return converted;
