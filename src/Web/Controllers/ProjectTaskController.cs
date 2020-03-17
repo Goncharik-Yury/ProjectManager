@@ -21,7 +21,7 @@ namespace TrainingTask.Controllers
             Logger = fileLogger;
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
         }
-        readonly DBManipulatorProjectTask dbManipulator = new DBManipulatorProjectTask();
+        readonly ProjectTaskDBManipulator dbManipulator = new ProjectTaskDBManipulator();
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
@@ -49,6 +49,7 @@ namespace TrainingTask.Controllers
         public ActionResult CreateOrEdit(ProjectTaskViewModel projectTask)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            ModelState.MarkFieldValid("IsCreateNotEdit"); // A small crutch for saving my nerves without any consequences
             try
             {
                 if (projectTask == null)
@@ -59,11 +60,11 @@ namespace TrainingTask.Controllers
                     ProjectTaskDTO projectTaskDTO = ProjectTaskConverter.ViewModelToDTO(projectTask);
                     if (projectTask.IsCreateNotEdit)
                     {
-                        DBManipulatorProjectTask.CreateProjectTask(projectTaskDTO);
+                        ProjectTaskDBManipulator.CreateProjectTask(projectTaskDTO);
                     }
                     else
                     {
-                        DBManipulatorProjectTask.EditProjectTask(projectTask.Id, projectTaskDTO);
+                        ProjectTaskDBManipulator.EditProjectTask(projectTask.Id, projectTaskDTO);
                     }
                 }
                 else
@@ -86,7 +87,7 @@ namespace TrainingTask.Controllers
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                DBManipulatorProjectTask.DeleteProjectTask(id);
+                ProjectTaskDBManipulator.DeleteProjectTask(id);
             }
             catch (Exception ex)
             {

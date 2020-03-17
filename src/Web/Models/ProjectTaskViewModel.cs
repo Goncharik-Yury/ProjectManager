@@ -35,5 +35,6 @@ namespace TrainingTask.Web.Models
     //    public DateTime EndDate { get; set; }
     //    public string Status { get; set; }
     //    public int ProjectId { get; set; }
+    //    public bool IsCreateNotEdit { get; set; }
     //}
 }

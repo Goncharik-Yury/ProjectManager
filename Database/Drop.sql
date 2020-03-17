@@ -1,0 +1,6 @@
+USE [master]
+GO
+
+/****** Object:  Database [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TestTaskDatabase3.MDF]    Script Date: 3/12/2020 10:44:01 AM ******/
+DROP DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TestTaskDatabase3.MDF]
+GO

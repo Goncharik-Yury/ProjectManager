@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace TrainingTask.Infrastructure.Functional
 {
     public abstract class DBManipulator
     {
+        public object CustomQuery(string query)
+        {
+            return DBGetData(query);
+        }
         private static string GetConnectionString()
         {
             SqlConnectionStringBuilder builder =
@@ -15,6 +18,7 @@ namespace TrainingTask.Infrastructure.Functional
             {
                 DataSource = @"(LocalDB)\MSSQLLocalDB",
                 AttachDBFilename = @"C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf",
+                //AttachDBFilename = @"C:\_Programs\CSharp\TrainingTask\Database\TestTaskDB.mdf",
                 IntegratedSecurity = true,
                 ConnectTimeout = 30
             };
@@ -22,31 +26,55 @@ namespace TrainingTask.Infrastructure.Functional
             return builder.ToString();
         }
 
-        protected static bool DBDoAction(string sqlQueryString)
+        protected static bool DBDoAction(string sqlQueryString, List<SqlParameter> queryParameters = null)
+        {
+            using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
+            {
+                try
+                {
+
+                    DBConnection.Open();
+                    using SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
+                    if (queryParameters != null)
+                    {
+                        foreach (var Parameter in queryParameters)
+                        {
+                            CommandToExecute.Parameters.Add(Parameter);
+                        }
+                    }
+                    CommandToExecute.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            return true;
+        }
+
+        protected object DBGetData(string sqlQueryString, List<SqlParameter> queryParameters = null)
         {
             using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
             {
                 try
                 {
                     DBConnection.Open();
-                    using SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
-                    CommandToExecute.ExecuteNonQuery();
+                    SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
+                    if (queryParameters != null)
+                    {
+                        foreach (var Parameter in queryParameters)
+                        {
+                            CommandToExecute.Parameters.Add(Parameter);
+                        }
+                    }
+
+                    SqlDataReader DataReader = CommandToExecute.ExecuteReader();
+                    return DataParse(DataReader);
                 }
-                catch { throw; }
-            }
-            return true;
-        }
-
-        protected object DBGetData(string sqlQueryString)
-        {
-            using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
-            {
-                DBConnection.Open();
-                SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
-
-                SqlDataReader DataReader = CommandToExecute.ExecuteReader();
-                return DataParse(DataReader);
-
+                catch (Exception ex)
+                {
+                    throw;
+                }
             }
         }
 

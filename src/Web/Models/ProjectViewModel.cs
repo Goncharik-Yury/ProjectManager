@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace TrainingTask.Web.Models
 {
@@ -20,11 +19,5 @@ namespace TrainingTask.Web.Models
         [MaxLength(3999, ErrorMessage = "Description should not be longer than 3999 simbols")]
         public string Description { get; set; }
         public bool IsCreateNotEdit { get; set; }
-    }
-
-    public class ProjectViewModel2
-    {
-        public List<ProjectViewModel> Projects { get; set; }
-        public List<ProjectTaskViewModel> ProjectTasks { get; set; }
     }
 }

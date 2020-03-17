@@ -1,5 +1,5 @@
 ﻿@*@model List<ProjectViewModel>*@
-@model ProjectViewModel2
+@model ProjectAndTaskViewModel
 
 @{
     ViewData["Title"] = "Tasks main page";
@@ -25,9 +25,6 @@
                 </th>
             </tr>
             <tr>
-                @*<td class="col-sm-10">
-                        @Html.DisplayFor(q => Project.Id)
-                    </td>*@
                 <td class="col-sm-10">
                     @Html.DisplayFor(q => Project.Name)
                 </td>

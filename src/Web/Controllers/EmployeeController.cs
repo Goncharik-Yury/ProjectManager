@@ -15,7 +15,7 @@ namespace TrainingTask.Controllers
     public class EmployeeController : Controller
     {
 
-        readonly DBManipulatorEmployee dbManipulator = new DBManipulatorEmployee();
+        readonly EmployeeDBManipulator dbManipulator = new EmployeeDBManipulator();
 
         private ILogger Logger;
         public EmployeeController(ILogger logger)
@@ -48,11 +48,11 @@ namespace TrainingTask.Controllers
                     Logger.LogTrace("CreateOrEdit employee in database");
                     if (employee.IsCreateNotEdit)
                     {
-                        DBManipulatorEmployee.CreateEmployee(EmployeeConverter.ViewModelToDTO(employee));
+                        EmployeeDBManipulator.CreateEmployee(EmployeeConverter.ViewModelToDTO(employee));
                     }
                     else
                     {
-                        DBManipulatorEmployee.EditEmployee(employee.Id, EmployeeConverter.ViewModelToDTO(employee));
+                        EmployeeDBManipulator.EditEmployee(employee.Id, EmployeeConverter.ViewModelToDTO(employee));
                     }
                 }
                 else
@@ -93,7 +93,7 @@ namespace TrainingTask.Controllers
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                DBManipulatorEmployee.DeleteEmployee(id);
+                EmployeeDBManipulator.DeleteEmployee(id);
             }
             catch (Exception ex)
             {

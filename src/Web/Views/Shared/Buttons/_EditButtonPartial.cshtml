@@ -1,2 +1,2 @@
 ﻿
-@Html.ActionLink("Edit", "CreateOrEdit", new { id = Model@*, ReturnUrl = Request.Url.AbsoluteUri*@ }, new { @class = "btn btn-info" })
+@Html.ActionLink("Edit", "CreateOrEdit", new { id = Model@*, ReturnUrl = HttpContext.Current.Request.Url.AbsoluteUri*@ }, new { @class = "btn btn-info" })
