@@ -10,12 +10,14 @@ using TrainingTask.Web.Functional;
 using TrainingTask.ApplicationCore.Validators;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TrainingTask.Controllers
 {
     public class ProjectTaskController : Controller
     {
         private ILogger Logger;
+        private readonly string[] ProjectTaskStatus = { "NotStarted", "InProcess", "Completed", "Delayed" };
         public ProjectTaskController(ILogger fileLogger)
         {
             Logger = fileLogger;
@@ -31,6 +33,7 @@ namespace TrainingTask.Controllers
         public ActionResult CreateOrEdit(int id = -1)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            ViewBag.ProjectTaskStatus = new SelectList(ProjectTaskStatus, "Value", "Name");
             if (id < 0)
             {
                 ViewBag.IsCreateNotEdit = true;
@@ -54,6 +57,7 @@ namespace TrainingTask.Controllers
             {
                 if (projectTask == null)
                     throw new NullReferenceException();
+                ViewBag.ProjectTaskStatus = new SelectList(ProjectTaskStatus, "Value", "Name");
                 ProjectTaskValidate(projectTask);
                 if (ModelState.IsValid)
                 {

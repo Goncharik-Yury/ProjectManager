@@ -29,7 +29,6 @@ namespace TrainingTask.Controllers
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
 
-
             var ProjectAndTaskViewModel = GetAllProjectsAndTasksViewModels();
 
             return View(ProjectAndTaskViewModel);
