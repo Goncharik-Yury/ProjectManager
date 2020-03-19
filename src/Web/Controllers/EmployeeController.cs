@@ -28,7 +28,7 @@ namespace TrainingTask.Controllers
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            return View(EmployeeConverter.DTOtoVM(dbManipulator.GetEmployeesList()));
+            return View(VMConverter.DTOtoVM(dbManipulator.GetEmployeesList()));
         }
 
         //public ActionResult Create(int id = -1)
@@ -42,7 +42,7 @@ namespace TrainingTask.Controllers
         //    else
         //    {
         //        ViewBag.IsCreateNotEdit = false;
-        //        EmployeeVM model = EmployeeConverter.DTOtoVM(dbManipulator.GetEmployeeById(id))[0];
+        //        EmployeeVM model = ViewModelsConverter.DTOtoVM(dbManipulator.GetEmployeeById(id))[0];
         //        return View(model);
         //    }
         //}
@@ -61,7 +61,7 @@ namespace TrainingTask.Controllers
             else
             {
                 ViewBag.IsCreateNotEdit = "false";
-                EmployeeVM model = EmployeeConverter.DTOtoVM(dbManipulator.GetEmployeeById(id))[0];
+                EmployeeVM model = VMConverter.DTOtoVM(dbManipulator.GetEmployeeById(id))[0];
                 return View(model);
             }
         }
@@ -84,12 +84,12 @@ namespace TrainingTask.Controllers
                     if (IsCreateNotEdit)
                     {
                         Logger.LogTrace("Create employee in database");
-                        EmployeeDBManipulator.CreateEmployee(EmployeeConverter.VMToDTO(employee));
+                        EmployeeDBManipulator.CreateEmployee(VMConverter.VMToDTO(employee));
                     }
                     else
                     {
                         Logger.LogTrace("Edit employee in database");
-                        EmployeeDBManipulator.EditEmployee(employee.Id, EmployeeConverter.VMToDTO(employee));
+                        EmployeeDBManipulator.EditEmployee(employee.Id, VMConverter.VMToDTO(employee));
                     }
                 }
                 else

@@ -26,6 +26,5 @@ namespace TrainingTask.Web.ViewModels
         [MaxLength(50, ErrorMessage = "Position should not be longer than 50 simbols")]
 
         public string Position { get; set; }
-        public int? ProjectTaskId { get; set; }
     }
 }

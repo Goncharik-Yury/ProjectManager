@@ -19,7 +19,6 @@ namespace TrainingTask.Infrastructure.Functional
             {
                 DataSource = @"(LocalDB)\MSSQLLocalDB",
                 AttachDBFilename = @"C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf",
-                //AttachDBFilename = @"C:\_Programs\CSharp\TrainingTask\Database\TestTaskDB.mdf",
                 IntegratedSecurity = true,
                 ConnectTimeout = 30
             };
@@ -52,32 +51,6 @@ namespace TrainingTask.Infrastructure.Functional
             return true;
         }
 
-        //protected object DBGetData(string sqlQueryString, List<SqlParameter> queryParameters = null)
-        //{
-        //    using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
-        //    {
-        //        try
-        //        {
-        //            DBConnection.Open();
-        //            SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
-        //            if (queryParameters != null)
-        //            {
-        //                foreach (var Parameter in queryParameters)
-        //                {
-        //                    CommandToExecute.Parameters.Add(Parameter);
-        //                }
-        //            }
-
-        //            DataTable DataReader = CommandToExecute.ExecuteReader();
-        //            return DataParse(DataReader);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //}
-
         protected object DBGetData(string sqlQueryString, List<SqlParameter> queryParameters = null)
         {
             using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
@@ -105,7 +78,6 @@ namespace TrainingTask.Infrastructure.Functional
             }
         }
 
-        //protected abstract object DataParse(SqlDataReader dataReader);
         protected abstract object DataParse(DataTable dataTable);
     }
 }

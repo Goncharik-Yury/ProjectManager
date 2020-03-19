@@ -1,4 +1,4 @@
-﻿@model ProjectAndTaskVM
+﻿@model ProjectAllVM
 @*@model ProjectVMWithRelations*@
 
 @{
@@ -49,8 +49,7 @@
                                     @Html.DisplayNameFor(m => m.ProjectTasks[0].EndDate)
                                 </th>
                                 <th>
-                                    @*@Html.DisplayNameFor(m => m.ProjectTasks[0].Name)*@
-                                    EmployeeName
+                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].EmployeeFullName)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(m => m.ProjectTasks[0].Status)
@@ -71,7 +70,7 @@
                                 @ProjectTask.EndDate
                             </td>
                             <td>
-                                Supra Hero
+                                @ProjectTask.EmployeeFullName
                             </td>
                             <td>
                                 @ProjectTask.Status

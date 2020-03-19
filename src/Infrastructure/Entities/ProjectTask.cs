@@ -15,5 +15,6 @@ namespace TrainingTask.Infrastructure.Models
         public DateTime? EndDate { get; set; }
         public string Status { get; set; }
         public int ProjectId { get; set; }
+        public int? EmployeeId{ get; set; }
     }
 }

@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
 using TrainingTask.ApplicationCore.DBManipulators;
 using TrainingTask.ApplicationCore.DTO;
-using TrainingTask.Web.Functional;
 using TrainingTask.ApplicationCore.Validators;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TrainingTask.Web.Converters;
 
 namespace TrainingTask.Controllers
 {
@@ -27,7 +27,7 @@ namespace TrainingTask.Controllers
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            return View(ProjectTaskConverter.DTOtoVM(dbManipulator.GetAllProjectTasksList()));
+            return View(VMConverter.DTOtoVM(dbManipulator.GetAllProjectTasksList()));
         }
 
         public ActionResult CreateOrEdit(int id = -1)
@@ -42,7 +42,7 @@ namespace TrainingTask.Controllers
             else
             {
                 ViewBag.IsCreateNotEdit = "false";
-                ProjectTaskVM model = ProjectTaskConverter.DTOtoVM(dbManipulator.GetProjectTasksById(id))[0];
+                ProjectTaskVM model = VMConverter.DTOtoVM(dbManipulator.GetProjectTasksById(id))[0];
                 return View(model);
             }
         }
@@ -61,7 +61,7 @@ namespace TrainingTask.Controllers
                 ProjectTaskValidate(projectTask);
                 if (ModelState.IsValid)
                 {
-                    ProjectTaskDTO projectTaskDTO = ProjectTaskConverter.VMToDTO(projectTask);
+                    ProjectTaskDTO projectTaskDTO = VMConverter.VMToDTO(projectTask);
                     if (IsCreateNotEdit)
                     {
                         ProjectTaskDBManipulator.CreateProjectTask(projectTaskDTO);

@@ -6,6 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModels\ProjectTaskVMWithRelations.cs" />
+    <Compile Remove="ViewModels\ProjectVMWithRelations.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Project\CreateOrEdit - Copy.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Views\ProjectTask\CreateOrEdit.cshtml" />
     <None Include="Views\ProjectTask\Index.cshtml" />
     <None Include="Views\Project\Index.cshtml" />

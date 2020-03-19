@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
 using TrainingTask.ApplicationCore.DBManipulators;
 using TrainingTask.ApplicationCore.DTO;
-using TrainingTask.Web.Functional;
 using TrainingTask.ApplicationCore.Validators;
 using TrainingTask.Web.Converters;
 using Microsoft.Extensions.Logging;
@@ -31,8 +30,8 @@ namespace TrainingTask.Controllers
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
 
-            List<ProjectVM> Projects = ProjectConverter.DTOtoVMList(ProjectDbManipulator.GetProjectsList());
-            //var ProjectTasks = ProjectTaskConverter.DTOtoVM(ProjectTaskDbManipulator.GetAllProjectTasksList());
+            List<ProjectVM> Projects = VMConverter.DTOtoVM(ProjectDbManipulator.GetProjectsList());
+            //var ProjectTasks = VMConverter.DTOtoVM(ProjectTaskDbManipulator.GetAllProjectTasksList());
 
             //var ProjectAndTaskVM = GetProjectVM(Projects, ProjectTasks);
 
@@ -50,9 +49,9 @@ namespace TrainingTask.Controllers
             else
             {
                 ViewBag.IsCreateNotEdit = "false";
-                var ProjectVM = ProjectConverter.DTOtoVMList(ProjectDbManipulator.GetProjectById(id));
-                var ProjectTasksVM = ProjectTaskConverter.DTOtoVM(ProjectTaskDbManipulator.GetProjectTasksByProjectId(id));
-                ProjectAndTaskVM model = GetProjectVM(ProjectVM, ProjectTasksVM);
+                var ProjectVM = VMConverter.DTOtoVM(ProjectDbManipulator.GetProjectById(id));
+                var ProjectTasksVM = VMConverter.DTOtoVM(ProjectTaskDbManipulator.GetProjectTasksByProjectId(id));
+                ProjectAllVM model = GetProjectVM(ProjectVM, ProjectTasksVM);
 
                 return View(model);
             }
@@ -70,7 +69,7 @@ namespace TrainingTask.Controllers
                 ProjectValidate(project);
                 if (ModelState.IsValid)
                 {
-                    ProjectDTO projectDTO = ProjectConverter.VMToDTO(project);
+                    ProjectDTO projectDTO = VMConverter.VMToDTO(project);
                     if (IsCreateNotEdit)
                     {
                         ProjectDbManipulator.CreateProject(projectDTO);
@@ -128,12 +127,12 @@ namespace TrainingTask.Controllers
             }
         }
 
-        private ProjectAndTaskVM GetProjectVM(List<ProjectVM> ProjectsVM, List<ProjectTaskVM> ProjectTasksVM)
+        private ProjectAllVM GetProjectVM(List<ProjectVM> projectsVM, List<ProjectTaskVM> projectTasksVM)
         {
-            ProjectAndTaskVM ProjectAndTask = new ProjectAndTaskVM()
+            ProjectAllVM ProjectAndTask = new ProjectAllVM()
             {
-                Projects = ProjectsVM,
-                ProjectTasks = ProjectTasksVM
+                Projects = projectsVM,
+                ProjectTasks = projectTasksVM
             };
 
             return ProjectAndTask;
@@ -142,9 +141,9 @@ namespace TrainingTask.Controllers
         //private ProjectVMWithRelations GetProjectVMWithRelations(int projectId)
         //{
         //    ProjectVMWithRelations model = new ProjectVMWithRelations {
-        //        Project = ProjectConverter.DTOtoVMList(ProjectDbManipulator.GetProjectById(projectId))[0],
+        //        Project = VMConverter.DTOtoVMList(ProjectDbManipulator.GetProjectById(projectId))[0],
         //        ProjectTasks = new List<ProjectTaskVMWithRelations>().Add(
-        //            ProjectTaskConverter.DTOtoVM(ProjectTaskDbManipulator.GetProjectTasksByProjectId(projectId)))
+        //            VMConverter.DTOtoVM(ProjectTaskDbManipulator.GetProjectTasksByProjectId(projectId)))
 
 
         //    }

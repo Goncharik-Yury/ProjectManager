@@ -26,8 +26,11 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             {
                 new SqlParameter("@Id", id)
             };
-            return DTOConverter.EmployeeToDTO((List<Employee>)DBGetData(SqlQueryString, QueryParameters));
+            var Employees = (List<Employee>)DBGetData(SqlQueryString, QueryParameters);
+            return DTOConverter.EmployeeToDTO(Employees);
         }
+
+        // TODO: ? remove this method
         public List<EmployeeDTO> GetEmployeeByProjectTaskId(int projectTaskIdId)
         {
             string SqlQueryString = $"SELECT * FROM Employee where ProjectTaskId = @ProjectTaskId";
@@ -109,8 +112,7 @@ namespace TrainingTask.ApplicationCore.DBManipulators
                     LastName = dr.Field<string>("LastName"),
                     FirstName = dr.Field<string>("FirstName"),
                     Patronymic = dr.Field<string>("Patronymic"),
-                    Position = dr.Field<string>("Position"),
-                    ProjectTaskId = dr.Field<int?>("ProjectTaskId")
+                    Position = dr.Field<string>("Position")
                 });
             }
             return employees;

@@ -11,11 +11,13 @@ namespace TrainingTask.ApplicationCore.DBManipulators
 {
     public class ProjectTaskDBManipulator : DBManipulator
     {
+        EmployeeDBManipulator EmployeeDBManipulator = new EmployeeDBManipulator();
         public List<ProjectTaskDTO> GetAllProjectTasksList()
         {
             string SqlQueryString = "SELECT * FROM ProjectTask";
             var ProjectTasksList = (List<ProjectTask>)DBGetData(SqlQueryString);
-            return DTOConverter.ProjectTaskToDTO(ProjectTasksList);
+
+            return GetProjectTaskDTOList(SqlQueryString);
         }
         public List<ProjectTaskDTO> GetProjectTasksById(int id)
         {
@@ -24,8 +26,8 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             {
                 new SqlParameter("@Id", id)
             };
-            var ProjectTasksList = (List<ProjectTask>)DBGetData(SqlQueryString, QueryParameters);
-            return DTOConverter.ProjectTaskToDTO(ProjectTasksList);
+
+            return GetProjectTaskDTOList(SqlQueryString, QueryParameters);
         }
         public List<ProjectTaskDTO> GetProjectTasksByProjectId(int projectId)
         {
@@ -34,8 +36,24 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             {
                 new SqlParameter("@ProjectId", projectId)
             };
+            
+
+            return GetProjectTaskDTOList(SqlQueryString, QueryParameters);
+        }
+
+        private List<ProjectTaskDTO> GetProjectTaskDTOList(string SqlQueryString, List<SqlParameter> QueryParameters = null)
+        {
             var ProjectTasksList = (List<ProjectTask>)DBGetData(SqlQueryString, QueryParameters);
-            return DTOConverter.ProjectTaskToDTO(ProjectTasksList);
+            var ProjectTasksListDTO = DTOConverter.ProjectTaskToDTO(ProjectTasksList);
+            ProjectTasksListDTO.ForEach(pt =>
+            {
+                var EmployeesVM = EmployeeDBManipulator.GetEmployeeById(pt.Id);
+                if (EmployeesVM.Count > 0)
+                {
+                    pt.EmloyeeFullName = $"{EmployeesVM[0].LastName} {EmployeesVM[0].FirstName} {EmployeesVM[0].Patronymic}";
+                }
+            });
+            return ProjectTasksListDTO;
         }
 
         public static bool CreateProjectTask(ProjectTaskDTO projectTask)
@@ -81,25 +99,6 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             return true;
         }
 
-        //protected override object DataParse(SqlDataReader dataReader)
-        //{
-        //    List<ProjectTask> tasksList = new List<ProjectTask>();
-        //    while (dataReader.Read())
-        //    {
-        //        tasksList.Add(new ProjectTask()
-        //        {
-        //            Id = (int)dataReader.GetValue(0),
-        //            Name = (string)dataReader.GetValue(1),
-        //            TimeToComplete = (int)dataReader.GetValue(2),
-        //            BeginDate = (DateTime)dataReader.GetValue(3),
-        //            EndDate = (DateTime)dataReader.GetValue(4),
-        //            Status = dataReader.GetValue(5).ToString(),
-        //            ProjectId = (int)dataReader.GetValue(6)
-        //        });
-        //    }
-        //    return tasksList;
-        //}
-
         protected override object DataParse(DataTable dataTable)
         {
             List<ProjectTask> ProjectTasks = new List<ProjectTask>();
@@ -113,7 +112,8 @@ namespace TrainingTask.ApplicationCore.DBManipulators
                     BeginDate = dr.Field<DateTime?>("BeginDate"),
                     EndDate = dr.Field<DateTime?>("EndDate"),
                     Status = dr.Field<string>("Status"),
-                    ProjectId = dr.Field<int>("ProjectId")
+                    ProjectId = dr.Field<int>("ProjectId"),
+                    EmployeeId = dr.Field<int?>("EmployeeId"),
                 });
             }
             return ProjectTasks;
