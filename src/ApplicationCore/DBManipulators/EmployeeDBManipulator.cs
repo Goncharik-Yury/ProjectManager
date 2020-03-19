@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using TrainingTask.ApplicationCore.DTO;
@@ -24,6 +25,16 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             List<SqlParameter> QueryParameters = new List<SqlParameter>
             {
                 new SqlParameter("@Id", id)
+            };
+            return DTOConverter.EmployeeToDTO((List<Employee>)DBGetData(SqlQueryString, QueryParameters));
+        }
+        public List<EmployeeDTO> GetEmployeeByProjectTaskId(int projectTaskIdId)
+        {
+            string SqlQueryString = $"SELECT * FROM Employee where ProjectTaskId = @ProjectTaskId";
+
+            List<SqlParameter> QueryParameters = new List<SqlParameter>
+            {
+                new SqlParameter("@ProjectTaskId", projectTaskIdId)
             };
             return DTOConverter.EmployeeToDTO((List<Employee>)DBGetData(SqlQueryString, QueryParameters));
         }
@@ -69,18 +80,37 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             return true;
         }
 
-        protected override object DataParse(SqlDataReader dataReader)
+        // Working
+        //protected override object DataParse(SqlDataReader dataReader)
+        //{
+        //    List<Employee> employees = new List<Employee>();
+        //    while (dataReader.Read())
+        //    {
+        //        employees.Add(new Employee
+        //        {
+        //            Id = (int)dataReader.GetValue(0),
+        //            LastName = dataReader.GetValue(1).ToString(),
+        //            FirstName = dataReader.GetValue(2).ToString(),
+        //            Patronymic = dataReader.GetValue(3).ToString(),
+        //            Position = dataReader.GetValue(4).ToString()
+        //        });
+        //    }
+        //    return employees;
+        //}
+
+        protected override object DataParse(DataTable dataTable)
         {
             List<Employee> employees = new List<Employee>();
-            while (dataReader.Read())
+            foreach (DataRow dr in dataTable.Rows)
             {
                 employees.Add(new Employee
                 {
-                    Id = (int)dataReader.GetValue(0),
-                    LastName = dataReader.GetValue(1).ToString(),
-                    FirstName = dataReader.GetValue(2).ToString(),
-                    Patronymic = dataReader.GetValue(3).ToString(),
-                    Position = dataReader.GetValue(4).ToString()
+                    Id = dr.Field<int>("Id"),
+                    LastName = dr.Field<string>("LastName"),
+                    FirstName = dr.Field<string>("FirstName"),
+                    Patronymic = dr.Field<string>("Patronymic"),
+                    Position = dr.Field<string>("Position"),
+                    ProjectTaskId = dr.Field<int?>("ProjectTaskId")
                 });
             }
             return employees;

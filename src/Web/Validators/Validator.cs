@@ -18,7 +18,7 @@ namespace TrainingTask.ApplicationCore.Validators
             return true;
         }
 
-        public static bool DateIsValid(DateTime date)
+        public static bool DateIsValid(DateTime? date)
         {
             if (date == null)
                 return false;

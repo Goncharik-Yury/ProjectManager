@@ -33,7 +33,8 @@
                 <span asp-validation-for="Position" class="text-danger"></span>
             </div>
             <div>
-                <input type="hidden" asp-for="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
+                <input type="hidden" name="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
+                @*<input type="hidden" name="TestField" value="@ViewBag.ska" />*@
             </div>
             <div class="form-group">
                 <partial name="Buttons\_SaveButtonPartial" />

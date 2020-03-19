@@ -1,10 +1,11 @@
 ﻿@model ProjectAndTaskViewModel
+@*@model ProjectViewModelWithRelations*@
 
 @{
     ViewData["Title"] = "Enter";
 }
 
-@*<h1>Enter</h1>*@
+<h1>Enter</h1>
 
 <h4>Project</h4>
 <hr />
@@ -27,42 +28,69 @@
                 <input asp-for="@Model.Projects[0].Description" class="form-control" />
                 <span asp-validation-for="@Model.Projects[0].Description" class="text-danger"></span>
             </div>
-            <div class="col-md-12">
-                @foreach (var ProjectTask in @Model.ProjectTasks)
-                {
-                    <div class="row">
-                            <span>
-                                @ProjectTask.Id&nbsp;
-                            </span>
-                            <span>
-                                @ProjectTask.Name&nbsp;
-                            </span>
-                            <span>
-                                @ProjectTask.BeginDate&nbsp;
-                            </span>
-                            <span>
-                                @ProjectTask.EndDate&nbsp;
-                            </span>
-                            <span>
-                                Supra Hero&nbsp;
-                            </span>
-                            <span>
-                                @ProjectTask.Status&nbsp;
-                            </span>
-                        <span>
-                            @Html.ActionLink("Edit", "CreateOrEdit", "ProjectTask", new { id = @ProjectTask.Id }, new { @class = "btn btn-info" })
-                        </span>
-                        <span>
-                            <form asp-controller="ProjectTask" asp-action="Delete" method="post">
-                                <input type="submit" value="Delete" class="btn btn-danger" />
-                                <input type="hidden" value="@ProjectTask.Id" name="Id" />
-                            </form>
-                        </span>
-                    </div>
-                }
-            </div>
+            @{
+                bool AddTableHeads = true;
+            }
+            <tr class="col-md-12">
+                <table class="table">
+                    @foreach (var ProjectTask in @Model.ProjectTasks)
+                    {
+                        if (AddTableHeads)
+                        {
+                            AddTableHeads = false;
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].BeginDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].EndDate)
+                                </th>
+                                <th>
+                                    @*@Html.DisplayNameFor(m => m.ProjectTasks[0].Name)*@
+                                    EmployeeName
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Status)
+                                </th>
+                                <th>
+                                    @Html.ActionLink("Create", "CreateOrEdit", "ProjectTask", new { id = @ProjectTask.Id, projectId = @Model.Projects[0].Id }, new { @class = "btn btn-info" })
+                                </th>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                @ProjectTask.Name
+                            </td>
+                            <td>
+                                @ProjectTask.BeginDate
+                            </td>
+                            <td>
+                                @ProjectTask.EndDate
+                            </td>
+                            <td>
+                                Supra Hero
+                            </td>
+                            <td>
+                                @ProjectTask.Status
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "CreateOrEdit", "ProjectTask", new { id = @ProjectTask.Id }, new { @class = "btn btn-info" })
+                            </td>
+                            <td>
+                                <form asp-controller="ProjectTask" asp-action="Delete" method="post">
+                                    <input type="submit" value="Delete" class="btn btn-danger" />
+                                    <input type="hidden" value="@ProjectTask.Id" name="Id" />
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </tr>
             <div>
-                <input type="hidden" asp-for="@Model.Projects[0].IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
+                <input type="hidden" name="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
             </div>
             <div class="form-group">
                 <partial name="Buttons\_SaveButtonPartial" />
@@ -71,6 +99,7 @@
         </form>
     </div>
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

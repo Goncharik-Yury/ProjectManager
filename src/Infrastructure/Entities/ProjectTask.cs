@@ -8,11 +8,11 @@ namespace TrainingTask.Infrastructure.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int TimeToComplete { get; set; }
+        public int? TimeToComplete { get; set; }
         [DataType(DataType.Date)]
-        public DateTime BeginDate { get; set; }
+        public DateTime? BeginDate { get; set; }
         [DataType(DataType.Date)]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public string Status { get; set; }
         public int ProjectId { get; set; }
     }

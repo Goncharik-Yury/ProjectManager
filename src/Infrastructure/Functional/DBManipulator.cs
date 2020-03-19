@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -32,7 +33,6 @@ namespace TrainingTask.Infrastructure.Functional
             {
                 try
                 {
-
                     DBConnection.Open();
                     using SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
                     if (queryParameters != null)
@@ -52,6 +52,32 @@ namespace TrainingTask.Infrastructure.Functional
             return true;
         }
 
+        //protected object DBGetData(string sqlQueryString, List<SqlParameter> queryParameters = null)
+        //{
+        //    using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
+        //    {
+        //        try
+        //        {
+        //            DBConnection.Open();
+        //            SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
+        //            if (queryParameters != null)
+        //            {
+        //                foreach (var Parameter in queryParameters)
+        //                {
+        //                    CommandToExecute.Parameters.Add(Parameter);
+        //                }
+        //            }
+
+        //            DataTable DataReader = CommandToExecute.ExecuteReader();
+        //            return DataParse(DataReader);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            throw;
+        //        }
+        //    }
+        //}
+
         protected object DBGetData(string sqlQueryString, List<SqlParameter> queryParameters = null)
         {
             using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
@@ -67,9 +93,10 @@ namespace TrainingTask.Infrastructure.Functional
                             CommandToExecute.Parameters.Add(Parameter);
                         }
                     }
+                    DataTable DataTable = new DataTable();
 
-                    SqlDataReader DataReader = CommandToExecute.ExecuteReader();
-                    return DataParse(DataReader);
+                    new SqlDataAdapter(CommandToExecute).Fill(DataTable);
+                    return DataParse(DataTable);
                 }
                 catch (Exception ex)
                 {
@@ -78,6 +105,7 @@ namespace TrainingTask.Infrastructure.Functional
             }
         }
 
-        protected abstract object DataParse(SqlDataReader dataReader);
+        //protected abstract object DataParse(SqlDataReader dataReader);
+        protected abstract object DataParse(DataTable dataTable);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using TrainingTask.ApplicationCore.DTO;
@@ -72,20 +73,20 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             return true;
         }
 
-        protected override object DataParse(SqlDataReader dataReader)
+        protected override object DataParse(DataTable dataTable)
         {
-            List<Project> projectsList = new List<Project>();
-            while (dataReader.Read())
+            List<Project> Projects = new List<Project>();
+            foreach (DataRow dr in dataTable.Rows)
             {
-                projectsList.Add(new Project
+                Projects.Add(new Project
                 {
-                    Id = (int)dataReader.GetValue(0),
-                    Name = (string)dataReader.GetValue(1),
-                    ShortName = (string)dataReader.GetValue(2),
-                    Description = (string)dataReader.GetValue(3)
+                    Id = dr.Field<int>("Id"),
+                    Name = dr.Field<string>("Name"),
+                    ShortName = dr.Field<string>("ShortName"),
+                    Description = dr.Field<string>("Description"),
                 });
             }
-            return projectsList;
+            return Projects;
         }
     }
 

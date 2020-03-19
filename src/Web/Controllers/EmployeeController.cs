@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TrainingTask.Web.Models;
+using TrainingTask.Web.ViewModels;
 using TrainingTask.ApplicationCore.DBManipulators;
 using TrainingTask.ApplicationCore.Validators;
 using TrainingTask.Web.Converters;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using Microsoft.Extensions.Primitives;
 
 namespace TrainingTask.Controllers
 {
@@ -30,9 +31,44 @@ namespace TrainingTask.Controllers
             return View(EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeesList()));
         }
 
+        //public ActionResult Create(int id = -1)
+        //{
+        //    Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+        //    if (id < 0)
+        //    {
+        //        ViewBag.IsCreateNotEdit = true;
+        //        return View();
+        //    }
+        //    else
+        //    {
+        //        ViewBag.IsCreateNotEdit = false;
+        //        EmployeeViewModel model = EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
+        //        return View(model);
+        //    }
+        //}
+
+        public ActionResult CreateOrEdit(int id = -1)
+        {
+            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+
+            ViewBag.ska = "skaka";
+
+            if (id < 0)
+            {
+                ViewBag.IsCreateNotEdit = "true";
+                return View();
+            }
+            else
+            {
+                ViewBag.IsCreateNotEdit = "false";
+                EmployeeViewModel model = EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
+                return View(model);
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(EmployeeViewModel employee)
+        public ActionResult CreateOrEdit(EmployeeViewModel employee, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -41,17 +77,18 @@ namespace TrainingTask.Controllers
                 if (employee == null)
                     throw new NullReferenceException();
                 Logger.LogTrace("Running validation");
-                EmployeeValidate(employee); // TODO: Comment on testing
+                //EmployeeValidate(employee); // TODO: Comment on testing
                 Logger.LogTrace("Checking if ModelState IsValid");
                 if (ModelState.IsValid)
                 {
-                    Logger.LogTrace("CreateOrEdit employee in database");
-                    if (employee.IsCreateNotEdit)
+                    if (IsCreateNotEdit)
                     {
+                        Logger.LogTrace("Create employee in database");
                         EmployeeDBManipulator.CreateEmployee(EmployeeConverter.ViewModelToDTO(employee));
                     }
                     else
                     {
+                        Logger.LogTrace("Edit employee in database");
                         EmployeeDBManipulator.EditEmployee(employee.Id, EmployeeConverter.ViewModelToDTO(employee));
                     }
                 }
@@ -68,22 +105,6 @@ namespace TrainingTask.Controllers
             }
             Logger.LogTrace("Redirecting to action");
             return RedirectToAction(nameof(Index));
-        }
-
-        public ActionResult CreateOrEdit(int id = -1)
-        {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            if (id < 0)
-            {
-                ViewBag.IsCreateNotEdit = true;
-                return View();
-            }
-            else
-            {
-                ViewBag.IsCreateNotEdit = false;
-                EmployeeViewModel model = EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
-                return View(model);
-            }
         }
 
         [HttpPost]

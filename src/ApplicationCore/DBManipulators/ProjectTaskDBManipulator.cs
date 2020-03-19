@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using TrainingTask.ApplicationCore.DTO;
@@ -16,7 +17,7 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             var ProjectTasksList = (List<ProjectTask>)DBGetData(SqlQueryString);
             return DTOConverter.ProjectTaskToDTO(ProjectTasksList);
         }
-        public List<ProjectTaskDTO> GetProjectTasksbyId(int id)
+        public List<ProjectTaskDTO> GetProjectTasksById(int id)
         {
             string SqlQueryString = $"SELECT * FROM ProjectTask WHERE Id = @Id";
             List<SqlParameter> QueryParameters = new List<SqlParameter>
@@ -80,23 +81,42 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             return true;
         }
 
-        protected override object DataParse(SqlDataReader dataReader)
+        //protected override object DataParse(SqlDataReader dataReader)
+        //{
+        //    List<ProjectTask> tasksList = new List<ProjectTask>();
+        //    while (dataReader.Read())
+        //    {
+        //        tasksList.Add(new ProjectTask()
+        //        {
+        //            Id = (int)dataReader.GetValue(0),
+        //            Name = (string)dataReader.GetValue(1),
+        //            TimeToComplete = (int)dataReader.GetValue(2),
+        //            BeginDate = (DateTime)dataReader.GetValue(3),
+        //            EndDate = (DateTime)dataReader.GetValue(4),
+        //            Status = dataReader.GetValue(5).ToString(),
+        //            ProjectId = (int)dataReader.GetValue(6)
+        //        });
+        //    }
+        //    return tasksList;
+        //}
+
+        protected override object DataParse(DataTable dataTable)
         {
-            List<ProjectTask> tasksList = new List<ProjectTask>();
-            while (dataReader.Read())
+            List<ProjectTask> ProjectTasks = new List<ProjectTask>();
+            foreach (DataRow dr in dataTable.Rows)
             {
-                tasksList.Add(new ProjectTask()
+                ProjectTasks.Add(new ProjectTask
                 {
-                    Id = (int)dataReader.GetValue(0),
-                    Name = (string)dataReader.GetValue(1),
-                    TimeToComplete = (int)dataReader.GetValue(2),
-                    BeginDate = (DateTime)dataReader.GetValue(3),
-                    EndDate = (DateTime)dataReader.GetValue(4),
-                    Status = dataReader.GetValue(5).ToString(),
-                    ProjectId = (int)dataReader.GetValue(6)
+                    Id = dr.Field<int>("Id"),
+                    Name = dr.Field<string>("Name"),
+                    TimeToComplete = dr.Field<int>("TimeToComplete"),
+                    BeginDate = dr.Field<DateTime?>("BeginDate"),
+                    EndDate = dr.Field<DateTime?>("EndDate"),
+                    Status = dr.Field<string>("Status"),
+                    ProjectId = dr.Field<int>("ProjectId")
                 });
             }
-            return tasksList;
+            return ProjectTasks;
         }
     }
 

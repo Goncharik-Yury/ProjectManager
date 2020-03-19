@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TrainingTask.Web.Models;
+using TrainingTask.Web.ViewModels;
 using TrainingTask.ApplicationCore.DBManipulators;
 using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Web.Functional;
@@ -22,16 +22,21 @@ namespace TrainingTask.Controllers
             Logger = fileLogger;
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
         }
-        readonly ProjectDBManipulator ProjectsDbManipulator = new ProjectDBManipulator();
+        //readonly DBManipulatorFacade DbManipulator = new DBManipulatorFacade();
+        readonly ProjectDBManipulator ProjectDbManipulator = new ProjectDBManipulator();
         readonly ProjectTaskDBManipulator ProjectTaskDbManipulator = new ProjectTaskDBManipulator();
         readonly EmployeeDBManipulator EmployeeDbManipulator = new EmployeeDBManipulator();
+
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
 
-            var ProjectAndTaskViewModel = GetAllProjectsAndTasksViewModels();
+            List<ProjectViewModel> Projects = ProjectConverter.DTOtoViewModelList(ProjectDbManipulator.GetProjectsList());
+            //var ProjectTasks = ProjectTaskConverter.DTOtoViewModel(ProjectTaskDbManipulator.GetAllProjectTasksList());
 
-            return View(ProjectAndTaskViewModel);
+            //var ProjectAndTaskViewModel = GetProjectViewModel(Projects, ProjectTasks);
+
+            return View(Projects);
         }
 
         public ActionResult CreateOrEdit(int id = -1)
@@ -39,23 +44,23 @@ namespace TrainingTask.Controllers
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             if (id < 0)
             {
-                ViewBag.IsCreateNotEdit = true;
+                ViewBag.IsCreateNotEdit = "true";
                 return View();
             }
             else
             {
-                ViewBag.IsCreateNotEdit = false;
-                var ProjectViewModel = ProjectConverter.DTOtoViewModelList(GetProjectById(id));
-                var ProjectTasksViewModel = ProjectTaskConverter.DTOtoViewModel(GetProjectTasksById(id));
-                ProjectAndTaskViewModel model = BuildProjectAndTaskViewModel(ProjectViewModel, ProjectTasksViewModel);
-                    
+                ViewBag.IsCreateNotEdit = "false";
+                var ProjectViewModel = ProjectConverter.DTOtoViewModelList(ProjectDbManipulator.GetProjectById(id));
+                var ProjectTasksViewModel = ProjectTaskConverter.DTOtoViewModel(ProjectTaskDbManipulator.GetProjectTasksByProjectId(id));
+                ProjectAndTaskViewModel model = GetProjectViewModel(ProjectViewModel, ProjectTasksViewModel);
+
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(ProjectViewModel project)
+        public ActionResult CreateOrEdit(ProjectViewModel project, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -66,13 +71,13 @@ namespace TrainingTask.Controllers
                 if (ModelState.IsValid)
                 {
                     ProjectDTO projectDTO = ProjectConverter.ViewModelToDTO(project);
-                    if (project.IsCreateNotEdit)
+                    if (IsCreateNotEdit)
                     {
-                        ProjectsDbManipulator.CreateProject(projectDTO);
+                        ProjectDbManipulator.CreateProject(projectDTO);
                     }
                     else
                     {
-                        ProjectsDbManipulator.EditProject(project.Id, projectDTO);
+                        ProjectDbManipulator.EditProject(project.Id, projectDTO);
                     }
                 }
                 else
@@ -94,7 +99,7 @@ namespace TrainingTask.Controllers
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                ProjectsDbManipulator.DeleteProject(id);
+                ProjectDbManipulator.DeleteProject(id);
             }
             catch (Exception ex)
             {
@@ -123,41 +128,27 @@ namespace TrainingTask.Controllers
             }
         }
 
-        private List<ProjectDTO> GetProjectById(int projectId)
-        {
-            return ProjectsDbManipulator.GetProjectById(projectId);
-        }
-
-        private List<ProjectTaskDTO> GetProjectTasksById(int projectId)
-        {
-            return ProjectTaskDbManipulator.GetProjectTasksByProjectId(projectId);
-        }
-
-        private ProjectAndTaskViewModel GetAllProjectsAndTasksViewModels()
-        {
-            var Projects = ProjectConverter.DTOtoViewModelList(ProjectsDbManipulator.GetProjectsList());
-            var ProjectTasks = ProjectTaskConverter.DTOtoViewModel(ProjectTaskDbManipulator.GetAllProjectTasksList());
-
-            return BuildProjectAndTaskViewModel(Projects, ProjectTasks);
-        }
-
-        private ProjectAndTaskViewModel GetByProjectIdProjectAndTasksViewModel(int projectId)
-        {
-            var Projects = ProjectConverter.DTOtoViewModelList(ProjectsDbManipulator.GetProjectById(projectId));
-            var ProjectTasks = ProjectTaskConverter.DTOtoViewModel(ProjectTaskDbManipulator.GetProjectTasksByProjectId(projectId));
-
-            return BuildProjectAndTaskViewModel(Projects, ProjectTasks);
-        }
-
-        private ProjectAndTaskViewModel BuildProjectAndTaskViewModel(List<ProjectViewModel> ProjectsViewModel, List<ProjectTaskViewModel> ProjectTaskssViewModel)
+        private ProjectAndTaskViewModel GetProjectViewModel(List<ProjectViewModel> ProjectsViewModel, List<ProjectTaskViewModel> ProjectTasksViewModel)
         {
             ProjectAndTaskViewModel ProjectAndTask = new ProjectAndTaskViewModel()
             {
                 Projects = ProjectsViewModel,
-                ProjectTasks = ProjectTaskssViewModel
+                ProjectTasks = ProjectTasksViewModel
             };
 
             return ProjectAndTask;
         }
+
+        //private ProjectViewModelWithRelations GetProjectViewModelWithRelations(int projectId)
+        //{
+        //    ProjectViewModelWithRelations model = new ProjectViewModelWithRelations {
+        //        Project = ProjectConverter.DTOtoViewModelList(ProjectDbManipulator.GetProjectById(projectId))[0],
+        //        ProjectTasks = new List<ProjectTaskViewModelWithRelations>().Add(
+        //            ProjectTaskConverter.DTOtoViewModel(ProjectTaskDbManipulator.GetProjectTasksByProjectId(projectId)))
+
+
+        //    }
+        //    return model; // TODO: change
+        //}
     }
 }

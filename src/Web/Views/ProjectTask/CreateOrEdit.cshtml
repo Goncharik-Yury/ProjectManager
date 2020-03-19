@@ -34,7 +34,7 @@
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
                 @*<input asp-for="Status" class="form-control" />*@
-                @Html.DropDownList("Status", new SelectList(new string[] { "NotStarted", "InProcess", "Completed", "Delayed" }, new { @class = "form-control" }))
+                @Html.DropDownList("Status", new SelectList(new string[] { "NotStarted", "InProcess", "Completed", "Delayed" }), new { @class = "form-control" })
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -43,7 +43,7 @@
                 <span asp-validation-for="ProjectId" class="text-danger"></span>
             </div>
             <div>
-                <input type="hidden" asp-for="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
+                <input type="hidden" name="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
             </div>
             <div class="form-group">
                 <partial name="Buttons\_SaveButtonPartial" />

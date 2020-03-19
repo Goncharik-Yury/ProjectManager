@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace TrainingTask.Web.Models
+namespace TrainingTask.Web.ViewModels
 {
     public class ProjectViewModel
     {
@@ -18,6 +18,5 @@ namespace TrainingTask.Web.Models
         [Display(Name = "Description")]
         [MaxLength(3999, ErrorMessage = "Description should not be longer than 3999 simbols")]
         public string Description { get; set; }
-        public bool IsCreateNotEdit { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TrainingTask.Web.Models;
+using TrainingTask.Web.ViewModels;
 using TrainingTask.ApplicationCore.DBManipulators;
 using TrainingTask.ApplicationCore.DTO;
 using TrainingTask.Web.Functional;
@@ -36,23 +36,23 @@ namespace TrainingTask.Controllers
             ViewBag.ProjectTaskStatus = new SelectList(ProjectTaskStatus, "Value", "Name");
             if (id < 0)
             {
-                ViewBag.IsCreateNotEdit = true;
+                ViewBag.IsCreateNotEdit = "true";
                 return View();
             }
             else
             {
-                ViewBag.IsCreateNotEdit = false;
-                ProjectTaskViewModel model = ProjectTaskConverter.DTOtoViewModel(dbManipulator.GetProjectTasksbyId(id))[0];
+                ViewBag.IsCreateNotEdit = "false";
+                ProjectTaskViewModel model = ProjectTaskConverter.DTOtoViewModel(dbManipulator.GetProjectTasksById(id))[0];
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(ProjectTaskViewModel projectTask)
+        public ActionResult CreateOrEdit(ProjectTaskViewModel projectTask, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            ModelState.MarkFieldValid("IsCreateNotEdit"); // A small crutch for saving my nerves without any consequences
+            //ModelState.MarkFieldValid("IsCreateNotEdit"); // A small crutch for saving my nerves without any consequences
             try
             {
                 if (projectTask == null)
@@ -62,7 +62,7 @@ namespace TrainingTask.Controllers
                 if (ModelState.IsValid)
                 {
                     ProjectTaskDTO projectTaskDTO = ProjectTaskConverter.ViewModelToDTO(projectTask);
-                    if (projectTask.IsCreateNotEdit)
+                    if (IsCreateNotEdit)
                     {
                         ProjectTaskDBManipulator.CreateProjectTask(projectTaskDTO);
                     }

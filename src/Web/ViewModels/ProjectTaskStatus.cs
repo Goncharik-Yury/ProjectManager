@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TrainingTask.Web.Models
+namespace TrainingTask.Web.ViewModels
 {
     public enum ProjectTaskStatus
     {

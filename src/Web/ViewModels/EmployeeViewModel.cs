@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 
-namespace TrainingTask.Web.Models
+namespace TrainingTask.Web.ViewModels
 {
     public class EmployeeViewModel
     {
@@ -26,20 +26,6 @@ namespace TrainingTask.Web.Models
         [MaxLength(50, ErrorMessage = "Position should not be longer than 50 simbols")]
 
         public string Position { get; set; }
-        public int ProjectTaskId { get; set; }
-        public bool IsCreateNotEdit { get; set; }
+        public int? ProjectTaskId { get; set; }
     }
-    //public class EmployeeViewModel
-    //{
-    //    public int Id { get; set; }
-
-    //    public string LastName { get; set; }
-
-    //    public string FirstName { get; set; }
-
-    //    public string Patronymic { get; set; }
-
-    //    public string Position { get; set; }
-    //public int ProjectTaskId { get; set; }
-    //}
 }

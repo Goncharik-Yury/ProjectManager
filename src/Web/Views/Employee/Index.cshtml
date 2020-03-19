@@ -12,6 +12,9 @@
     <table class="table">
         <tr>
             <th>
+                @Html.DisplayNameFor(m => m[0].Id)
+            </th>
+            <th>
                 @Html.DisplayNameFor(m => m[0].LastName)
             </th>
             <th>
@@ -28,6 +31,9 @@
         @foreach (EmployeeViewModel employee in Model)
         {
             <tr>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(q => employee.Id)
+                </td>
                 <td class="col-sm-10">
                     @Html.DisplayFor(q => employee.LastName)
                 </td>
