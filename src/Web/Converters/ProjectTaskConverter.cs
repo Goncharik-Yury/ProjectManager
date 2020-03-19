@@ -9,13 +9,13 @@ namespace TrainingTask.Web.Functional
 {
     public static class ProjectTaskConverter
     {
-        public static List<ProjectTaskViewModel> DTOtoViewModel(List<ProjectTaskDTO> convert)
+        public static List<ProjectTaskVM> DTOtoVM(List<ProjectTaskDTO> convert)
         {
-            List<ProjectTaskViewModel> converted = new List<ProjectTaskViewModel>();
+            List<ProjectTaskVM> converted = new List<ProjectTaskVM>();
 
             foreach (var item in convert)
             {
-                ProjectTaskViewModel listItem = new ProjectTaskViewModel
+                ProjectTaskVM listItem = new ProjectTaskVM
                 {
                     Id = item.Id,
                     Name = item.Name,
@@ -32,7 +32,7 @@ namespace TrainingTask.Web.Functional
             return converted;
         }
 
-        public static ProjectTaskDTO ViewModelToDTO(ProjectTaskViewModel convert)
+        public static ProjectTaskDTO VMToDTO(ProjectTaskVM convert)
         {
             ProjectTaskDTO converted = new ProjectTaskDTO
             {

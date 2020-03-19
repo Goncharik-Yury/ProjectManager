@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace TrainingTask.Web.ViewModels
 {
-    public class EmployeeViewModel
+    public class EmployeeVM
     {
         public int Id { get; set; }
         [Display(Name = "Last name")]

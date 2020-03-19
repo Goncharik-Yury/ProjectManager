@@ -28,7 +28,7 @@ namespace TrainingTask.Controllers
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            return View(EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeesList()));
+            return View(EmployeeConverter.DTOtoVM(dbManipulator.GetEmployeesList()));
         }
 
         //public ActionResult Create(int id = -1)
@@ -42,7 +42,7 @@ namespace TrainingTask.Controllers
         //    else
         //    {
         //        ViewBag.IsCreateNotEdit = false;
-        //        EmployeeViewModel model = EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
+        //        EmployeeVM model = EmployeeConverter.DTOtoVM(dbManipulator.GetEmployeeById(id))[0];
         //        return View(model);
         //    }
         //}
@@ -61,14 +61,14 @@ namespace TrainingTask.Controllers
             else
             {
                 ViewBag.IsCreateNotEdit = "false";
-                EmployeeViewModel model = EmployeeConverter.DTOtoViewModel(dbManipulator.GetEmployeeById(id))[0];
+                EmployeeVM model = EmployeeConverter.DTOtoVM(dbManipulator.GetEmployeeById(id))[0];
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(EmployeeViewModel employee, bool IsCreateNotEdit = false)
+        public ActionResult CreateOrEdit(EmployeeVM employee, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -84,12 +84,12 @@ namespace TrainingTask.Controllers
                     if (IsCreateNotEdit)
                     {
                         Logger.LogTrace("Create employee in database");
-                        EmployeeDBManipulator.CreateEmployee(EmployeeConverter.ViewModelToDTO(employee));
+                        EmployeeDBManipulator.CreateEmployee(EmployeeConverter.VMToDTO(employee));
                     }
                     else
                     {
                         Logger.LogTrace("Edit employee in database");
-                        EmployeeDBManipulator.EditEmployee(employee.Id, EmployeeConverter.ViewModelToDTO(employee));
+                        EmployeeDBManipulator.EditEmployee(employee.Id, EmployeeConverter.VMToDTO(employee));
                     }
                 }
                 else
@@ -123,7 +123,7 @@ namespace TrainingTask.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private void EmployeeValidate(EmployeeViewModel employee)
+        private void EmployeeValidate(EmployeeVM employee)
         {
             const string TooLongString = "Too long";
             const string InvalidValue = "Invalid value";

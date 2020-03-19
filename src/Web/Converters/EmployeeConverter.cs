@@ -8,13 +8,13 @@ namespace TrainingTask.Web.Converters
 {
     public static class EmployeeConverter
     {
-        public static List<EmployeeViewModel> DTOtoViewModel(List<EmployeeDTO> convert)
+        public static List<EmployeeVM> DTOtoVM(List<EmployeeDTO> convert)
         {
-            List<EmployeeViewModel> converted = new List<EmployeeViewModel>();
+            List<EmployeeVM> converted = new List<EmployeeVM>();
 
             foreach (var item in convert)
             {
-                EmployeeViewModel listItem = new EmployeeViewModel
+                EmployeeVM listItem = new EmployeeVM
                 {
                     Id = item.Id,
                     LastName = item.LastName,
@@ -30,7 +30,7 @@ namespace TrainingTask.Web.Converters
             return converted;
         }
 
-        public static EmployeeDTO ViewModelToDTO(EmployeeViewModel convert)
+        public static EmployeeDTO VMToDTO(EmployeeVM convert)
         {
             EmployeeDTO converted = new EmployeeDTO
             {

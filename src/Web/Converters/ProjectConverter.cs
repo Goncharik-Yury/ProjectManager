@@ -8,12 +8,12 @@ namespace TrainingTask.Web.Converters
 {
     public static class ProjectConverter
     {
-        public static List<ProjectViewModel> DTOtoViewModelList(List<ProjectDTO> convert)
+        public static List<ProjectVM> DTOtoVMList(List<ProjectDTO> convert)
         {
-            List<ProjectViewModel> converted = new List<ProjectViewModel>();
+            List<ProjectVM> converted = new List<ProjectVM>();
             foreach (var item in convert)
             {
-                ProjectViewModel listItem = new ProjectViewModel
+                ProjectVM listItem = new ProjectVM
                 {
                     Id = item.Id,
                     Name = item.Name,
@@ -25,9 +25,9 @@ namespace TrainingTask.Web.Converters
 
             return converted;
         }
-        //public static ProjectViewModel DTOtoViewModel(ProjectDTO convert)
+        //public static ProjectVM DTOtoVM(ProjectDTO convert)
         //{
-        //    ProjectViewModel converted = new ProjectViewModel
+        //    ProjectVM converted = new ProjectVM
         //    {
         //        Id = convert.Id,
         //        Name = convert.Name,
@@ -38,7 +38,7 @@ namespace TrainingTask.Web.Converters
         //    return converted;
         //}
 
-        public static ProjectDTO ViewModelToDTO(ProjectViewModel convert)
+        public static ProjectDTO VMToDTO(ProjectVM convert)
     {
         ProjectDTO Project = new ProjectDTO
         {

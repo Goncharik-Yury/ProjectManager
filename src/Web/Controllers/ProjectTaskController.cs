@@ -27,7 +27,7 @@ namespace TrainingTask.Controllers
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            return View(ProjectTaskConverter.DTOtoViewModel(dbManipulator.GetAllProjectTasksList()));
+            return View(ProjectTaskConverter.DTOtoVM(dbManipulator.GetAllProjectTasksList()));
         }
 
         public ActionResult CreateOrEdit(int id = -1)
@@ -42,14 +42,14 @@ namespace TrainingTask.Controllers
             else
             {
                 ViewBag.IsCreateNotEdit = "false";
-                ProjectTaskViewModel model = ProjectTaskConverter.DTOtoViewModel(dbManipulator.GetProjectTasksById(id))[0];
+                ProjectTaskVM model = ProjectTaskConverter.DTOtoVM(dbManipulator.GetProjectTasksById(id))[0];
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(ProjectTaskViewModel projectTask, bool IsCreateNotEdit = false)
+        public ActionResult CreateOrEdit(ProjectTaskVM projectTask, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             //ModelState.MarkFieldValid("IsCreateNotEdit"); // A small crutch for saving my nerves without any consequences
@@ -61,7 +61,7 @@ namespace TrainingTask.Controllers
                 ProjectTaskValidate(projectTask);
                 if (ModelState.IsValid)
                 {
-                    ProjectTaskDTO projectTaskDTO = ProjectTaskConverter.ViewModelToDTO(projectTask);
+                    ProjectTaskDTO projectTaskDTO = ProjectTaskConverter.VMToDTO(projectTask);
                     if (IsCreateNotEdit)
                     {
                         ProjectTaskDBManipulator.CreateProjectTask(projectTaskDTO);
@@ -100,7 +100,7 @@ namespace TrainingTask.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private void ProjectTaskValidate(ProjectTaskViewModel projectTask)
+        private void ProjectTaskValidate(ProjectTaskVM projectTask)
         {
             const string TooLongString = "Too long";
             const string InvalidValue = "Invalid value";

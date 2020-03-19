@@ -1,4 +1,4 @@
-﻿@model List<ProjectTaskViewModel>
+﻿@model List<ProjectTaskVM>
 
 @{
     ViewData["Title"] = "Tasks main page";
@@ -30,7 +30,7 @@
                 @Html.DisplayNameFor(m => m[0].Status)
             </th>
         </tr>
-        @foreach (ProjectTaskViewModel projectTask in Model)
+        @foreach (ProjectTaskVM projectTask in Model)
         {
             <tr>
                 <td class="col-sm-10">

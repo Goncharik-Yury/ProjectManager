@@ -2,7 +2,7 @@ using System;
 
 namespace TrainingTask.Web.ViewModels
 {
-    public class ErrorViewModel
+    public class ErrorVM
     {
         public string RequestId { get; set; }
 
