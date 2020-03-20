@@ -38,6 +38,10 @@ namespace TrainingTask.Infrastructure.Functional
                     {
                         foreach (var Parameter in queryParameters)
                         {
+                            if (Parameter.Value == null)
+                            {
+                                Parameter.Value = "";
+                            }
                             CommandToExecute.Parameters.Add(Parameter);
                         }
                     }

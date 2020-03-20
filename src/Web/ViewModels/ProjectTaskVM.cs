@@ -18,7 +18,6 @@ namespace TrainingTask.Web.ViewModels
         public DateTime? BeginDate { get; set; }
         [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
-        [Required(ErrorMessage = "Choose the status of project")]
         [MaxLength(50, ErrorMessage = "Status should not be longer than 50 simbols")]
         public string EmployeeFullName { get; set; }
         public string Status { get; set; }

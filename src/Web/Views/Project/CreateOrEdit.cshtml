@@ -10,13 +10,17 @@
 <div class="row">
     <div class="col-md-12">
         <form asp-action="CreateOrEdit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="@Model.Projects[0].Id" class="control-label"></label>
-                <input asp-for="@Model.Projects[0].Id" class="form-control" disabled="disabled" />
-                <input type="hidden" asp-for="@Model.Projects[0].Id class="form-control" />
-                <span asp-validation-for="@Model.Projects[0].Id" class="text-danger"></span>
-            </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            @if (@ViewBag.IsCreateNotEdit == "false")
+            {
+                <div class="form-group">
+                    <label asp-for="@Model.Projects[0].Id" class="control-label"></label>
+                    @*<input asp-for="@Model.Projects[0].Id" class="form-control" disabled="disabled" />*@
+                    <input value="@Model.Projects[0].Id" class=" form-control" disabled="disabled"/>
+                    <input type="hidden" asp-for="@Model.Projects[0].Id class=" form-control" />
+                    <span asp-validation-for="@Model.Projects[0].Id" class="text-danger"></span>
+                </div>
+            }
             <div class="form-group">
                 <label asp-for="@Model.Projects[0].Name" class="control-label"></label>
                 <input asp-for="@Model.Projects[0].Name" class="form-control" />
@@ -61,7 +65,7 @@
                     @Html.DisplayNameFor(m => m.ProjectTasks[0].Status)
                 </th>
                 <th>
-                    @Html.ActionLink("Create", "CreateOrEdit", "ProjectTask", new { @*projectId = @Model.Projects[0].Id*@ }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Create", "CreateOrEdit", "ProjectTask", new { @*projectId = @Model.Projects[0].Id*@}, new { @class = "btn btn-info" })
                 </th>
             </tr>
             @if (@Model?.ProjectTasks != null)

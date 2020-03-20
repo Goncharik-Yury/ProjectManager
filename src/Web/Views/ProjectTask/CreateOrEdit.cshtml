@@ -59,7 +59,7 @@
             </div>
             <div>
                 <input type="hidden" name="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
-                <input type="hidden" asp-for="EmployeeFullName" value="@Model.EmployeeFullName" />
+                @*<input type="hidden" asp-for="EmployeeFullName" value="@Model.EmployeeFullName" />*@ @*DOTO: why do I need it?*@
             </div>
             <div class="form-group">
                 <partial name="Buttons\_SaveButtonPartial" />

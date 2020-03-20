@@ -112,6 +112,8 @@ namespace TrainingTask.Controllers
                 }
                 else
                 {
+                    FillEmployeeSelectList();
+                    FillProjectSelectList();
                     return View(projectTask);
                 }
             }

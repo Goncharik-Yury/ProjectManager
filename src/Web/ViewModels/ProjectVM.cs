@@ -13,6 +13,7 @@ namespace TrainingTask.Web.ViewModels
         [MaxLength(50, ErrorMessage = "Project name should not be longer than 50 simbols")]
         public string Name { get; set; }
         [Display(Name = "Short name")]
+        [Required(ErrorMessage = "Enter the Project short name")]
         [MaxLength(50, ErrorMessage = "Short name should not be longer than 50 simbols")]
         public string ShortName { get; set; }
         [Display(Name = "Description")]
