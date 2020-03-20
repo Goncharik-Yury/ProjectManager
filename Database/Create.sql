@@ -1,19 +1,139 @@
+
+/* DT creation */
+
 USE [master]
 GO
 
-/****** Object:  Database [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TESTTASKDATABASE3.MDF]    Script Date: 3/10/2020 4:44:58 PM ******/
-CREATE DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TestTaskDatabase3.MDF]
+/****** Object:  Database [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF]    Script Date: 3/20/2020 4:42:57 PM ******/
+CREATE DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'TESTTASKDATABASE3', FILENAME = N'C:\SeleSt\Programs\Projects\Database\TestTaskDatabase3.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'TestTaskDatabase', FILENAME = N'C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
  LOG ON 
-( NAME = N'TESTTASKDATABASE3_log', FILENAME = N'C:\SeleSt\Programs\Projects\Database\TestTaskDatabase3.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+( NAME = N'TestTaskDatabase_log', FILENAME = N'C:\SeleSt\Programs\Projects\Database\TestTaskDB_log.ldf' , SIZE = 768KB , MAXSIZE = UNLIMITED, FILEGROWTH = 10%)
 GO
 
-USE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TESTTASKDATABASE3.MDF]
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF].[dbo].[sp_fulltext_database] @action = 'enable'
+end
 GO
 
-/****** Object:  Table [dbo].[ProjectTask]    Script Date: 3/10/2020 4:52:51 PM ******/
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET ANSI_NULL_DEFAULT ON 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET ANSI_NULLS ON 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET ANSI_PADDING ON 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET ANSI_WARNINGS ON 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET ARITHABORT ON 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET AUTO_CLOSE ON 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET AUTO_SHRINK OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET AUTO_UPDATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET CURSOR_DEFAULT  LOCAL 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET CONCAT_NULL_YIELDS_NULL ON 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET NUMERIC_ROUNDABORT OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET QUOTED_IDENTIFIER ON 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET RECURSIVE_TRIGGERS OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET  DISABLE_BROKER 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET TRUSTWORTHY OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET PARAMETERIZATION SIMPLE 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET HONOR_BROKER_PRIORITY OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET RECOVERY SIMPLE 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET  MULTI_USER 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET PAGE_VERIFY CHECKSUM  
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET DB_CHAINING OFF 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET DELAYED_DURABILITY = DISABLED 
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET QUERY_STORE = OFF
+GO
+
+USE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF]
+GO
+
+ALTER DATABASE SCOPED CONFIGURATION SET LEGACY_CARDINALITY_ESTIMATION = OFF;
+GO
+
+ALTER DATABASE SCOPED CONFIGURATION SET MAXDOP = 0;
+GO
+
+ALTER DATABASE SCOPED CONFIGURATION SET PARAMETER_SNIFFING = ON;
+GO
+
+ALTER DATABASE SCOPED CONFIGURATION SET QUERY_OPTIMIZER_HOTFIXES = OFF;
+GO
+
+ALTER DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF] SET  READ_WRITE 
+GO
+
+
+
+/* Employee table creation */
+
+USE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF]
+GO
+
 SET ANSI_NULLS ON
 GO
 
@@ -21,67 +141,123 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[Employee](
-    [Id] [int] IDENTITY(1,1) NOT NULL,
-    [Lastname] [nvarchar](50) NOT NULL,
-    [Firstname] [nvarchar](50) NOT NULL,
-    [Patronymic] [nvarchar](50) NULL,
-    [Position] [nvarchar](50) NOT NULL,
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Lastname] [nvarchar](50) NOT NULL,
+	[Firstname] [nvarchar](50) NOT NULL,
+	[Patronymic] [nvarchar](50) NULL,
+	[Position] [nvarchar](50) NOT NULL,
  CONSTRAINT [PK_Employee] PRIMARY KEY CLUSTERED 
 (
-    [Id] ASC
+	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[Employee]  WITH CHECK ADD  CONSTRAINT [FK_Employee_Employee] FOREIGN KEY([Id])
+
+/* Project table creation */
+
+USE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Project](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[ShortName] [nvarchar](50) NOT NULL,
+	[Description] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Project2] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+/* ProjectTask table creation */
+
+USE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ProjectTask](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[TimeToComplete] [int] NULL,
+	[BeginDate] [date] NULL,
+	[EndDate] [date] NULL,
+	[Status] [nvarchar](50) NOT NULL,
+	[ProjectId] [int] NULL,
+	[EmployeeId] [int] NULL,
+ CONSTRAINT [PK_Project] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ProjectTask]  WITH CHECK ADD  CONSTRAINT [FK_ProjectTask_Employee] FOREIGN KEY([EmployeeId])
 REFERENCES [dbo].[Employee] ([Id])
 GO
 
-ALTER TABLE [dbo].[Employee] CHECK CONSTRAINT [FK_Employee_Employee]
+ALTER TABLE [dbo].[ProjectTask] CHECK CONSTRAINT [FK_ProjectTask_Employee]
 GO
 
-CREATE TABLE [dbo].[Project] (
-    [Id]          INT            IDENTITY (1, 1) NOT NULL,
-    [Name]        NVARCHAR (50)  NOT NULL,
-    [ShortName]   NVARCHAR (50)  NULL,
-    [Description] NVARCHAR (MAX) NULL,
-    CONSTRAINT [PK_Project2] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
+ALTER TABLE [dbo].[ProjectTask]  WITH CHECK ADD  CONSTRAINT [FK_ProjectTask_Project] FOREIGN KEY([ProjectId])
+REFERENCES [dbo].[Project] ([Id])
 GO
 
-CREATE TABLE [dbo].[ProjectTask] (
-    [Id]             INT           IDENTITY (1, 1) NOT NULL,
-    [Name]           NVARCHAR (50) NOT NULL,
-    [TimeToComplete] INT           NULL,
-    [BeginDate]      DATE          NULL,
-    [EndDate]        DATE          NULL,
-    [Status]         NVARCHAR (50) NOT NULL,
-    [ExecutorId]     INT           NULL,
-    CONSTRAINT [PK_Project] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
+ALTER TABLE [dbo].[ProjectTask] CHECK CONSTRAINT [FK_ProjectTask_Project]
 GO
+
+
+
+
+
+/* Tables data filling */
+
+/* Employee table data filling */
 
 SET IDENTITY_INSERT [dbo].[Employee] ON
-INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (1, N'Goncharik', N'Yury', N'qqq', N'Softaware developer')
-INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (2, N'Petrushko', N'Dmitry', N'www', N'noone')
-INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (1005, N'qqq', N'qqq', N'qqq', N'qqq')
-INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (2002, N'www', N'www', N'', N'www')
-INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (3002, N'eee', N'eeettt', N'eee', N'eee')
-INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (3005, N'rrr', N'rrr', N'rrr', N'rrr')
+INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (1, N'Goncharik', N'Yury', N'Viktorowich', N'Slow Softaware Developer')
+INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (2, N'Petrushko', N'Dmitry', N'ddd', N'A friend of mine')
+INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (1005, N'Makise', N'Kurisu', N'', N'Genius Scientist')
+INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (3006, N'Doe', N'John', N'', N'Unknown')
+INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (3007, N'Petrov', N'Petr', N'Petrovich', N'Locksmith')
+INSERT INTO [dbo].[Employee] ([Id], [Lastname], [Firstname], [Patronymic], [Position]) VALUES (3009, N'Just', N'Random', N'Guy', N'Who knows')
 SET IDENTITY_INSERT [dbo].[Employee] OFF
-GO
+
+
+/* Project table data filling */
 
 SET IDENTITY_INSERT [dbo].[Project] ON
-INSERT INTO [dbo].[Project] ([Id], [Name], [ShortName], [Description]) VALUES (2, N'qqq', N'qqq', N'qqq')
-INSERT INTO [dbo].[Project] ([Id], [Name], [ShortName], [Description]) VALUES (1004, N'www', N'www', N'www')
+INSERT INTO [dbo].[Project] ([Id], [Name], [ShortName], [Description]) VALUES (2, N'Main project', N'P01', N'Just some project description')
+INSERT INTO [dbo].[Project] ([Id], [Name], [ShortName], [Description]) VALUES (1004, N'Project 02', N'P02', N'What about description?')
+INSERT INTO [dbo].[Project] ([Id], [Name], [ShortName], [Description]) VALUES (1010, N'Project 03', N'P03', N'i')
+INSERT INTO [dbo].[Project] ([Id], [Name], [ShortName], [Description]) VALUES (1012, N'Project 04', N'P04', N'sss')
+INSERT INTO [dbo].[Project] ([Id], [Name], [ShortName], [Description]) VALUES (1014, N'q', N'q', N'')
+INSERT INTO [dbo].[Project] ([Id], [Name], [ShortName], [Description]) VALUES (1015, N'Last project', N'Last P', N'testing project id 1015')
 SET IDENTITY_INSERT [dbo].[Project] OFF
-GO
+
+
+/* ProjectTask table data filling */
 
 SET IDENTITY_INSERT [dbo].[ProjectTask] ON
-INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ExecutorId]) VALUES (2, N'sss', 1, N'0001-01-01', N'0001-01-01', N'5', 0)
-INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ExecutorId]) VALUES (3, N'', 1, N'2020-03-09', N'2020-03-09', N'', 0)
-INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ExecutorId]) VALUES (4, N'qqq', 2, N'2020-03-09', N'2020-03-09', N'3', 0)
-INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ExecutorId]) VALUES (5, N'11111', 11111, N'0001-01-01', N'0001-01-01', N'1111', 1)
+INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ProjectId], [EmployeeId]) VALUES (2, N'Some quick task', 2, N'2020-02-02', N'2020-03-22', N'Completed', 2, 1)
+INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ProjectId], [EmployeeId]) VALUES (4, N'Task11', 2, N'2020-03-09', N'2020-03-09', N'InProcess', 1004, 1)
+INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ProjectId], [EmployeeId]) VALUES (13, N'Task33', 11, N'2020-03-17', N'2020-03-19', N'NotStarted', 2, 2)
+INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ProjectId], [EmployeeId]) VALUES (14, N'Task34', 33, N'2020-03-18', N'2020-03-22', N'NotStarted', 2, 1)
+INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ProjectId], [EmployeeId]) VALUES (15, N'First training task', 66, N'2020-04-05', N'2020-05-30', N'Delayed', 1012, 2)
+INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ProjectId], [EmployeeId]) VALUES (16, N'pttttttt', 1, N'2020-03-19', N'2020-03-13', N'InProcess', 2, 1)
+INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ProjectId], [EmployeeId]) VALUES (17, N'new test project ', 1, N'2020-03-19', N'2020-03-20', N'NotStarted', 2, 1)
+INSERT INTO [dbo].[ProjectTask] ([Id], [Name], [TimeToComplete], [BeginDate], [EndDate], [Status], [ProjectId], [EmployeeId]) VALUES (18, N'test task', 2, N'2020-03-19', N'2020-03-21', N'NotStarted', 1015, 1)
 SET IDENTITY_INSERT [dbo].[ProjectTask] OFF
-GO
-
