@@ -49,15 +49,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="ProjectId" class="control-label"></label>
-                <input asp-for="ProjectId" class="form-control" />
+                @Html.DropDownList("ProjectId", ViewBag.ProjectSelectList as IEnumerable<SelectListItem>, new { @class = "form-control" })
                 <span asp-validation-for="ProjectId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EmployeeId" class="control-label"></label>
-                @*<input asp-for="EmployeeId" class="form-control" />*@
-                @*@Html.DropDownList("EmployeeId", new SelectList(@ViewBag.ProjectTaskStatuses), new { @class = "form-control" })*@
                 @Html.DropDownList("EmployeeId", ViewBag.EmployeeSelectList as IEnumerable<SelectListItem>, new { @class = "form-control" })
-                @*@Html.DropDownList("EmployeeId", new SelectList(new string[] { "Russia", "USA", "Canada", "France" }), new { @class = "form-control" })*@
                 <span asp-validation-for="EmployeeId" class="text-danger"></span>
             </div>
             <div>

@@ -17,14 +17,16 @@ namespace TrainingTask.Controllers
     public class ProjectTaskController : Controller
     {
         private ILogger Logger;
-        private string[] ProjectTaskStatuses = { "NotStarted", "InProcess", "Completed", "Delayed" };
         readonly EmployeeDBManipulator EmployeeDbManipulator = new EmployeeDBManipulator();
+        readonly ProjectDBManipulator ProjectDbManipulator = new ProjectDBManipulator();
+        readonly ProjectTaskDBManipulator dbManipulator = new ProjectTaskDBManipulator();
+        string[] ProjectTaskStatuses = { "NotStarted", "InProcess", "Completed", "Delayed" };
+
         public ProjectTaskController(ILogger fileLogger)
         {
             Logger = fileLogger;
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
         }
-        readonly ProjectTaskDBManipulator dbManipulator = new ProjectTaskDBManipulator();
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
@@ -35,19 +37,11 @@ namespace TrainingTask.Controllers
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
 
-            var EmployeesList = EmployeeDbManipulator.GetEmployeesList();
-            List<EmployeeSelectListItem> EmployeeSelectList = new List<EmployeeSelectListItem>();
-            EmployeesList.ForEach(employee =>
-            {
-                EmployeeSelectList.Add(new EmployeeSelectListItem
-                {
-                    Id = employee.Id,
-                    FullName = $"{employee.LastName} {employee.FirstName} {employee.Patronymic}"
-                });
-            });
+            FillEmployeeSelectList();
+            FillProjectSelectList();
 
             ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
-            ViewBag.EmployeeSelectList = new SelectList(EmployeeSelectList, "Id", "FullName");
+
             if (id < 0)
             {
                 ViewBag.IsCreateNotEdit = "true";
@@ -59,6 +53,34 @@ namespace TrainingTask.Controllers
                 ProjectTaskVM model = VMConverter.DTOtoVM(dbManipulator.GetProjectTasksById(id))[0];
                 return View(model);
             }
+        }
+        private void FillProjectSelectList()
+        {
+            List<ProjectDTO> ProjectsList = ProjectDbManipulator.GetProjectsList();
+            List<ProjectSelectListItem> ProjectSelectList = new List<ProjectSelectListItem>();
+            ProjectsList.ForEach(project =>
+            {
+                ProjectSelectList.Add(new ProjectSelectListItem
+                {
+                    Id = project.Id,
+                    ShortName = project.ShortName
+                });
+            });
+            ViewBag.ProjectSelectList = new SelectList(ProjectSelectList, "Id", "ShortName");
+        }
+        private void FillEmployeeSelectList()
+        {
+            List<EmployeeDTO> EmployeesList = EmployeeDbManipulator.GetEmployeesList();
+            List<EmployeeSelectListItem> EmployeeSelectList = new List<EmployeeSelectListItem>();
+            EmployeesList.ForEach(employee =>
+            {
+                EmployeeSelectList.Add(new EmployeeSelectListItem
+                {
+                    Id = employee.Id,
+                    FullName = $"{employee.LastName} {employee.FirstName} {employee.Patronymic}"
+                });
+            });
+            ViewBag.EmployeeSelectList = new SelectList(EmployeeSelectList, "Id", "FullName");
         }
 
         [HttpPost]
@@ -155,6 +177,11 @@ namespace TrainingTask.Controllers
         {
             public int Id { get; set; }
             public string FullName { get; set; }
+        }
+        private class ProjectSelectListItem
+        {
+            public int Id { get; set; }
+            public string ShortName { get; set; }
         }
     }
 }

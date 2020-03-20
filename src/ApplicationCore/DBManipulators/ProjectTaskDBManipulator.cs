@@ -93,7 +93,7 @@ namespace TrainingTask.ApplicationCore.DBManipulators
 
         public static bool EditProjectTask(int id, ProjectTaskDTO projectTask)
         {
-            string SqlQueryString = $"UPDATE ProjectTask SET Name = @Name, TimeToComplete = @TimeToComplete, BeginDate = @BeginDate, EndDate = @EndDate, Status = @Status, EmployeeId = @EmployeeId, @ProjectId = ProjectId WHERE Id = @Id";
+            string SqlQueryString = $"UPDATE ProjectTask SET Name = @Name, TimeToComplete = @TimeToComplete, BeginDate = @BeginDate, EndDate = @EndDate, Status = @Status, EmployeeId = @EmployeeId, ProjectId = @ProjectId WHERE Id = @Id";
             List<SqlParameter> QueryParameters = new List<SqlParameter>
             {
                 new SqlParameter("@Id", id),
