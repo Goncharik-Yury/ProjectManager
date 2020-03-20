@@ -59,34 +59,35 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(ProjectVM project, bool IsCreateNotEdit = false)
+        public ActionResult CreateOrEdit(ProjectAllVM projectAll, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                if (project == null)
+                if (projectAll.Projects[0] == null)
                     throw new NullReferenceException();
-                ProjectValidate(project);
+                ProjectValidate(projectAll.Projects[0]);
                 if (ModelState.IsValid)
                 {
-                    ProjectDTO projectDTO = VMConverter.VMToDTO(project);
+                    ProjectDTO projectDTO = VMConverter.VMToDTO(projectAll.Projects[0]);
                     if (IsCreateNotEdit)
                     {
                         ProjectDbManipulator.CreateProject(projectDTO);
                     }
                     else
                     {
-                        ProjectDbManipulator.EditProject(project.Id, projectDTO);
+                        ProjectDbManipulator.EditProject(projectAll.Projects[0].Id, projectDTO);
                     }
                 }
                 else
                 {
-                    return View(project);
+                    return View(projectAll);
                 }
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
+                return View("Error");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -103,6 +104,7 @@ namespace TrainingTask.Controllers
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
+                return View("Error");
             }
             return RedirectToAction(nameof(Index));
         }

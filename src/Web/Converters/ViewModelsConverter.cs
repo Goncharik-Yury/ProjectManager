@@ -57,6 +57,7 @@ namespace TrainingTask.Web.Converters
                 ProjectTaskVM listItem = new ProjectTaskVM
                 {
                     Id = item.Id,
+                    ProjectShortName = item.ProjectShortName,
                     Name = item.Name,
                     TimeToComplete = item.TimeToComplete,
                     BeginDate = item.BeginDate,
@@ -106,6 +107,7 @@ namespace TrainingTask.Web.Converters
             ProjectTaskDTO converted = new ProjectTaskDTO
             {
                 Id = convert.Id,
+                ProjectShortName = convert.ProjectShortName,
                 Name = convert.Name,
                 TimeToComplete = convert.TimeToComplete,
                 BeginDate = convert.BeginDate,

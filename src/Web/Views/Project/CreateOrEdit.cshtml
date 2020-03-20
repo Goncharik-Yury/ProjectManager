@@ -5,14 +5,17 @@
     ViewData["Title"] = "Enter";
 }
 
-<h1>Enter</h1>
-
 <h4>Project</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
         <form asp-action="CreateOrEdit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.Projects[0].Id" class="control-label"></label>
+                <input asp-for="@Model.Projects[0].Id" class="form-control" disabled="disabled" />
+                <span asp-validation-for="@Model.Projects[0].Id" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="@Model.Projects[0].Name" class="control-label"></label>
                 <input asp-for="@Model.Projects[0].Name" class="form-control" />
@@ -28,66 +31,6 @@
                 <input asp-for="@Model.Projects[0].Description" class="form-control" />
                 <span asp-validation-for="@Model.Projects[0].Description" class="text-danger"></span>
             </div>
-            @{
-                bool AddTableHeads = true;
-            }
-            <tr class="col-md-12">
-                <table class="table">
-                    @foreach (var ProjectTask in @Model.ProjectTasks)
-                    {
-                        if (AddTableHeads)
-                        {
-                            AddTableHeads = false;
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Name)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].BeginDate)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].EndDate)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].EmployeeFullName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Status)
-                                </th>
-                                <th>
-                                    @Html.ActionLink("Create", "CreateOrEdit", "ProjectTask", new { id = @ProjectTask.Id, projectId = @Model.Projects[0].Id }, new { @class = "btn btn-info" })
-                                </th>
-                            </tr>
-                        }
-                        <tr>
-                            <td>
-                                @ProjectTask.Name
-                            </td>
-                            <td>
-                                @ProjectTask.BeginDate
-                            </td>
-                            <td>
-                                @ProjectTask.EndDate
-                            </td>
-                            <td>
-                                @ProjectTask.EmployeeFullName
-                            </td>
-                            <td>
-                                @ProjectTask.Status
-                            </td>
-                            <td>
-                                @Html.ActionLink("Edit", "CreateOrEdit", "ProjectTask", new { id = @ProjectTask.Id }, new { @class = "btn btn-info" })
-                            </td>
-                            <td>
-                                <form asp-controller="ProjectTask" asp-action="Delete" method="post">
-                                    <input type="submit" value="Delete" class="btn btn-danger" />
-                                    <input type="hidden" value="@ProjectTask.Id" name="Id" />
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </tr>
             <div>
                 <input type="hidden" name="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
             </div>
@@ -96,6 +39,66 @@
                 <partial name="Buttons\_CancelButtonPartial" />
             </div>
         </form>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.ProjectTasks[0].BeginDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.ProjectTasks[0].EndDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.ProjectTasks[0].EmployeeFullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Status)
+                </th>
+                <th>
+                    @Html.ActionLink("Create", "CreateOrEdit", "ProjectTask", new { @*projectId = @Model.Projects[0].Id*@ }, new { @class = "btn btn-info" })
+                </th>
+            </tr>
+            @if (@Model?.ProjectTasks != null)
+            {
+                @foreach (var ProjectTask in @Model.ProjectTasks)
+                {
+                    <tr>
+                        <td>
+                            @ProjectTask.Id
+                        </td>
+                        <td>
+                            @ProjectTask.Name
+                        </td>
+                        <td>
+                            @ProjectTask.BeginDate
+                        </td>
+                        <td>
+                            @ProjectTask.EndDate
+                        </td>
+                        <td>
+                            @ProjectTask.EmployeeFullName
+                        </td>
+                        <td>
+                            @ProjectTask.Status
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "CreateOrEdit", "ProjectTask", new { id = @ProjectTask.Id }, new { @class = "btn btn-info" })
+                        </td>
+                        <td>
+                            <form asp-controller="ProjectTask" asp-action="Delete" method="post">
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                                <input type="hidden" value="@ProjectTask.Id" name="Id" />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
     </div>
 </div>
 

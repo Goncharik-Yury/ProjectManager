@@ -17,7 +17,8 @@ namespace TrainingTask.Controllers
     public class ProjectTaskController : Controller
     {
         private ILogger Logger;
-        private readonly string[] ProjectTaskStatus = { "NotStarted", "InProcess", "Completed", "Delayed" };
+        private string[] ProjectTaskStatuses = { "NotStarted", "InProcess", "Completed", "Delayed" };
+        readonly EmployeeDBManipulator EmployeeDbManipulator = new EmployeeDBManipulator();
         public ProjectTaskController(ILogger fileLogger)
         {
             Logger = fileLogger;
@@ -33,7 +34,20 @@ namespace TrainingTask.Controllers
         public ActionResult CreateOrEdit(int id = -1)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            ViewBag.ProjectTaskStatus = new SelectList(ProjectTaskStatus, "Value", "Name");
+
+            var EmployeesList = EmployeeDbManipulator.GetEmployeesList();
+            List<EmployeeSelectListItem> EmployeeSelectList = new List<EmployeeSelectListItem>();
+            EmployeesList.ForEach(employee =>
+            {
+                EmployeeSelectList.Add(new EmployeeSelectListItem
+                {
+                    Id = employee.Id,
+                    FullName = $"{employee.LastName} {employee.FirstName} {employee.Patronymic}"
+                });
+            });
+
+            ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
+            ViewBag.EmployeeSelectList = new SelectList(EmployeeSelectList, "Id", "FullName");
             if (id < 0)
             {
                 ViewBag.IsCreateNotEdit = "true";
@@ -52,12 +66,15 @@ namespace TrainingTask.Controllers
         public ActionResult CreateOrEdit(ProjectTaskVM projectTask, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            //ModelState.ClearValidationState("IsCreateNotEdit"); // A small crutch for saving my nerves without any consequences
             //ModelState.MarkFieldValid("IsCreateNotEdit"); // A small crutch for saving my nerves without any consequences
+            //ModelState.ClearValidationState("EmployeeFullName"); // A small crutch for saving my nerves without any consequences
+            //ModelState.MarkFieldValid("EmployeeFullName"); // A small crutch for saving my nerves without any consequences
             try
             {
                 if (projectTask == null)
                     throw new NullReferenceException();
-                ViewBag.ProjectTaskStatus = new SelectList(ProjectTaskStatus, "Value", "Name");
+                ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
                 ProjectTaskValidate(projectTask);
                 if (ModelState.IsValid)
                 {
@@ -79,6 +96,7 @@ namespace TrainingTask.Controllers
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
+                return View("Error");
             }
 
             return RedirectToAction(nameof(Index));
@@ -96,6 +114,7 @@ namespace TrainingTask.Controllers
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
+                return View("Error");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -131,6 +150,11 @@ namespace TrainingTask.Controllers
                 ModelState.AddModelError("EndDate", InvalidValue);
             }
 
+        }
+        private class EmployeeSelectListItem
+        {
+            public int Id { get; set; }
+            public string FullName { get; set; }
         }
     }
 }

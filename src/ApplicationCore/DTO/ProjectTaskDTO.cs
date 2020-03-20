@@ -5,6 +5,7 @@ namespace TrainingTask.ApplicationCore.DTO
     public class ProjectTaskDTO
     {
         public int Id { get; set; }
+        public string ProjectShortName { get; set; }
         public string Name { get; set; }
         public int? TimeToComplete { get; set; }
         public DateTime? BeginDate { get; set; }

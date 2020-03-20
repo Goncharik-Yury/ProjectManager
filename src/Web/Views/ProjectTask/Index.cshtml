@@ -15,6 +15,9 @@
                 @Html.DisplayNameFor(m => m[0].Id)
             </th>
             <th>
+                @Html.DisplayNameFor(m => m[0].ProjectShortName)
+            </th>
+            <th>
                 @Html.DisplayNameFor(m => m[0].Name)
             </th>
             <th>
@@ -29,12 +32,21 @@
             <th>
                 @Html.DisplayNameFor(m => m[0].Status)
             </th>
+            <th>
+                @Html.DisplayNameFor(m => m[0].ProjectId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m[0].EmployeeFullName)
+            </th>
         </tr>
         @foreach (ProjectTaskVM projectTask in Model)
         {
             <tr>
                 <td class="col-sm-10">
                     @Html.DisplayFor(q => projectTask.Id)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(q => projectTask.ProjectShortName)
                 </td>
                 <td class="col-sm-10">
                     @Html.DisplayFor(q => projectTask.Name)
@@ -50,6 +62,12 @@
                 </td>
                 <td class="col-sm-10">
                     @Html.DisplayFor(q => projectTask.Status)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(q => projectTask.ProjectId)
+                </td>
+                <td class="col-sm-10">
+                    @Html.DisplayFor(q => projectTask.EmployeeFullName)
                 </td>
 
                 <td class="col-sm-10">

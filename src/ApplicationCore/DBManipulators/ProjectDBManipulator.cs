@@ -30,6 +30,18 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             var ProjectsList = (List<Project>)DBGetData(SqlQueryString, QueryParameters);
             return DTOConverter.ProjectToDTO(ProjectsList);
         }
+        //public string GetProjectShortNameById(int id)
+        //{
+        //    string SqlQueryString = $"SELECT ShortName FROM Project where Id = @Id";
+
+        //    List<SqlParameter> QueryParameters = new List<SqlParameter>
+        //    {
+        //        new SqlParameter("@Id", id)
+        //    };
+
+        //    string ProjectShortName = DBGetData(SqlQueryString, QueryParameters).ToString();
+        //    return ProjectShortName;
+        //}
 
         public bool CreateProject(ProjectDTO project)
         {
@@ -76,15 +88,18 @@ namespace TrainingTask.ApplicationCore.DBManipulators
         protected override object DataParse(DataTable dataTable)
         {
             List<Project> Projects = new List<Project>();
-            foreach (DataRow dr in dataTable.Rows)
+            if (dataTable != null)
             {
-                Projects.Add(new Project
+                foreach (DataRow dr in dataTable.Rows)
                 {
-                    Id = dr.Field<int>("Id"),
-                    Name = dr.Field<string>("Name"),
-                    ShortName = dr.Field<string>("ShortName"),
-                    Description = dr.Field<string>("Description"),
-                });
+                    Projects.Add(new Project
+                    {
+                        Id = dr.Field<int>("Id"),
+                        Name = dr.Field<string>("Name"),
+                        ShortName = dr.Field<string>("ShortName"),
+                        Description = dr.Field<string>("Description"),
+                    });
+                }
             }
             return Projects;
         }

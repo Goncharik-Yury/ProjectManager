@@ -12,6 +12,8 @@ namespace TrainingTask.ApplicationCore.DBManipulators
     public class ProjectTaskDBManipulator : DBManipulator
     {
         EmployeeDBManipulator EmployeeDBManipulator = new EmployeeDBManipulator();
+
+        ProjectDBManipulator ProjectDBManipulator = new ProjectDBManipulator();
         public List<ProjectTaskDTO> GetAllProjectTasksList()
         {
             string SqlQueryString = "SELECT * FROM ProjectTask";
@@ -36,7 +38,7 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             {
                 new SqlParameter("@ProjectId", projectId)
             };
-            
+
 
             return GetProjectTaskDTOList(SqlQueryString, QueryParameters);
         }
@@ -47,10 +49,15 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             var ProjectTasksListDTO = DTOConverter.ProjectTaskToDTO(ProjectTasksList);
             ProjectTasksListDTO.ForEach(pt =>
             {
-                var EmployeesVM = EmployeeDBManipulator.GetEmployeeById(pt.Id);
-                if (EmployeesVM.Count > 0)
+                if (pt?.EmployeeId != null)
                 {
-                    pt.EmloyeeFullName = $"{EmployeesVM[0].LastName} {EmployeesVM[0].FirstName} {EmployeesVM[0].Patronymic}";
+                    List<EmployeeDTO> EmployeesDTO = EmployeeDBManipulator.GetEmployeeById((int)pt?.EmployeeId);
+                    List<ProjectDTO> ProjectsDTO = ProjectDBManipulator.GetProjectById((int)pt?.ProjectId);
+                    if (EmployeesDTO.Count > 0)
+                    {
+                        pt.EmloyeeFullName = $"{EmployeesDTO[0].LastName} {EmployeesDTO[0].FirstName} {EmployeesDTO[0].Patronymic}";
+                        pt.ProjectShortName = ProjectsDTO[0].ShortName;
+                    }
                 }
             });
             return ProjectTasksListDTO;
@@ -58,7 +65,7 @@ namespace TrainingTask.ApplicationCore.DBManipulators
 
         public static bool CreateProjectTask(ProjectTaskDTO projectTask)
         {
-            string SqlQueryString = $"INSERT INTO ProjectTask (Name, TimeToComplete, BeginDate, EndDate, Status, ProjectId) VALUES (@Name, @TimeToComplete, @BeginDate, @EndDate, @Status, @ProjectId)";
+            string SqlQueryString = $"INSERT INTO ProjectTask (Name, TimeToComplete, BeginDate, EndDate, Status, ProjectId, EmployeeId) VALUES (@Name, @TimeToComplete, @BeginDate, @EndDate, @Status, @ProjectId, @EmployeeId)";
             List<SqlParameter> QueryParameters = new List<SqlParameter>
             {
                 new SqlParameter("@Name", projectTask.Name),
@@ -66,7 +73,8 @@ namespace TrainingTask.ApplicationCore.DBManipulators
                 new SqlParameter("@BeginDate", projectTask.BeginDate),
                 new SqlParameter("@EndDate", projectTask.EndDate),
                 new SqlParameter("@Status", projectTask.Status),
-                new SqlParameter("@ProjectId", projectTask.ProjectId)
+                new SqlParameter("@ProjectId", projectTask.ProjectId),
+                new SqlParameter("@EmployeeId", projectTask.EmployeeId)
             };
             DBDoAction(SqlQueryString, QueryParameters);
             return true;
@@ -85,15 +93,17 @@ namespace TrainingTask.ApplicationCore.DBManipulators
 
         public static bool EditProjectTask(int id, ProjectTaskDTO projectTask)
         {
-            string SqlQueryString = $"UPDATE ProjectTask SET Name = @Name, TimeToComplete = @TimeToComplete, BeginDate = @BeginDate, EndDate = @EndDate, Status = @Status WHERE Id = @Id";
+            string SqlQueryString = $"UPDATE ProjectTask SET Name = @Name, TimeToComplete = @TimeToComplete, BeginDate = @BeginDate, EndDate = @EndDate, Status = @Status, EmployeeId = @EmployeeId, @ProjectId = ProjectId WHERE Id = @Id";
             List<SqlParameter> QueryParameters = new List<SqlParameter>
             {
+                new SqlParameter("@Id", id),
                 new SqlParameter("@Name", projectTask.Name),
                 new SqlParameter("@TimeToComplete", projectTask.TimeToComplete),
                 new SqlParameter("@BeginDate", projectTask.BeginDate),
                 new SqlParameter("@EndDate", projectTask.EndDate),
                 new SqlParameter("@Status", projectTask.Status),
-                new SqlParameter("@Id", id)
+                new SqlParameter("@ProjectId", projectTask.ProjectId),
+                new SqlParameter("@EmployeeId", projectTask.EmployeeId)
             };
             DBDoAction(SqlQueryString, QueryParameters);
             return true;

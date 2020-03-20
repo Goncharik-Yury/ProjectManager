@@ -31,27 +31,9 @@ namespace TrainingTask.Controllers
             return View(VMConverter.DTOtoVM(dbManipulator.GetEmployeesList()));
         }
 
-        //public ActionResult Create(int id = -1)
-        //{
-        //    Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-        //    if (id < 0)
-        //    {
-        //        ViewBag.IsCreateNotEdit = true;
-        //        return View();
-        //    }
-        //    else
-        //    {
-        //        ViewBag.IsCreateNotEdit = false;
-        //        EmployeeVM model = ViewModelsConverter.DTOtoVM(dbManipulator.GetEmployeeById(id))[0];
-        //        return View(model);
-        //    }
-        //}
-
         public ActionResult CreateOrEdit(int id = -1)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-
-            ViewBag.ska = "skaka";
 
             if (id < 0)
             {
@@ -102,6 +84,7 @@ namespace TrainingTask.Controllers
             {
                 Logger.LogTrace("Logging error occured");
                 Logger.LogError(ex.Message);
+                return View("Error");
             }
             Logger.LogTrace("Redirecting to action");
             return RedirectToAction(nameof(Index));
@@ -119,6 +102,7 @@ namespace TrainingTask.Controllers
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
+                return View("Error");
             }
             return RedirectToAction(nameof(Index));
         }

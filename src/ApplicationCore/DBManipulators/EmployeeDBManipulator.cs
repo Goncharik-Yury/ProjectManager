@@ -30,18 +30,6 @@ namespace TrainingTask.ApplicationCore.DBManipulators
             return DTOConverter.EmployeeToDTO(Employees);
         }
 
-        // TODO: ? remove this method
-        public List<EmployeeDTO> GetEmployeeByProjectTaskId(int projectTaskIdId)
-        {
-            string SqlQueryString = $"SELECT * FROM Employee where ProjectTaskId = @ProjectTaskId";
-
-            List<SqlParameter> QueryParameters = new List<SqlParameter>
-            {
-                new SqlParameter("@ProjectTaskId", projectTaskIdId)
-            };
-            return DTOConverter.EmployeeToDTO((List<Employee>)DBGetData(SqlQueryString, QueryParameters));
-        }
-
         public static bool CreateEmployee(EmployeeDTO employee)
         {
             string SqlQueryString = $"INSERT INTO Employee (LastName, FirstName, Patronymic , Position) VALUES (@LastName, @FirstName, @Patronymic, @Position)";
