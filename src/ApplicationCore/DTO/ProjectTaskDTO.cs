@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace TrainingTask.ApplicationCore.DTO
+namespace TrainingTask.ApplicationCore.Dto
 {
-    public class ProjectTaskDTO
+    public class ProjectTaskDto
     {
         public int Id { get; set; }
         public string ProjectShortName { get; set; }
@@ -10,7 +10,7 @@ namespace TrainingTask.ApplicationCore.DTO
         public int? TimeToComplete { get; set; }
         public DateTime? BeginDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public string EmloyeeFullName { get; set; }
+        public string EmployeeFullName { get; set; }
         public string Status { get; set; }
         public int ProjectId { get; set; }
         public int? EmployeeId { get; set; }

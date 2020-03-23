@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace TrainingTask.Web.ViewModels
 {
-    public class ProjectAllVM
+    public class ProjectAllVm
     {
-        public List<ProjectVM> Projects { get; set; }
-        public List<ProjectTaskVM> ProjectTasks { get; set; }
-        //public List<EmployeeVM> Employees { get; set; }
+        public ProjectVm Projects { get; set; }
+        public List<ProjectTaskVm> ProjectTasks { get; set; }
+        //public List<EmployeeVm> Employees { get; set; }
     }
 }

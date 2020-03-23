@@ -1,5 +1,5 @@
-﻿@*@model List<ProjectVM>*@
-@model List<ProjectVM>
+﻿@*@model List<ProjectVm>*@
+@model List<ProjectVm>
 
 @{
     ViewData["Title"] = "Tasks main page";
@@ -25,7 +25,7 @@
                       @Html.DisplayNameFor(m => m[0].Description)
                   </th>
               </tr>
-              @foreach (ProjectVM Project in Model)
+              @foreach (ProjectVm Project in Model)
               {
 
                   <tr>

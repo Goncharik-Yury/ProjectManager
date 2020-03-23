@@ -4,15 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace TrainingTask.Infrastructure.Functional
+namespace TrainingTask.Infrastructure.DbOperators
 {
-    public abstract class DBManipulator
+    public class DbOperator : IDbOperator
     {
-        public object CustomQuery(string query)
-        {
-            return DBGetData(query);
-        }
-        private static string GetConnectionString()
+        public string GetConnectionString()
         {
             SqlConnectionStringBuilder builder =
             new SqlConnectionStringBuilder
@@ -24,9 +20,10 @@ namespace TrainingTask.Infrastructure.Functional
             };
 
             return builder.ToString();
+            return null; // TODO: write using appsettings.json
         }
 
-        protected static bool DBDoAction(string sqlQueryString, List<SqlParameter> queryParameters = null)
+        public bool ExecuteNonQuery(string sqlQueryString, List<SqlParameter> queryParameters = null)
         {
             using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
             {
@@ -55,7 +52,7 @@ namespace TrainingTask.Infrastructure.Functional
             return true;
         }
 
-        protected object DBGetData(string sqlQueryString, List<SqlParameter> queryParameters = null)
+        public DataTable GetData(string sqlQueryString, List<SqlParameter> queryParameters = null)
         {
             using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
             {
@@ -73,7 +70,7 @@ namespace TrainingTask.Infrastructure.Functional
                     DataTable DataTable = new DataTable();
 
                     new SqlDataAdapter(CommandToExecute).Fill(DataTable);
-                    return DataParse(DataTable);
+                    return DataTable;
                 }
                 catch (Exception ex)
                 {
@@ -82,6 +79,6 @@ namespace TrainingTask.Infrastructure.Functional
             }
         }
 
-        protected abstract object DataParse(DataTable dataTable);
+        //protected abstract IEnumerable<T> DataParse(DataTable dataTable);
     }
 }

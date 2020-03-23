@@ -1,7 +1,7 @@
 ﻿
-namespace TrainingTask.ApplicationCore.DTO
+namespace TrainingTask.ApplicationCore.Dto
 {
-    public class EmployeeDTO
+    public class EmployeeDto
     {
         public int Id { get; set; }
         public string LastName { get; set; }

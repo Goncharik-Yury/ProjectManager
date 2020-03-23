@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace TrainingTask.Web.ViewModels
 {
-    public class ProjectTaskVM
+    public class ProjectTaskVm
     {
         public int Id { get; set; }
         public string ProjectShortName { get; set; }

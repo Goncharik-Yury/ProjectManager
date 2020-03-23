@@ -4,36 +4,39 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
-using TrainingTask.ApplicationCore.DBManipulators;
-using TrainingTask.ApplicationCore.DTO;
-using TrainingTask.ApplicationCore.Validators;
-using TrainingTask.Web.Converters;
+using TrainingTask.ApplicationCore.Dto;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using ApplicationCore.Repository;
+using TrainingTask.Web.Converters;
 
 namespace TrainingTask.Controllers
 {
     public class ProjectController : Controller
     {
         private ILogger Logger;
-        public ProjectController(ILogger fileLogger)
+        readonly IRepositoryService<ProjectDto> ProjectRepositoryService;
+        readonly IProjectTaskRepositoryService<ProjectTaskDto> ProjectTaskRepositoryService;
+        readonly IConvertWeb<ProjectVm, ProjectDto> ProjectConverter;
+        readonly IConvertWeb<ProjectTaskVm, ProjectTaskDto> ProjectTaskConverter;
+
+        public ProjectController(ILogger logger, IConvertWeb<ProjectVm, ProjectDto> projectConverter, IConvertWeb<ProjectTaskVm, ProjectTaskDto> projectTaskConverter)
         {
-            Logger = fileLogger;
+            Logger = logger;
+            ProjectConverter = projectConverter;
+            ProjectTaskConverter = projectTaskConverter;
+
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+
+            ProjectRepositoryService = new ProjectRepositoryService();
+            ProjectTaskRepositoryService = new ProjectTaskRepositoryService();
         }
-        //readonly DBManipulatorFacade DbManipulator = new DBManipulatorFacade();
-        readonly ProjectDBManipulator ProjectDbManipulator = new ProjectDBManipulator();
-        readonly ProjectTaskDBManipulator ProjectTaskDbManipulator = new ProjectTaskDBManipulator();
-        readonly EmployeeDBManipulator EmployeeDbManipulator = new EmployeeDBManipulator();
 
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
 
-            List<ProjectVM> Projects = VMConverter.DTOtoVM(ProjectDbManipulator.GetProjectsList());
-            //var ProjectTasks = VMConverter.DTOtoVM(ProjectTaskDbManipulator.GetAllProjectTasksList());
-
-            //var ProjectAndTaskVM = GetProjectVM(Projects, ProjectTasks);
+            List<ProjectVm> Projects = ProjectConverter.ConvertAll(ProjectRepositoryService.GetAll());
 
             return View(Projects);
         }
@@ -49,9 +52,9 @@ namespace TrainingTask.Controllers
             else
             {
                 ViewBag.IsCreateNotEdit = "false";
-                var ProjectVM = VMConverter.DTOtoVM(ProjectDbManipulator.GetProjectById(id));
-                var ProjectTasksVM = VMConverter.DTOtoVM(ProjectTaskDbManipulator.GetProjectTasksByProjectId(id));
-                ProjectAllVM model = GetProjectVM(ProjectVM, ProjectTasksVM);
+                ProjectVm ProjectVm = ProjectConverter.Convert(ProjectRepositoryService.GetSingle(id));
+                List<ProjectTaskVm> ProjectTasksVm = ProjectTaskConverter.ConvertAll(ProjectTaskRepositoryService.GetAllByProjectId(ProjectVm.Id));// Получать нужные таски
+                ProjectAllVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);
 
                 return View(model);
             }
@@ -59,29 +62,28 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(ProjectAllVM projectAll, bool IsCreateNotEdit = false)
+        public ActionResult CreateOrEdit(ProjectAllVm projectAllVm, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                if (projectAll.Projects[0] == null)
+                if (projectAllVm.Projects == null)
                     throw new NullReferenceException();
-                ProjectValidate(projectAll.Projects[0]);
                 if (ModelState.IsValid)
                 {
-                    ProjectDTO projectDTO = VMConverter.VMToDTO(projectAll.Projects[0]);
+                    ProjectDto projectDto = ProjectConverter.Convert(projectAllVm.Projects);
                     if (IsCreateNotEdit)
                     {
-                        ProjectDbManipulator.CreateProject(projectDTO);
+                        ProjectRepositoryService.Create(projectDto);
                     }
                     else
                     {
-                        ProjectDbManipulator.EditProject(projectAll.Projects[0].Id, projectDTO);
+                        ProjectRepositoryService.Update(projectDto);
                     }
                 }
                 else
                 {
-                    return View(projectAll);
+                    return View(projectAllVm);
                 }
             }
             catch (Exception ex)
@@ -99,7 +101,7 @@ namespace TrainingTask.Controllers
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                ProjectDbManipulator.DeleteProject(id);
+                ProjectRepositoryService.Delete(id);
             }
             catch (Exception ex)
             {
@@ -109,47 +111,15 @@ namespace TrainingTask.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private void ProjectValidate(ProjectVM project)
+        private ProjectAllVm ComposeProjectVm(ProjectVm projectsVm, List<ProjectTaskVm> projectTasksVm)
         {
-            const string TooLongString = "Too long";
-            const string InvalidValue = "Invalid value";
-            const int MaxLength = 50;
-
-            if (!Validator.NameIsValid(project.Name))
+            ProjectAllVm ProjectAndTask = new ProjectAllVm()
             {
-                ModelState.AddModelError("Name", InvalidValue);
-            }
-            if (!Validator.LengthIsValid(project.Name, MaxLength))
-            {
-                ModelState.AddModelError("Name", TooLongString);
-            }
-            if (!Validator.NameIsValid(project.ShortName))
-            {
-                ModelState.AddModelError("ShortName", InvalidValue);
-            }
-        }
-
-        private ProjectAllVM GetProjectVM(List<ProjectVM> projectsVM, List<ProjectTaskVM> projectTasksVM)
-        {
-            ProjectAllVM ProjectAndTask = new ProjectAllVM()
-            {
-                Projects = projectsVM,
-                ProjectTasks = projectTasksVM
+                Projects = projectsVm,
+                ProjectTasks = projectTasksVm
             };
 
             return ProjectAndTask;
         }
-
-        //private ProjectVMWithRelations GetProjectVMWithRelations(int projectId)
-        //{
-        //    ProjectVMWithRelations model = new ProjectVMWithRelations {
-        //        Project = VMConverter.DTOtoVMList(ProjectDbManipulator.GetProjectById(projectId))[0],
-        //        ProjectTasks = new List<ProjectTaskVMWithRelations>().Add(
-        //            VMConverter.DTOtoVM(ProjectTaskDbManipulator.GetProjectTasksByProjectId(projectId)))
-
-
-        //    }
-        //    return model; // TODO: change
-        //}
     }
 }

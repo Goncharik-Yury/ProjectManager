@@ -4,31 +4,37 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
-using TrainingTask.ApplicationCore.DBManipulators;
-using TrainingTask.ApplicationCore.Validators;
 using TrainingTask.Web.Converters;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using Microsoft.Extensions.Primitives;
+using ApplicationCore.Repository;
+using TrainingTask.ApplicationCore.Dto;
 
 namespace TrainingTask.Controllers
 {
     public class EmployeeController : Controller
     {
-
-        readonly EmployeeDBManipulator dbManipulator = new EmployeeDBManipulator();
-
         private ILogger Logger;
-        public EmployeeController(ILogger logger)
+        readonly IRepositoryService<EmployeeDto> EmployeeRepositoryService;
+        readonly IConvertWeb<EmployeeVm, EmployeeDto> EmployeeConverter;
+        public EmployeeController(ILogger logger, IConvertWeb<EmployeeVm, EmployeeDto> EmployeeConverter)
         {
             Logger = logger;
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            Logger.LogDebug($"Employee controller is created");
+            EmployeeRepositoryService = new EmployeeRepositoryService();
+            this.EmployeeConverter = EmployeeConverter;
         }
 
         public ActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            return View(VMConverter.DTOtoVM(dbManipulator.GetEmployeesList()));
+            List<EmployeeDto> EmployeesDto = EmployeeRepositoryService.GetAll();
+            List<EmployeeVm> EmployeesVm = new List<EmployeeVm>();
+            foreach (var item in EmployeesDto)
+            {
+                EmployeesVm.Add(EmployeeConverter.Convert(item));
+            }
+            return View(EmployeesVm);
         }
 
         public ActionResult CreateOrEdit(int id = -1)
@@ -43,50 +49,41 @@ namespace TrainingTask.Controllers
             else
             {
                 ViewBag.IsCreateNotEdit = "false";
-                EmployeeVM model = VMConverter.DTOtoVM(dbManipulator.GetEmployeeById(id))[0];
+                EmployeeVm model = EmployeeConverter.Convert(EmployeeRepositoryService.GetSingle(id));
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(EmployeeVM employee, bool IsCreateNotEdit = false)
+        public ActionResult CreateOrEdit(EmployeeVm employee, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                Logger.LogTrace("Checking for employee is not null");
                 if (employee == null)
                     throw new NullReferenceException();
-                Logger.LogTrace("Running validation");
-                //EmployeeValidate(employee); // TODO: Comment on testing
-                Logger.LogTrace("Checking if ModelState IsValid");
                 if (ModelState.IsValid)
                 {
                     if (IsCreateNotEdit)
                     {
-                        Logger.LogTrace("Create employee in database");
-                        EmployeeDBManipulator.CreateEmployee(VMConverter.VMToDTO(employee));
+                        EmployeeRepositoryService.Create(EmployeeConverter.Convert(employee));
                     }
                     else
                     {
-                        Logger.LogTrace("Edit employee in database");
-                        EmployeeDBManipulator.EditEmployee(employee.Id, VMConverter.VMToDTO(employee));
+                        EmployeeRepositoryService.Update(EmployeeConverter.Convert(employee));
                     }
                 }
                 else
                 {
-                    Logger.LogTrace("returning last page to fix the issues");
                     return View(employee);
                 }
             }
             catch (Exception ex)
             {
-                Logger.LogTrace("Logging error occured");
                 Logger.LogError(ex.Message);
                 return View("Error");
             }
-            Logger.LogTrace("Redirecting to action");
             return RedirectToAction(nameof(Index));
         }
 
@@ -97,7 +94,7 @@ namespace TrainingTask.Controllers
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
-                EmployeeDBManipulator.DeleteEmployee(id);
+                EmployeeRepositoryService.Delete(id);
             }
             catch (Exception ex)
             {
@@ -106,32 +103,6 @@ namespace TrainingTask.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
-        private void EmployeeValidate(EmployeeVM employee)
-        {
-            const string TooLongString = "Too long";
-            const string InvalidValue = "Invalid value";
-            const int MaxLength = 50;
-            Logger.LogTrace("Checking employee.LastName is valid value");
-            if (!Validator.NameIsValid(employee.LastName))
-            {
-                ModelState.AddModelError("LastName", InvalidValue);
-            }
-            Logger.LogTrace("Checking employee.LastName is valid length");
-            if (!Validator.LengthIsValid(employee.LastName, MaxLength))
-            {
-                ModelState.AddModelError("LastName", TooLongString);
-            }
-            Logger.LogTrace("Checking employee.FirstName is valid value");
-            if (!Validator.NameIsValid(employee.FirstName))
-            {
-                ModelState.AddModelError("FirstName", InvalidValue);
-            }
-            Logger.LogTrace("Checking employee.FirstName is valid length");
-            if (!Validator.LengthIsValid(employee.FirstName, MaxLength))
-            {
-                ModelState.AddModelError("FirstName", TooLongString);
-            }
-        }
     }
+
 }
