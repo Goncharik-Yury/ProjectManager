@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
 using TrainingTask.ApplicationCore.Dto;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using ApplicationCore.Repository;
-using TrainingTask.Web.Converters;
+using TrainingTask.ApplicationCore.Repository;
+using TrainingTask.Common;
 
 namespace TrainingTask.Controllers
 {
@@ -17,31 +15,40 @@ namespace TrainingTask.Controllers
         private ILogger Logger;
         readonly IRepositoryService<ProjectDto> ProjectRepositoryService;
         readonly IProjectTaskRepositoryService<ProjectTaskDto> ProjectTaskRepositoryService;
-        readonly IConvertWeb<ProjectVm, ProjectDto> ProjectConverter;
-        readonly IConvertWeb<ProjectTaskVm, ProjectTaskDto> ProjectTaskConverter;
+        readonly IConvert<ProjectVm, ProjectDto> ConvertToProjectDto;
+        readonly IConvert<ProjectDto, ProjectVm> ConvertToProjectVm;
+        readonly IConvert<ProjectTaskVm, ProjectTaskDto> ConvertToProjectTaskDto;
+        readonly IConvert<ProjectTaskDto, ProjectTaskVm> ConvertToProjectTaskVm;
 
-        public ProjectController(ILogger logger, IConvertWeb<ProjectVm, ProjectDto> projectConverter, IConvertWeb<ProjectTaskVm, ProjectTaskDto> projectTaskConverter)
+        public ProjectController(ILogger logger, IRepositoryService<ProjectDto> projectRepositoryService,
+            IProjectTaskRepositoryService<ProjectTaskDto> projectTaskRepositoryService,
+            IConvert<ProjectVm, ProjectDto> convertToProjectDto,
+            IConvert<ProjectDto, ProjectVm> convertToProjectVm,
+            IConvert<ProjectTaskVm, ProjectTaskDto> convertToProjectTaskDto,
+            IConvert<ProjectTaskDto, ProjectTaskVm> convertToProjectTaskVm
+            )
         {
             Logger = logger;
-            ProjectConverter = projectConverter;
-            ProjectTaskConverter = projectTaskConverter;
 
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            ProjectRepositoryService = projectRepositoryService;
+            ProjectTaskRepositoryService = projectTaskRepositoryService;
 
-            ProjectRepositoryService = new ProjectRepositoryService();
-            ProjectTaskRepositoryService = new ProjectTaskRepositoryService();
+            ConvertToProjectDto = convertToProjectDto;
+            ConvertToProjectVm = convertToProjectVm;
+            ConvertToProjectTaskDto = convertToProjectTaskDto;
+            ConvertToProjectTaskVm = convertToProjectTaskVm;
         }
 
-        public ActionResult Index()
+        public IActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
 
-            List<ProjectVm> Projects = ProjectConverter.ConvertAll(ProjectRepositoryService.GetAll());
+            IList<ProjectVm> Projects = ConvertToProjectVm.ConvertAll(ProjectRepositoryService.GetAll());
 
             return View(Projects);
         }
 
-        public ActionResult CreateOrEdit(int id = -1)
+        public IActionResult CreateOrEdit(int id = -1)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             if (id < 0)
@@ -52,8 +59,8 @@ namespace TrainingTask.Controllers
             else
             {
                 ViewBag.IsCreateNotEdit = "false";
-                ProjectVm ProjectVm = ProjectConverter.Convert(ProjectRepositoryService.GetSingle(id));
-                List<ProjectTaskVm> ProjectTasksVm = ProjectTaskConverter.ConvertAll(ProjectTaskRepositoryService.GetAllByProjectId(ProjectVm.Id));// Получать нужные таски
+                ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectRepositoryService.GetSingle(id));
+                IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.ConvertAll(ProjectTaskRepositoryService.GetAllByProjectId(ProjectVm.Id));
                 ProjectAllVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);
 
                 return View(model);
@@ -62,7 +69,7 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(ProjectAllVm projectAllVm, bool IsCreateNotEdit = false)
+        public IActionResult CreateOrEdit(ProjectAllVm projectAllVm, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -71,7 +78,7 @@ namespace TrainingTask.Controllers
                     throw new NullReferenceException();
                 if (ModelState.IsValid)
                 {
-                    ProjectDto projectDto = ProjectConverter.Convert(projectAllVm.Projects);
+                    ProjectDto projectDto = ConvertToProjectDto.Convert(projectAllVm.Projects);
                     if (IsCreateNotEdit)
                     {
                         ProjectRepositoryService.Create(projectDto);
@@ -96,7 +103,7 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -111,7 +118,7 @@ namespace TrainingTask.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private ProjectAllVm ComposeProjectVm(ProjectVm projectsVm, List<ProjectTaskVm> projectTasksVm)
+        private ProjectAllVm ComposeProjectVm(ProjectVm projectsVm, IList<ProjectTaskVm> projectTasksVm)
         {
             ProjectAllVm ProjectAndTask = new ProjectAllVm()
             {

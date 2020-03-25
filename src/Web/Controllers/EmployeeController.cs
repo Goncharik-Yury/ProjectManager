@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
-using TrainingTask.Web.Converters;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using ApplicationCore.Repository;
+using TrainingTask.ApplicationCore.Repository;
 using TrainingTask.ApplicationCore.Dto;
+using TrainingTask.Common;
 
 namespace TrainingTask.Controllers
 {
@@ -16,47 +15,50 @@ namespace TrainingTask.Controllers
     {
         private ILogger Logger;
         readonly IRepositoryService<EmployeeDto> EmployeeRepositoryService;
-        readonly IConvertWeb<EmployeeVm, EmployeeDto> EmployeeConverter;
-        public EmployeeController(ILogger logger, IConvertWeb<EmployeeVm, EmployeeDto> EmployeeConverter)
+        readonly IConvert<EmployeeVm, EmployeeDto> ConvertToEmployeeDto;
+        readonly IConvert<EmployeeDto, EmployeeVm> ConvertToEmployeeVm;
+        public EmployeeController(ILogger logger, IRepositoryService<EmployeeDto> employeeRepositoryService,
+            IConvert<EmployeeVm, EmployeeDto> convertToEmployeeDto,
+            IConvert<EmployeeDto, EmployeeVm> convertToEmployeeVm
+            )
         {
             Logger = logger;
-            Logger.LogDebug($"Employee controller is created");
-            EmployeeRepositoryService = new EmployeeRepositoryService();
-            this.EmployeeConverter = EmployeeConverter;
+
+            EmployeeRepositoryService = employeeRepositoryService;
+            ConvertToEmployeeDto = convertToEmployeeDto;
+            ConvertToEmployeeVm = convertToEmployeeVm;
         }
 
-        public ActionResult Index()
+        public IActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            List<EmployeeDto> EmployeesDto = EmployeeRepositoryService.GetAll();
+            IList<EmployeeDto> EmployeesDto = EmployeeRepositoryService.GetAll();
             List<EmployeeVm> EmployeesVm = new List<EmployeeVm>();
             foreach (var item in EmployeesDto)
             {
-                EmployeesVm.Add(EmployeeConverter.Convert(item));
+                EmployeesVm.Add(ConvertToEmployeeVm.Convert(item));
             }
             return View(EmployeesVm);
         }
 
-        public ActionResult CreateOrEdit(int id = -1)
+        public IActionResult Create()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            return View();
+        }
 
-            if (id < 0)
-            {
-                ViewBag.IsCreateNotEdit = "true";
-                return View();
-            }
-            else
-            {
-                ViewBag.IsCreateNotEdit = "false";
-                EmployeeVm model = EmployeeConverter.Convert(EmployeeRepositoryService.GetSingle(id));
-                return View(model);
-            }
+        public IActionResult Edit(int id)
+        {
+            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            ViewBag.IsCreateNotEdit = "false";
+            EmployeeDto EmployeeDto = EmployeeRepositoryService.GetSingle(id);
+            EmployeeVm model = ConvertToEmployeeVm.Convert(EmployeeDto);
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(EmployeeVm employee, bool IsCreateNotEdit = false)
+        public IActionResult CreateOrEdit(EmployeeVm employee, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -67,11 +69,11 @@ namespace TrainingTask.Controllers
                 {
                     if (IsCreateNotEdit)
                     {
-                        EmployeeRepositoryService.Create(EmployeeConverter.Convert(employee));
+                        EmployeeRepositoryService.Create(ConvertToEmployeeDto.Convert(employee));
                     }
                     else
                     {
-                        EmployeeRepositoryService.Update(EmployeeConverter.Convert(employee));
+                        EmployeeRepositoryService.Update(ConvertToEmployeeDto.Convert(employee));
                     }
                 }
                 else
@@ -89,7 +91,7 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(int id)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -101,6 +103,7 @@ namespace TrainingTask.Controllers
                 Logger.LogError(ex.Message);
                 return View("Error");
             }
+            // IActionResult
             return RedirectToAction(nameof(Index));
         }
     }

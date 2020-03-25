@@ -1,47 +1,55 @@
-﻿using ApplicationCore.Converters;
+﻿using TrainingTask.ApplicationCore.Converters;
 using System;
 using System.Collections.Generic;
 using TrainingTask.ApplicationCore.Dto;
+using TrainingTask.Common;
 using TrainingTask.Infrastructure.Models;
 using TrainingTask.Infrastructure.Repositories;
 
-namespace ApplicationCore.Repository
+namespace TrainingTask.ApplicationCore.Repository
 {
     public class ProjectTaskRepositoryService : IProjectTaskRepositoryService<ProjectTaskDto>
     {
-        IProjectTaskRepository<ProjectTask> Repository;
-        IConvertBll<ProjectTask, ProjectTaskDto> Converter;
+        IProjectTaskRepository<ProjectTask> ProjectTaskRepository;
+        IRepositoryService<ProjectDto> ProjectRepositoryService;
+        IRepositoryService<EmployeeDto> EmployeeRepositoryService;
 
-        ProjectRepositoryService ProjectRepositoryService;
-        EmployeeRepositoryService EmployeeRepositoryService;
+        IConvert<ProjectTask, ProjectTaskDto> ProjectTaskDtoConverter;
+        IConvert<ProjectTaskDto, ProjectTask> ProjectTaskConverter;
 
-        public ProjectTaskRepositoryService()
+        public ProjectTaskRepositoryService(IRepositoryService<ProjectDto> projectRepositoryService, 
+            IRepositoryService<EmployeeDto> employeeRepositoryService,
+            IProjectTaskRepository<ProjectTask> projectTaskRepository,
+            IConvert<ProjectTask, ProjectTaskDto> projectTaskDtoConverter,
+            IConvert<ProjectTaskDto, ProjectTask> projectTaskConverter
+            )
         {
-            Repository = new ProjectTaskRepository();
-            Converter = new ProjectTaskBloConverter();
+            ProjectTaskRepository = projectTaskRepository;
+            ProjectRepositoryService = projectRepositoryService;
+            EmployeeRepositoryService = employeeRepositoryService;
 
-            ProjectRepositoryService = new ProjectRepositoryService();
-            EmployeeRepositoryService = new EmployeeRepositoryService();
+            ProjectTaskDtoConverter = projectTaskDtoConverter;
+            ProjectTaskConverter = projectTaskConverter;
         }
 
         public void Create(ProjectTaskDto item)
         {
-            ProjectTask ProjectTask = Converter.Convert(item);
-            Repository.Create(ProjectTask);
+            ProjectTask ProjectTask = ProjectTaskConverter.Convert(item);
+            ProjectTaskRepository.Create(ProjectTask);
         }
 
         public void Delete(int id)
         {
-            Repository.Delete(id);
+            ProjectTaskRepository.Delete(id);
         }
 
-        public List<ProjectTaskDto> GetAll()
+        public IList<ProjectTaskDto> GetAll()
         {
-            List<ProjectTask> ProjectTasks = Repository.GetAll();
+            IList<ProjectTask> ProjectTasks = ProjectTaskRepository.GetAll();
             List<ProjectTaskDto> ProjectTasksDto = new List<ProjectTaskDto>();
             foreach (var item in ProjectTasks)
             {
-                ProjectTasksDto.Add(Converter.Convert(item));
+                ProjectTasksDto.Add(ProjectTaskDtoConverter.Convert(item));
             }
 
             foreach (var item in ProjectTasksDto)
@@ -55,8 +63,8 @@ namespace ApplicationCore.Repository
 
         public ProjectTaskDto GetSingle(int id)
         {
-            ProjectTask ProjectTask = Repository.GetSingle(id);
-            ProjectTaskDto ProjectTaskDto = Converter.Convert(ProjectTask);
+            ProjectTask ProjectTask = ProjectTaskRepository.GetSingle(id);
+            ProjectTaskDto ProjectTaskDto = ProjectTaskDtoConverter.Convert(ProjectTask);
             ProjectTaskDto.ProjectShortName = GetProjectShortName(ProjectTaskDto.ProjectId);
             ProjectTaskDto.EmployeeFullName = GetEmployeeFullName(ProjectTaskDto.EmployeeId);
 
@@ -65,8 +73,8 @@ namespace ApplicationCore.Repository
 
         public void Update(ProjectTaskDto item)
         {
-            ProjectTask ProjectTask = Converter.Convert(item);
-            Repository.Update(ProjectTask);
+            ProjectTask ProjectTask = ProjectTaskConverter.Convert(item);
+            ProjectTaskRepository.Update(ProjectTask);
         }
 
         private string GetProjectShortName(int id)
@@ -83,10 +91,10 @@ namespace ApplicationCore.Repository
             return EmployeeFullName;
         }
 
-        public List<ProjectTaskDto> GetAllByProjectId(int id)
+        public IList<ProjectTaskDto> GetAllByProjectId(int id)
         {
-            List<ProjectTask> ProjectTask = Repository.GetAllByProjectId(id);
-            return Converter.ConvertList(ProjectTask);
+            IList<ProjectTask> ProjectTask = ProjectTaskRepository.GetAllByProjectId(id);
+            return ProjectTaskDtoConverter.ConvertAll(ProjectTask);
         }
     }
 }

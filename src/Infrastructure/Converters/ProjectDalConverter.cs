@@ -13,7 +13,7 @@ namespace TrainingTask.Infrastructure.Converters
             throw new NotImplementedException();
         }
 
-        public List<Project> ConvertAll(DataTable items)
+        public IList<Project> ConvertAll(DataTable items)
         {
             List<Project> Projects = new List<Project>();
             int q = items.Rows.Count;

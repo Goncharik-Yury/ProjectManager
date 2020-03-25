@@ -1,49 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
 using TrainingTask.ApplicationCore.Dto;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TrainingTask.Web.Converters;
-using ApplicationCore.Repository;
+using TrainingTask.ApplicationCore.Repository;
+using TrainingTask.Common;
 
 namespace TrainingTask.Controllers
 {
     public class ProjectTaskController : Controller
     {
         private ILogger Logger;
-        IRepositoryService<ProjectTaskDto> ProjectTaskRepositoryService;
+        IProjectTaskRepositoryService<ProjectTaskDto> ProjectTaskRepositoryService;
         IRepositoryService<ProjectDto> ProjectRepositoryService;
         IRepositoryService<EmployeeDto> EmployeeRepositoryService;
 
-        IConvertWeb<ProjectTaskVm, ProjectTaskDto> ProjectTaskConverter;
+        readonly IConvert<ProjectTaskVm, ProjectTaskDto> ConvertToProjectTaskDto;
+        readonly IConvert<ProjectTaskDto, ProjectTaskVm> ConvertToProjectTaskVm;
 
         string[] ProjectTaskStatuses = { "NotStarted", "InProcess", "Completed", "Delayed" };
 
-        public ProjectTaskController(ILogger logger, IConvertWeb<ProjectTaskVm, ProjectTaskDto> projectTaskConverter)
+        public ProjectTaskController(
+            ILogger logger,
+            IProjectTaskRepositoryService<ProjectTaskDto> projectTaskRepositoryService,
+            IRepositoryService<ProjectDto> projectRepositoryService,
+            IRepositoryService<EmployeeDto> employeeRepositoryService,
+        IConvert<ProjectTaskVm, ProjectTaskDto> convertToProjectTaskDto,
+            IConvert<ProjectTaskDto, ProjectTaskVm> convertToProjectTaskVm
+            )
         {
             Logger = logger;
-            ProjectTaskConverter = projectTaskConverter;
 
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            ProjectTaskRepositoryService = projectTaskRepositoryService;
+            ProjectRepositoryService = projectRepositoryService;
+            EmployeeRepositoryService = employeeRepositoryService;
 
-            ProjectTaskRepositoryService = new ProjectTaskRepositoryService();
-            ProjectRepositoryService = new ProjectRepositoryService();
-            EmployeeRepositoryService = new EmployeeRepositoryService();
+            ConvertToProjectTaskDto = convertToProjectTaskDto;
+            ConvertToProjectTaskVm = convertToProjectTaskVm;
         }
 
-        public ActionResult Index()
+        public IActionResult Index()
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            List<ProjectTaskVm> ProjectTasksVm = ProjectTaskConverter.ConvertAll(ProjectTaskRepositoryService.GetAll());
+            IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.ConvertAll(ProjectTaskRepositoryService.GetAll());
             return View(ProjectTasksVm);
         }
 
-        public ActionResult CreateOrEdit(int id = -1)
+        public IActionResult CreateOrEdit(int id = -1)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
 
@@ -60,42 +66,42 @@ namespace TrainingTask.Controllers
             else
             {
                 ViewBag.IsCreateNotEdit = "false";
-                ProjectTaskVm model = ProjectTaskConverter.Convert(ProjectTaskRepositoryService.GetSingle(id));
+                ProjectTaskVm model = ConvertToProjectTaskVm.Convert(ProjectTaskRepositoryService.GetSingle(id));
                 return View(model);
             }
         }
         private void FillProjectSelectList()
         {
-            List<ProjectDto> ProjectsList = ProjectRepositoryService.GetAll();
+            IList<ProjectDto> ProjectsList = ProjectRepositoryService.GetAll();
             List<ProjectSelectListItem> ProjectSelectList = new List<ProjectSelectListItem>();
-            ProjectsList.ForEach(project =>
+            foreach (var item in ProjectsList)
             {
                 ProjectSelectList.Add(new ProjectSelectListItem
                 {
-                    Id = project.Id,
-                    ShortName = project.ShortName
+                    Id = item.Id,
+                    ShortName = item.ShortName
                 });
-            });
+            }
             ViewBag.ProjectSelectList = new SelectList(ProjectSelectList, "Id", "ShortName");
         }
         private void FillEmployeeSelectList()
         {
-            List<EmployeeDto> EmployeesList = EmployeeRepositoryService.GetAll();
+            IList<EmployeeDto> EmployeesList = EmployeeRepositoryService.GetAll();
             List<EmployeeSelectListItem> EmployeeSelectList = new List<EmployeeSelectListItem>();
-            EmployeesList.ForEach(employee =>
+            foreach (var item in EmployeesList)
             {
                 EmployeeSelectList.Add(new EmployeeSelectListItem
                 {
-                    Id = employee.Id,
-                    FullName = $"{employee.LastName} {employee.FirstName} {employee.Patronymic}"
+                    Id = item.Id,
+                    FullName = $"{item.LastName} {item.FirstName} {item.Patronymic}"
                 });
-            });
+            }
             ViewBag.EmployeeSelectList = new SelectList(EmployeeSelectList, "Id", "FullName");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrEdit(ProjectTaskVm projectTask, bool IsCreateNotEdit = false)
+        public IActionResult CreateOrEdit(ProjectTaskVm projectTask, bool IsCreateNotEdit = false)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
@@ -105,7 +111,7 @@ namespace TrainingTask.Controllers
                 ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
                 if (ModelState.IsValid)
                 {
-                    ProjectTaskDto projectTaskDto = ProjectTaskConverter.Convert(projectTask);
+                    ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTask);
                     if (IsCreateNotEdit)
                     {
                         ProjectTaskRepositoryService.Create(projectTaskDto);
@@ -133,7 +139,7 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try

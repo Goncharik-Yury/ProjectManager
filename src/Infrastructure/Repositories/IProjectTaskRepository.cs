@@ -6,6 +6,6 @@ namespace TrainingTask.Infrastructure.Repositories
 {
     public interface IProjectTaskRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        List<TEntity> GetAllByProjectId(int id);
+        IList<TEntity> GetAllByProjectId(int id);
     }
 }

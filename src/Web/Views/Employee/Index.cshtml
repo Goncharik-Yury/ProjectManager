@@ -50,7 +50,10 @@
                     <partial name="Buttons\_EditButtonPartial" , model="@employee.Id" />
                 </td>
                 <td class="col-sm-10">
-                    <partial name="Buttons\_DeleteButtonPartial" , model="@employee.Id" />
+                    <form asp-action="Delete" method="post">
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                        <input type="hidden" value="@employee.Id" name="id" />
+                    </form>
                 </td>
             </tr>
         }

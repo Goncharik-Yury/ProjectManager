@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ApplicationCore.Repository
+namespace TrainingTask.ApplicationCore.Repository
 {
     public interface IRepositoryService<TDto> where TDto : class
     {
-        List<TDto> GetAll();
+        IList<TDto> GetAll();
         TDto GetSingle(int id);
         void Create(TDto item);
         void Update(TDto item);

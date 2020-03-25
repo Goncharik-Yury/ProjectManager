@@ -8,7 +8,7 @@ namespace TrainingTask.Web.ViewModels
     public class ProjectAllVm
     {
         public ProjectVm Projects { get; set; }
-        public List<ProjectTaskVm> ProjectTasks { get; set; }
+        public IList<ProjectTaskVm> ProjectTasks { get; set; }
         //public List<EmployeeVm> Employees { get; set; }
     }
 }

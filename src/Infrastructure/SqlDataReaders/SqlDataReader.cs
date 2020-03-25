@@ -4,11 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace TrainingTask.Infrastructure.DbOperators
+namespace TrainingTask.Infrastructure.SqlDataReaders
 {
-    public class DbOperator : IDbOperator
+    public abstract class SqlDataReader<T> : ISqlDataReader<T>
     {
-        public string GetConnectionString()
+        public string GetConnectionString() // TODO: rewrite using appsettings.json
         {
             SqlConnectionStringBuilder builder =
             new SqlConnectionStringBuilder
@@ -20,10 +20,9 @@ namespace TrainingTask.Infrastructure.DbOperators
             };
 
             return builder.ToString();
-            return null; // TODO: write using appsettings.json
         }
 
-        public bool ExecuteNonQuery(string sqlQueryString, List<SqlParameter> queryParameters = null)
+        public void ExecuteNonQuery(string sqlQueryString, IList<SqlParameter> queryParameters = null)
         {
             using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
             {
@@ -46,13 +45,12 @@ namespace TrainingTask.Infrastructure.DbOperators
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    throw; // TODO: realize appropriate exception handling
                 }
             }
-            return true;
         }
 
-        public DataTable GetData(string sqlQueryString, List<SqlParameter> queryParameters = null)
+        public IList<T> GetData(string sqlQueryString, IList<SqlParameter> queryParameters = null)
         {
             using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
             {
@@ -69,16 +67,26 @@ namespace TrainingTask.Infrastructure.DbOperators
                     }
                     DataTable DataTable = new DataTable();
 
-                    new SqlDataAdapter(CommandToExecute).Fill(DataTable);
-                    return DataTable;
+                    SqlDataReader Reader = CommandToExecute.ExecuteReader();
+                    if (Reader.HasRows)
+                    {
+                        List<T> DataAll = new List<T>();
+                        while (Reader.Read())
+                        {
+                            DataAll.Add(DataParse(Reader));
+                        }
+                        Reader.Close();
+                        return DataAll;
+                    }
+                    return null;
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    throw; // TODO: realize correct
                 }
             }
         }
 
-        //protected abstract IEnumerable<T> DataParse(DataTable dataTable);
+        protected abstract T DataParse(SqlDataReader sqlDataReader);
     }
 }

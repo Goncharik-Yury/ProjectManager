@@ -1,56 +1,63 @@
-﻿using ApplicationCore.Converters;
+﻿using TrainingTask.ApplicationCore.Converters;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using TrainingTask.ApplicationCore.Dto;
+using TrainingTask.Common;
 using TrainingTask.Infrastructure.Models;
 using TrainingTask.Infrastructure.Repositories;
 
-namespace ApplicationCore.Repository
+namespace TrainingTask.ApplicationCore.Repository
 {
     public class EmployeeRepositoryService : IRepositoryService<EmployeeDto>
     {
-        IRepository<Employee> Repository;
-        IConvertBll<Employee, EmployeeDto> Converter;
-        public EmployeeRepositoryService()
+        IRepository<Employee> EmployeeRepository;
+        IConvert<Employee, EmployeeDto> EmployeeDtoConverter;
+        IConvert<EmployeeDto, Employee> EmployeeConverter;
+        public EmployeeRepositoryService(
+            IRepository<Employee> employeeRepository,
+        IConvert<Employee, EmployeeDto> employeeDtoConverter,
+        IConvert<EmployeeDto, Employee> employeeConverter
+            )
         {
-            Repository = new EmployeeRepository();
-            Converter = new EmployeeBloConverter();
+            EmployeeRepository = employeeRepository;
+            EmployeeDtoConverter = employeeDtoConverter;
+            EmployeeConverter = employeeConverter;
         }
 
         public void Create(EmployeeDto item)
         {
-            Employee Employee = Converter.Convert(item);
-            Repository.Create(Employee);
+            Employee Employee = EmployeeConverter.Convert(item);
+            EmployeeRepository.Create(Employee);
         }
 
         public void Delete(int id)
         {
-            Repository.Delete(id);
+            EmployeeRepository.Delete(id);
         }
 
         public EmployeeDto GetSingle(int id)
         {
-            Employee Employee = Repository.GetSingle(id);
-            EmployeeDto EmployeeDto = Converter.Convert(Employee);
+            Employee Employee = EmployeeRepository.GetSingle(id);
+            EmployeeDto EmployeeDto = EmployeeDtoConverter.Convert(Employee);
             return EmployeeDto;
         }
 
-        public List<EmployeeDto> GetAll()
+        public IList<EmployeeDto> GetAll()
         {
-            List<Employee> Employees = Repository.GetAll();
+            IList<Employee> Employees = EmployeeRepository.GetAll();
             List<EmployeeDto> EmployeesDto = new List<EmployeeDto>();
             foreach (var item in Employees)
             {
-                EmployeesDto.Add(Converter.Convert(item));
+                EmployeesDto.Add(EmployeeDtoConverter.Convert(item));
             }
             return EmployeesDto;
         }
 
         public void Update(EmployeeDto item)
         {
-            Employee Employee = Converter.Convert(item);
-            Repository.Update(Employee);
+            Employee Employee = EmployeeConverter.Convert(item);
+            EmployeeRepository.Update(Employee);
         }
     }
 }

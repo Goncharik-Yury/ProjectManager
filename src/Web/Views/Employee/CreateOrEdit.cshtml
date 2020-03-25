@@ -23,9 +23,9 @@
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Patronymic " class="control-label"></label>
-                <input asp-for="Patronymic " class="form-control" />
-                <span asp-validation-for="Patronymic " class="text-danger"></span>
+                <label asp-for="Patronymic" class="control-label"></label>
+                <input asp-for="Patronymic" class="form-control" />
+                <span asp-validation-for="Patronymic" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Position" class="control-label"></label>
@@ -34,7 +34,6 @@
             </div>
             <div>
                 <input type="hidden" name="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
-                @*<input type="hidden" name="TestField" value="@ViewBag.ska" />*@
             </div>
             <div class="form-group">
                 <partial name="Buttons\_SaveButtonPartial" />

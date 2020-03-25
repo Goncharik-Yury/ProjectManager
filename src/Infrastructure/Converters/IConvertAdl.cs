@@ -7,6 +7,6 @@ namespace TrainingTask.Infrastructure.Converters
     interface IConvertDal<TEntity, TSource>
     {
         public TEntity Convert(TSource item);
-        public List<TEntity> ConvertAll(TSource items);
+        public IList<TEntity> ConvertAll(TSource items);
     }
 }

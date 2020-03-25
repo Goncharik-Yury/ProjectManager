@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Converters\IConvert.cs" />
     <Compile Remove="ViewModels\ProjectTaskVmWithRelations.cs" />
     <Compile Remove="ViewModels\ProjectVmWithRelations.cs" />
   </ItemGroup>
@@ -32,6 +33,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicationCore\ApplicationCore.csproj" />
+    <ProjectReference Include="..\Converter\Common.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
 

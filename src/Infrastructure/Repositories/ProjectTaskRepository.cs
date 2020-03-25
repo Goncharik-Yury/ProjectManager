@@ -4,19 +4,19 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using TrainingTask.Infrastructure.Converters;
-using TrainingTask.Infrastructure.DbOperators;
+using TrainingTask.Infrastructure.SqlDataReaders;
 using TrainingTask.Infrastructure.Models;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
     public class ProjectTaskRepository : IProjectTaskRepository<ProjectTask>
     {
-        IDbOperator DbOperator;
+        ISqlDataReader<ProjectTask> ProjectTaskSqlDataReader;
         IConvertDal<ProjectTask, DataTable> Converter;
 
-        public ProjectTaskRepository()
+        public ProjectTaskRepository(ISqlDataReader<ProjectTask> projectTaskSqlDataReader)
         {
-            DbOperator = new DbOperator();
+            ProjectTaskSqlDataReader = projectTaskSqlDataReader;
             Converter = new ProjectTaskDalConverter();
         }
 
@@ -33,7 +33,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@ProjectId", item.ProjectId),
                 new SqlParameter("@EmployeeId", item.EmployeeId)
             };
-            DbOperator.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ProjectTaskSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
         public void Delete(int id)
@@ -43,18 +43,18 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
-            DbOperator.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ProjectTaskSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
-        public List<ProjectTask> GetAll()
+        public IList<ProjectTask> GetAll()
         {
             string SqlQueryString = "SELECT * FROM ProjectTask";
-            List<ProjectTask> ProjectTasksList = Converter.ConvertAll(DbOperator.GetData(SqlQueryString));
+            IList<ProjectTask> ProjectTasksList = ProjectTaskSqlDataReader.GetData(SqlQueryString);
 
             return ProjectTasksList;
         }
 
-        public List<ProjectTask> GetAllByProjectId(int id)
+        public IList<ProjectTask> GetAllByProjectId(int id)
         {
             string SqlQueryString = $"SELECT * FROM ProjectTask WHERE ProjectId = @ProjectId";
             List<SqlParameter> QueryParameters = new List<SqlParameter>
@@ -62,7 +62,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@ProjectId", id)
             };
 
-            List<ProjectTask> Projects = ConvertToProjectTasksList(DbOperator.GetData(SqlQueryString, QueryParameters));
+            IList<ProjectTask> Projects = ProjectTaskSqlDataReader.GetData(SqlQueryString, QueryParameters);
 
             return Projects;
         }
@@ -74,7 +74,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
-            ProjectTask ProjectTask = Converter.Convert(DbOperator.GetData(SqlQueryString, QueryParameters));
+            ProjectTask ProjectTask = ProjectTaskSqlDataReader.GetData(SqlQueryString, QueryParameters)[0];
 
             return ProjectTask;
         }
@@ -93,14 +93,14 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@ProjectId", item.ProjectId),
                 new SqlParameter("@EmployeeId", item.EmployeeId)
             };
-            DbOperator.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ProjectTaskSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
         private ProjectTask ConvertToProjectTask(DataTable dataTable)
         {
             return Converter.ConvertAll(dataTable)[0];
         }
-        private List<ProjectTask> ConvertToProjectTasksList(DataTable dataTable)
+        private IList<ProjectTask> ConvertToProjectTasksList(DataTable dataTable)
         {
             return Converter.ConvertAll(dataTable);
         }

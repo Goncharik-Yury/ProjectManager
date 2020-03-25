@@ -16,7 +16,7 @@ namespace TrainingTask.Infrastructure.Converters
             return Employee;
         }
 
-        public List<Employee> ConvertAll(DataTable items)
+        public IList<Employee> ConvertAll(DataTable items)
         {
             List<Employee> employees = new List<Employee>();
             foreach (DataRow DataRow in items.Rows)

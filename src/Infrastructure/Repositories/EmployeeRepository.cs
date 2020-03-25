@@ -4,20 +4,18 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using TrainingTask.Infrastructure.Converters;
-using TrainingTask.Infrastructure.DbOperators;
+using TrainingTask.Infrastructure.SqlDataReaders;
 using TrainingTask.Infrastructure.Models;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
     public class EmployeeRepository : IRepository<Employee>
     {
-        IDbOperator DbOperator;
-        IConvertDal<Employee, DataTable> Converter;
+        ISqlDataReader<Employee> EmployeeSqlDataReader;
 
-        public EmployeeRepository()
+        public EmployeeRepository(ISqlDataReader<Employee> employeeSqlDataReader)
         {
-            DbOperator = new DbOperator();
-            Converter = new EmployeeDalConverter();
+            EmployeeSqlDataReader = employeeSqlDataReader;
         }
 
         public void Create(Employee item)
@@ -31,7 +29,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@Position", item.Position)
             };
 
-            DbOperator.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            EmployeeSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
         public void Delete(int id)
@@ -41,7 +39,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
-            DbOperator.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            EmployeeSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
         public Employee GetSingle(int id)
@@ -52,14 +50,15 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
-            Employee Employees = Converter.Convert(DbOperator.GetData(SqlQueryString, QueryParameters));
-            return Employees;
+            IList<Employee> Employees = EmployeeSqlDataReader.GetData(SqlQueryString, QueryParameters);
+ 
+            return Employees[0];
         }
 
-        public List<Employee> GetAll()
+        public IList<Employee> GetAll()
         {
             string SqlQueryString = $"SELECT * FROM Employee";
-            return Converter.ConvertAll(DbOperator.GetData(SqlQueryString));
+            return EmployeeSqlDataReader.GetData(SqlQueryString);
         }
 
         public void Update(Employee item)
@@ -73,7 +72,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@Position", item.Position),
                 new SqlParameter("@Id", item.Id)
             };
-            DbOperator.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            EmployeeSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
     }
 }

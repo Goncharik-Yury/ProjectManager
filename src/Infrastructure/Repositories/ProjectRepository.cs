@@ -4,19 +4,19 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using TrainingTask.Infrastructure.Converters;
-using TrainingTask.Infrastructure.DbOperators;
+using TrainingTask.Infrastructure.SqlDataReaders;
 using TrainingTask.Infrastructure.Models;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
     public class ProjectRepository : IRepository<Project>
     {
-        IDbOperator DbOperator;
+        ISqlDataReader<Project> ProjectSqlDataReader;
         IConvertDal<Project, DataTable> Converter;
 
-        public ProjectRepository()
+        public ProjectRepository(ISqlDataReader<Project> projectSqlDataReader)
         {
-            DbOperator = new DbOperator();
+            ProjectSqlDataReader = projectSqlDataReader;
             Converter = new ProjectDalConverter();
         }
 
@@ -31,7 +31,7 @@ namespace TrainingTask.Infrastructure.Repositories
 
             string SqlQueryString = $"INSERT INTO Project (Name, ShortName, Description) VALUES (@Name, @ShortName, @Description)";
 
-            DbOperator.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ProjectSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
         public void Delete(int id)
@@ -41,13 +41,13 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
-            DbOperator.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ProjectSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
-        public List<Project> GetAll()
+        public IList<Project> GetAll()
         {
             string SqlQueryString = "SELECT * FROM Project";
-            return ConvertToProjectsList(DbOperator.GetData(SqlQueryString));
+            return ProjectSqlDataReader.GetData(SqlQueryString);
         }
 
         public Project GetSingle(int id)
@@ -58,7 +58,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
-            Project Project = ConvertToProject(DbOperator.GetData(SqlQueryString, QueryParameters));
+            Project Project = ProjectSqlDataReader.GetData(SqlQueryString, QueryParameters)[0];
             return Project;
         }
 
@@ -73,15 +73,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@Description", item.Description),
                 new SqlParameter("@Id", item.Id)
             };
-            DbOperator.ExecuteNonQuery(SqlQueryString, QueryParameters);
-        }
-        private Project ConvertToProject(DataTable dataTable)
-        {
-            return Converter.ConvertAll(dataTable)[0];
-        }
-        private List<Project> ConvertToProjectsList(DataTable dataTable)
-        {
-            return Converter.ConvertAll(dataTable);
+            ProjectSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
     }
 }

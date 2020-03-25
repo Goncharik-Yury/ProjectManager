@@ -6,7 +6,7 @@ namespace TrainingTask.Infrastructure.Repositories
 {
     public interface IRepository<T> where T : class
     {
-        List<T> GetAll();
+        IList<T> GetAll();
         T GetSingle(int id);
         void Create(T item);
         void Update(T item);
