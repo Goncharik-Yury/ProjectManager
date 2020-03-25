@@ -7,7 +7,7 @@
 <div>
     <h2>Employees</h2>
     <hr />
-    <partial name="Buttons\_CreateButtonPartial" />
+    @Html.ActionLink("Create", "Create", FormMethod.Get, new { @class = "btn btn-info" })
     <br /><br />
     <table class="table">
         <tr>
@@ -47,7 +47,8 @@
                     @Html.DisplayFor(q => employee.Position)
                 </td>
                 <td class="col-sm-10">
-                    <partial name="Buttons\_EditButtonPartial" , model="@employee.Id" />
+                    @Html.ActionLink("Edit", "Edit", new { id = @employee.Id }, new { @class = "btn btn-info" })
+                    @*<partial name="Buttons\_EditButtonPartial" , model="@employee.Id" />*@
                 </td>
                 <td class="col-sm-10">
                     <form asp-action="Delete" method="post">

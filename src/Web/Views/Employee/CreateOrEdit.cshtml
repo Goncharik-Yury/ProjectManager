@@ -1,45 +1,37 @@
 ﻿@model EmployeeVm
 
-@{
-    ViewData["Title"] = "Edit";
-}
-
-@*<h1>Edit</h1>*@
-
 <h4>Employee</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateOrEdit" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Patronymic" class="control-label"></label>
-                <input asp-for="Patronymic" class="form-control" />
-                <span asp-validation-for="Patronymic" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Position" class="control-label"></label>
-                <input asp-for="Position" class="form-control" />
-                <span asp-validation-for="Position" class="text-danger"></span>
-            </div>
-            <div>
-                <input type="hidden" name="IsCreateNotEdit" value="@ViewBag.IsCreateNotEdit" />
-            </div>
-            <div class="form-group">
-                <partial name="Buttons\_SaveButtonPartial" />
-                <partial name="Buttons\_CancelButtonPartial" />
-            </div>
-        </form>
+
+        @if (@ViewBag.AspAction == "Create")
+        {
+            ViewData["Title"] = "Create";
+
+            <h1>Create</h1>
+            <form asp-action="Create" method="post">
+
+                <partial name="_EmployeeFormPartial" />
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-info" />
+                    @Html.ActionLink("Cancel", "Index", new { }, new { @class = "btn btn-info" })
+                </div>
+            </form>
+        }
+        else
+        {
+            ViewData["Title"] = "Edit";
+
+            <h1>Edit</h1>
+            <form asp-action="Edit" method="post">
+                <partial name="_EmployeeFormPartial" />
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-info" />
+                    @Html.ActionLink("Cancel", "Index", new { }, new { @class = "btn btn-info" })
+                </div>
+            </form>
+        }
     </div>
 </div>
 

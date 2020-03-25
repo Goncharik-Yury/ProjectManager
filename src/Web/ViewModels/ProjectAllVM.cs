@@ -9,6 +9,5 @@ namespace TrainingTask.Web.ViewModels
     {
         public ProjectVm Projects { get; set; }
         public IList<ProjectTaskVm> ProjectTasks { get; set; }
-        //public List<EmployeeVm> Employees { get; set; }
     }
 }

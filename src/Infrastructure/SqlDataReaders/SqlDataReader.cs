@@ -8,23 +8,38 @@ namespace TrainingTask.Infrastructure.SqlDataReaders
 {
     public abstract class SqlDataReader<T> : ISqlDataReader<T>
     {
-        public string GetConnectionString() // TODO: rewrite using appsettings.json
+        protected SqlDataReader(string connectionString)
         {
-            SqlConnectionStringBuilder builder =
-            new SqlConnectionStringBuilder
-            {
-                DataSource = @"(LocalDB)\MSSQLLocalDB",
-                AttachDBFilename = @"C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf",
-                IntegratedSecurity = true,
-                ConnectTimeout = 30
-            };
-
-            return builder.ToString();
+            ConnectionString = connectionString;
+            /* @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf;Integrated Security=True;Connect Timeout=30"*//*connectionString*/
+            ;
         }
+        public string ConnectionString { get; set; }
+        //protected string ConnectionString
+        //{
+        //    get { return @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf;Integrated Security=True;Connect Timeout=30"; }
+        //    set { }
+        //}
+
+        //public string GetConnectionString() // TODO: rewrite using appsettings.json
+        //{
+
+        //    SqlConnectionStringBuilder builder =
+        //    new SqlConnectionStringBuilder
+        //    {
+        //        DataSource = @"(LocalDB)\MSSQLLocalDB",
+        //        AttachDBFilename = @"C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf",
+        //        IntegratedSecurity = true,
+        //        ConnectTimeout = 30
+        //    };
+
+        //    return builder.ToString();
+        //    //return "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\SeleSt\\Programs\\Projects\\Database\\TestTaskDB.mdf;Integrated Security=True;Connect Timeout=30";
+        //}
 
         public void ExecuteNonQuery(string sqlQueryString, IList<SqlParameter> queryParameters = null)
         {
-            using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
+            using (SqlConnection DBConnection = new SqlConnection(ConnectionString))
             {
                 try
                 {
@@ -52,7 +67,7 @@ namespace TrainingTask.Infrastructure.SqlDataReaders
 
         public IList<T> GetData(string sqlQueryString, IList<SqlParameter> queryParameters = null)
         {
-            using (SqlConnection DBConnection = new SqlConnection(GetConnectionString()))
+            using (SqlConnection DBConnection = new SqlConnection(ConnectionString))
             {
                 try
                 {

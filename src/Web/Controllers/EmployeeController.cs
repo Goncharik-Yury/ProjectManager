@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using TrainingTask.ApplicationCore.Repository;
 using TrainingTask.ApplicationCore.Dto;
 using TrainingTask.Common;
@@ -17,7 +16,8 @@ namespace TrainingTask.Controllers
         readonly IRepositoryService<EmployeeDto> EmployeeRepositoryService;
         readonly IConvert<EmployeeVm, EmployeeDto> ConvertToEmployeeDto;
         readonly IConvert<EmployeeDto, EmployeeVm> ConvertToEmployeeVm;
-        public EmployeeController(ILogger logger, IRepositoryService<EmployeeDto> employeeRepositoryService,
+        public EmployeeController(ILogger logger,
+            IRepositoryService<EmployeeDto> employeeRepositoryService,
             IConvert<EmployeeVm, EmployeeDto> convertToEmployeeDto,
             IConvert<EmployeeDto, EmployeeVm> convertToEmployeeVm
             )
@@ -31,7 +31,7 @@ namespace TrainingTask.Controllers
 
         public IActionResult Index()
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            Logger.LogDebug($"Employee.Index is called");
             IList<EmployeeDto> EmployeesDto = EmployeeRepositoryService.GetAll();
             List<EmployeeVm> EmployeesVm = new List<EmployeeVm>();
             foreach (var item in EmployeesDto)
@@ -43,38 +43,60 @@ namespace TrainingTask.Controllers
 
         public IActionResult Create()
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            return View();
+            Logger.LogDebug($"Employee.Create is called");
+            ViewBag.AspAction = "Create";
+            return View("CreateOrEdit");
         }
 
         public IActionResult Edit(int id)
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            ViewBag.IsCreateNotEdit = "false";
+            Logger.LogDebug($"Employee.Edit is called");
             EmployeeDto EmployeeDto = EmployeeRepositoryService.GetSingle(id);
             EmployeeVm model = ConvertToEmployeeVm.Convert(EmployeeDto);
-            return View(model);
+            ViewBag.AspAction = "Edit";
+            return View("CreateOrEdit", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateOrEdit(EmployeeVm employee, bool IsCreateNotEdit = false)
+        public IActionResult Create(EmployeeVm employee)
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            Logger.LogDebug($"Employee.Create is called");
+
             try
             {
                 if (employee == null)
                     throw new NullReferenceException();
                 if (ModelState.IsValid)
                 {
-                    if (IsCreateNotEdit)
-                    {
-                        EmployeeRepositoryService.Create(ConvertToEmployeeDto.Convert(employee));
-                    }
-                    else
-                    {
-                        EmployeeRepositoryService.Update(ConvertToEmployeeDto.Convert(employee));
-                    }
+                    EmployeeRepositoryService.Create(ConvertToEmployeeDto.Convert(employee));
+                }
+                else
+                {
+                    return View(employee);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.Message);
+                return View("Error");
+            }
+            return RedirectToAction(nameof(Index));
+
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(EmployeeVm employee)
+        {
+            Logger.LogDebug($"Employee.Edit is called");
+            try
+            {
+                if (employee == null)
+                    throw new NullReferenceException();
+                if (ModelState.IsValid)
+                {
+                    EmployeeRepositoryService.Update(ConvertToEmployeeDto.Convert(employee));
                 }
                 else
                 {
@@ -93,7 +115,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            Logger.LogDebug($"Employee.Delete is called");
             try
             {
                 EmployeeRepositoryService.Delete(id);
@@ -103,7 +125,6 @@ namespace TrainingTask.Controllers
                 Logger.LogError(ex.Message);
                 return View("Error");
             }
-            // IActionResult
             return RedirectToAction(nameof(Index));
         }
     }
