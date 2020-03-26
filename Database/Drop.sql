@@ -1,8 +1,20 @@
+USE [TrainingTaskDB]
+GO
+ALTER TABLE [dbo].[ProjectTask] DROP CONSTRAINT [FK_ProjectTask_Project]
+GO
+ALTER TABLE [dbo].[ProjectTask] DROP CONSTRAINT [FK_ProjectTask_Employee]
+GO
+/****** Object:  Table [dbo].[ProjectTask]    Script Date: 3/26/2020 1:59:52 PM ******/
+DROP TABLE [dbo].[ProjectTask]
+GO
+/****** Object:  Table [dbo].[Project]    Script Date: 3/26/2020 1:59:52 PM ******/
+DROP TABLE [dbo].[Project]
+GO
+/****** Object:  Table [dbo].[Employee]    Script Date: 3/26/2020 1:59:52 PM ******/
+DROP TABLE [dbo].[Employee]
+GO
 USE [master]
 GO
-
-/****** Object:  Database [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF]    Script Date: 3/20/2020 4:54:16 PM ******/
-DROP DATABASE [C:\SELEST\PROGRAMS\PROJECTS\DATABASE\TRAININGTASKDB.MDF]
+/****** Object:  Database [TrainingTaskDB]    Script Date: 3/26/2020 1:59:52 PM ******/
+DROP DATABASE [TrainingTaskDB]
 GO
-
-
