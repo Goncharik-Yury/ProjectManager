@@ -6,6 +6,7 @@ using System.Text;
 using TrainingTask.Infrastructure.Converters;
 using TrainingTask.Infrastructure.SqlDataReaders;
 using TrainingTask.Infrastructure.Models;
+using System.Linq;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
@@ -58,7 +59,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
-            Project Project = ProjectSqlDataReader.GetData(SqlQueryString, QueryParameters)[0];
+            Project Project = ProjectSqlDataReader.GetData(SqlQueryString, QueryParameters).FirstOrDefault();
             return Project;
         }
 

@@ -40,22 +40,22 @@
         <table class="table">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Id)
+                    @Html.DisplayNameFor(m => m.ProjectTasks.FirstOrDefault().Id)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Name)
+                    @Html.DisplayNameFor(m => m.ProjectTasks.FirstOrDefault().Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.ProjectTasks[0].BeginDate)
+                    @Html.DisplayNameFor(m => m.ProjectTasks.FirstOrDefault().BeginDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.ProjectTasks[0].EndDate)
+                    @Html.DisplayNameFor(m => m.ProjectTasks.FirstOrDefault().EndDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.ProjectTasks[0].EmployeeFullName)
+                    @Html.DisplayNameFor(m => m.ProjectTasks.FirstOrDefault().EmployeeFullName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.ProjectTasks[0].Status)
+                    @Html.DisplayNameFor(m => m.ProjectTasks.FirstOrDefault().Status)
                 </th>
                 <th>
                     @Html.ActionLink("Create", "CreateOrEdit", "ProjectTask", new { }, new { @class = "btn btn-info" })

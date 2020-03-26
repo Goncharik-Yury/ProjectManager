@@ -127,7 +127,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            logger.LogDebug($"Project.Delete [post] is called");
             try
             {
                 ProjectRepositoryService.Delete(id);

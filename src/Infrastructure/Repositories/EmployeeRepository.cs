@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using TrainingTask.Infrastructure.Converters;
+using System.Linq;
 using TrainingTask.Infrastructure.SqlDataReaders;
 using TrainingTask.Infrastructure.Models;
 
@@ -52,7 +53,7 @@ namespace TrainingTask.Infrastructure.Repositories
             };
             IList<Employee> Employees = EmployeeSqlDataReader.GetData(SqlQueryString, QueryParameters);
  
-            return Employees[0];
+            return Employees.FirstOrDefault();
         }
 
         public IList<Employee> GetAll()

@@ -12,20 +12,20 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(m => m[0].Id)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().Id)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].LastName)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].FirstName)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().FirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].Patronymic)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().Patronymic)
 
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].Position)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().Position)
             </th>
         </tr>
         @foreach (EmployeeVm employee in Model)

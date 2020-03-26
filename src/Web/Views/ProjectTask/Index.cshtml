@@ -12,31 +12,31 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(m => m[0].Id)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().Id)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].ProjectShortName)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().ProjectShortName)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].Name)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].TimeToComplete)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().TimeToComplete)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].BeginDate)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().BeginDate)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].EndDate)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().EndDate)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].Status)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().Status)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].ProjectId)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().ProjectId)
             </th>
             <th>
-                @Html.DisplayNameFor(m => m[0].EmployeeFullName)
+                @Html.DisplayNameFor(m => m.FirstOrDefault().EmployeeFullName)
             </th>
         </tr>
         @foreach (ProjectTaskVm projectTask in Model)

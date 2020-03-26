@@ -6,6 +6,7 @@ using System.Text;
 using TrainingTask.Infrastructure.Converters;
 using TrainingTask.Infrastructure.SqlDataReaders;
 using TrainingTask.Infrastructure.Models;
+using System.Linq;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
@@ -74,7 +75,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
-            ProjectTask ProjectTask = ProjectTaskSqlDataReader.GetData(SqlQueryString, QueryParameters)[0];
+            ProjectTask ProjectTask = ProjectTaskSqlDataReader.GetData(SqlQueryString, QueryParameters).FirstOrDefault();
 
             return ProjectTask;
         }
@@ -98,7 +99,7 @@ namespace TrainingTask.Infrastructure.Repositories
 
         private ProjectTask ConvertToProjectTask(DataTable dataTable)
         {
-            return Converter.ConvertAll(dataTable)[0];
+            return Converter.ConvertAll(dataTable).FirstOrDefault();
         }
         private IList<ProjectTask> ConvertToProjectTasksList(DataTable dataTable)
         {
