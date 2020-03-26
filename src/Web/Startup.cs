@@ -21,12 +21,11 @@ namespace TrainingTask.Web
 {
     public class Startup
     {
-        private string ConnectionString;
+        private readonly string ConnectionString;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
             ConnectionString = Configuration["ConnectionStrings:TrainingTaskDB"];
-            Console.WriteLine("!!!!!!!!!!!!!!!!!!!" + ConnectionString);
         }
 
         public IConfiguration Configuration { get; }
@@ -55,16 +54,13 @@ namespace TrainingTask.Web
             services.AddSingleton<IRepositoryService<ProjectDto>, ProjectRepositoryService>();
             services.AddSingleton<IProjectTaskRepositoryService<ProjectTaskDto>, ProjectTaskRepositoryService>();
 
-            services.AddSingleton<IRepository<Employee>, EmployeeRepository>();
-            services.AddSingleton<IRepository<Project>, ProjectRepository>();
-            services.AddSingleton<IProjectTaskRepository<ProjectTask>, ProjectTaskRepository>();
+            services.AddSingleton<IRepository<Employee>>(x => new EmployeeRepository(ConnectionString));
+            services.AddSingleton<IRepository<Project>>(x => new ProjectRepository(ConnectionString));
+            services.AddSingleton<IProjectTaskRepository<ProjectTask>>(x => new ProjectTaskRepository(ConnectionString));
 
-            services.AddSingleton<ISqlDataReader<Employee>>(x => new EmployeeSqlDataReader(ConnectionString));
-            services.AddSingleton<ISqlDataReader<Project>>(x => new ProjectSqlDataReader(ConnectionString));
-            services.AddSingleton<ISqlDataReader<ProjectTask>>(x => new ProjectTaskSqlDataReader(ConnectionString));
-            //services.AddSingleton<ISqlDataReader<Employee>, EmployeeSqlDataReader>();
-            //services.AddSingleton<ISqlDataReader<Project>, ProjectSqlDataReader>();
-            //services.AddSingleton<ISqlDataReader<ProjectTask>, ProjectTaskSqlDataReader>();
+            //services.AddSingleton<ISqlDataReader<Employee>>(x => new EmployeeReader(ConnectionString));
+            //services.AddSingleton<ISqlDataReader<Project>>(x => new ProjectReader(ConnectionString));
+            //services.AddSingleton<ISqlDataReader<ProjectTask>>(x => new ProjectTaskReader(ConnectionString));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -3,22 +3,38 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
-using TrainingTask.Infrastructure.Converters;
 using TrainingTask.Infrastructure.SqlDataReaders;
 using TrainingTask.Infrastructure.Models;
 using System.Linq;
+using TrainingTask.Common;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
-    public class ProjectRepository : IRepository<Project>
+    public class ProjectRepository : BaseRepository<Project>, IRepository<Project>
     {
-        private readonly ISqlDataReader<Project> ProjectSqlDataReader;
-        private readonly IConvertDal<Project, DataTable> Converter;
+        protected override string ConnectionString { get; }
 
-        public ProjectRepository(ISqlDataReader<Project> projectSqlDataReader)
+        Func<SqlDataReader, List<Project>> converter = ConvertToProject;
+        public ProjectRepository(string connectionString)
         {
-            ProjectSqlDataReader = projectSqlDataReader;
-            Converter = new ProjectDalConverter();
+            ConnectionString = connectionString;
+        }
+        static List<Project> ConvertToProject(SqlDataReader sqlDataReader)
+        {
+            List<Project> Projects = new List<Project>();
+            while (sqlDataReader.Read())
+            {
+                Project project = new Project
+                {
+                    Id = sqlDataReader.GetInt32("Id"),
+                    Name = sqlDataReader.GetString("Name"),
+                    ShortName = sqlDataReader.GetString("ShortName"),
+                    Description = sqlDataReader.GetString("Description"),
+                };
+
+                Projects.Add(project);
+            }
+            return Projects;
         }
 
         public void Create(Project item)
@@ -32,7 +48,7 @@ namespace TrainingTask.Infrastructure.Repositories
 
             string SqlQueryString = $"INSERT INTO Project (Name, ShortName, Description) VALUES (@Name, @ShortName, @Description)";
 
-            ProjectSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
         public void Delete(int id)
@@ -43,13 +59,13 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@Id", id)
             };
 
-            ProjectSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
         public IList<Project> GetAll()
         {
             string SqlQueryString = "SELECT * FROM Project";
-            return ProjectSqlDataReader.GetData(SqlQueryString);
+            return GetData(SqlQueryString, converter, null);
         }
 
         public Project Get(int id)
@@ -61,7 +77,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@Id", id)
             };
 
-            Project Project = ProjectSqlDataReader.GetData(SqlQueryString, QueryParameters).FirstOrDefault();
+            Project Project = GetData(SqlQueryString, converter, QueryParameters).FirstOrDefault();
             return Project;
         }
 
@@ -77,7 +93,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@Id", item.Id)
             };
 
-            ProjectSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
     }
 }

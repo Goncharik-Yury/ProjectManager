@@ -13,12 +13,12 @@ namespace TrainingTask.Controllers
     public class ProjectController : Controller
     {
         private readonly ILogger logger;
-        readonly IRepositoryService<ProjectDto> ProjectRepositoryService;
-        readonly IProjectTaskRepositoryService<ProjectTaskDto> ProjectTaskRepositoryService;
-        readonly IConvert<ProjectVm, ProjectDto> ConvertToProjectDto;
-        readonly IConvert<ProjectDto, ProjectVm> ConvertToProjectVm;
-        readonly IConvert<ProjectTaskVm, ProjectTaskDto> ConvertToProjectTaskDto;
-        readonly IConvert<ProjectTaskDto, ProjectTaskVm> ConvertToProjectTaskVm;
+        private readonly IRepositoryService<ProjectDto> ProjectRepositoryService;
+        private readonly IProjectTaskRepositoryService<ProjectTaskDto> ProjectTaskRepositoryService;
+        private readonly IConvert<ProjectVm, ProjectDto> ConvertToProjectDto;
+        private readonly IConvert<ProjectDto, ProjectVm> ConvertToProjectVm;
+        private readonly IConvert<ProjectTaskVm, ProjectTaskDto> ConvertToProjectTaskDto;
+        private readonly IConvert<ProjectTaskDto, ProjectTaskVm> ConvertToProjectTaskVm;
 
         public ProjectController(ILogger logger, IRepositoryService<ProjectDto> projectRepositoryService,
             IProjectTaskRepositoryService<ProjectTaskDto> projectTaskRepositoryService,

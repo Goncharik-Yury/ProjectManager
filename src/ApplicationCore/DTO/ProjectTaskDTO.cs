@@ -10,8 +10,8 @@ namespace TrainingTask.ApplicationCore.Dto
         public int? TimeToComplete { get; set; }
         public DateTime? BeginDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public string EmployeeFullName { get; set; }
         public string Status { get; set; }
+        public string EmployeeFullName { get; set; }
         public int ProjectId { get; set; }
         public int? EmployeeId { get; set; }
     }

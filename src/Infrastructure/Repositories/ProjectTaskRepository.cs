@@ -3,22 +3,42 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
-using TrainingTask.Infrastructure.Converters;
 using TrainingTask.Infrastructure.SqlDataReaders;
 using TrainingTask.Infrastructure.Models;
 using System.Linq;
+using TrainingTask.Common;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
-    public class ProjectTaskRepository : IProjectTaskRepository<ProjectTask>
+    public class ProjectTaskRepository : BaseRepository<ProjectTask>, IProjectTaskRepository<ProjectTask>
     {
-        private readonly ISqlDataReader<ProjectTask> ProjectTaskSqlDataReader;
-        private readonly IConvertDal<ProjectTask, DataTable> Converter;
+        protected override string ConnectionString { get; }
 
-        public ProjectTaskRepository(ISqlDataReader<ProjectTask> projectTaskSqlDataReader)
+        Func<SqlDataReader, List<ProjectTask>> converter = ConvertToProject;
+        public ProjectTaskRepository(string connectionString)
         {
-            ProjectTaskSqlDataReader = projectTaskSqlDataReader;
-            Converter = new ProjectTaskDalConverter();
+            ConnectionString = connectionString;
+        }
+        static List<ProjectTask> ConvertToProject(SqlDataReader sqlDataReader)
+        {
+            List<ProjectTask> ProjectTasks = new List<ProjectTask>();
+            while (sqlDataReader.Read())
+            {
+                ProjectTask ProjectTask = new ProjectTask
+                {
+                    Id = sqlDataReader.GetInt32("Id"),
+                    Name = sqlDataReader.GetString("Name"),
+                    TimeToComplete = sqlDataReader.GetInt32("TimeToComplete"),
+                    BeginDate = sqlDataReader.GetDateTime("BeginDate"),
+                    EndDate = sqlDataReader.GetDateTime("EndDate"),
+                    Status = sqlDataReader.GetString("Status"),
+                    ProjectId = sqlDataReader.GetInt32("ProjectId"),
+                    EmployeeId = sqlDataReader.GetInt32("EmployeeId")
+                };
+
+                ProjectTasks.Add(ProjectTask);
+            }
+            return ProjectTasks;
         }
 
         public void Create(ProjectTask item)
@@ -35,7 +55,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@EmployeeId", item.EmployeeId)
             };
 
-            ProjectTaskSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
         public void Delete(int id)
@@ -46,13 +66,13 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@Id", id)
             };
 
-            ProjectTaskSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
+            ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
         public IList<ProjectTask> GetAll()
         {
             string SqlQueryString = "SELECT * FROM ProjectTask";
-            IList<ProjectTask> ProjectTasksList = ProjectTaskSqlDataReader.GetData(SqlQueryString);
+            IList<ProjectTask> ProjectTasksList = GetData(SqlQueryString, converter, null);
 
             return ProjectTasksList;
         }
@@ -65,7 +85,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@ProjectId", id)
             };
 
-            IList<ProjectTask> Projects = ProjectTaskSqlDataReader.GetData(SqlQueryString, QueryParameters);
+            IList<ProjectTask> Projects = GetData(SqlQueryString, converter, QueryParameters);
 
             return Projects;
         }
@@ -77,7 +97,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
-            ProjectTask ProjectTask = ProjectTaskSqlDataReader.GetData(SqlQueryString, QueryParameters).FirstOrDefault();
+            ProjectTask ProjectTask = GetData(SqlQueryString, converter, QueryParameters).FirstOrDefault();
 
             return ProjectTask;
         }
@@ -97,17 +117,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@EmployeeId", item.EmployeeId)
             };
 
-            ProjectTaskSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
-        }
-
-        private ProjectTask ConvertToProjectTask(DataTable dataTable)
-        {
-            return Converter.ConvertAll(dataTable).FirstOrDefault();
-        }
-
-        private IList<ProjectTask> ConvertToProjectTasksList(DataTable dataTable)
-        {
-            return Converter.ConvertAll(dataTable);
+            ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
     }
 }
