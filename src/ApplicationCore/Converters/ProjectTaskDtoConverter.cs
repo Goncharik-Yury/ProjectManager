@@ -24,6 +24,8 @@ namespace TrainingTask.ApplicationCore.Converters
         public IList<ProjectTaskDto> ConvertAll(IList<ProjectTask> items)
         {
             List<ProjectTaskDto> ProjectTasksDto = new List<ProjectTaskDto>();
+            if (items == null)
+                return null;
             foreach (var item in items)
             {
                 ProjectTasksDto.Add(Convert(item));

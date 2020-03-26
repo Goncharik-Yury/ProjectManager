@@ -13,7 +13,7 @@ namespace TrainingTask.Controllers
 {
     public class ProjectTaskController : Controller
     {
-        private ILogger Logger;
+        private readonly ILogger logger;
         IProjectTaskRepositoryService<ProjectTaskDto> ProjectTaskRepositoryService;
         IRepositoryService<ProjectDto> ProjectRepositoryService;
         IRepositoryService<EmployeeDto> EmployeeRepositoryService;
@@ -32,7 +32,7 @@ namespace TrainingTask.Controllers
             IConvert<ProjectTaskDto, ProjectTaskVm> convertToProjectTaskVm
             )
         {
-            Logger = logger;
+            this.logger = logger;
 
             ProjectTaskRepositoryService = projectTaskRepositoryService;
             ProjectRepositoryService = projectRepositoryService;
@@ -42,35 +42,123 @@ namespace TrainingTask.Controllers
             ConvertToProjectTaskVm = convertToProjectTaskVm;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            logger.LogDebug($"ProjectTask.Index [post] is called");
             IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.ConvertAll(ProjectTaskRepositoryService.GetAll());
             return View(ProjectTasksVm);
         }
 
-        public IActionResult CreateOrEdit(int id = -1)
+        [HttpGet]
+        public IActionResult Create()
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            logger.LogDebug($"ProjectTask.Create [get] is called");
 
-            FillEmployeeSelectList();
-            FillProjectSelectList();
+            ViewBag.EmployeeSelectList = FillEmployeeSelectList();
+            ViewBag.ProjectSelectList = GetProjectSelectList();
 
             ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
 
-            if (id < 0)
-            {
-                ViewBag.IsCreateNotEdit = "true";
-                return View();
-            }
-            else
-            {
-                ViewBag.IsCreateNotEdit = "false";
-                ProjectTaskVm model = ConvertToProjectTaskVm.Convert(ProjectTaskRepositoryService.GetSingle(id));
-                return View(model);
-            }
+            ViewBag.AspAction = "Create";
+            return View("CreateOrEdit");
         }
-        private void FillProjectSelectList()
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            logger.LogDebug($"ProjectTask.Edit [get] is called");
+
+            ViewBag.EmployeeSelectList = FillEmployeeSelectList();
+            ViewBag.ProjectSelectList = GetProjectSelectList();
+
+            ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
+
+            ViewBag.AspAction = "Edit";
+            ProjectTaskVm model = ConvertToProjectTaskVm.Convert(ProjectTaskRepositoryService.GetSingle(id));
+            return View("CreateOrEdit", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(ProjectTaskVm projectTask)
+        {
+            logger.LogDebug($"ProjectTask.Create [post] is called");
+            try
+            {
+                if (projectTask == null)
+                    throw new NullReferenceException();
+                ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
+                if (ModelState.IsValid)
+                {
+                    ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTask);
+                    ProjectTaskRepositoryService.Create(projectTaskDto);
+                }
+                else
+                {
+                    ViewBag.EmployeeSelectList = FillEmployeeSelectList();
+                    ViewBag.ProjectSelectList = GetProjectSelectList();
+                    return View(projectTask);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return View("Error");
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(ProjectTaskVm projectTask)
+        {
+            logger.LogDebug($"ProjectTask.Edit [post] is called");
+            try
+            {
+                if (projectTask == null)
+                    throw new NullReferenceException();
+                ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
+                if (ModelState.IsValid)
+                {
+                    ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTask);
+                    ProjectTaskRepositoryService.Update(projectTaskDto);
+                }
+                else
+                {
+                    ViewBag.EmployeeSelectList = FillEmployeeSelectList();
+                    ViewBag.ProjectSelectList = GetProjectSelectList();
+                    return View(projectTask);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return View("Error");
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            logger.LogDebug($"ProjectTask.Delete is called");
+            try
+            {
+                ProjectTaskRepositoryService.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return View("Error");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        private SelectList GetProjectSelectList()
         {
             IList<ProjectDto> ProjectsList = ProjectRepositoryService.GetAll();
             List<ProjectSelectListItem> ProjectSelectList = new List<ProjectSelectListItem>();
@@ -82,9 +170,9 @@ namespace TrainingTask.Controllers
                     ShortName = item.ShortName
                 });
             }
-            ViewBag.ProjectSelectList = new SelectList(ProjectSelectList, "Id", "ShortName");
+            return new SelectList(ProjectSelectList, "Id", "ShortName");
         }
-        private void FillEmployeeSelectList()
+        private SelectList FillEmployeeSelectList()
         {
             IList<EmployeeDto> EmployeesList = EmployeeRepositoryService.GetAll();
             List<EmployeeSelectListItem> EmployeeSelectList = new List<EmployeeSelectListItem>();
@@ -96,62 +184,7 @@ namespace TrainingTask.Controllers
                     FullName = $"{item.LastName} {item.FirstName} {item.Patronymic}"
                 });
             }
-            ViewBag.EmployeeSelectList = new SelectList(EmployeeSelectList, "Id", "FullName");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateOrEdit(ProjectTaskVm projectTask, bool IsCreateNotEdit = false)
-        {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            try
-            {
-                if (projectTask == null)
-                    throw new NullReferenceException();
-                ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
-                if (ModelState.IsValid)
-                {
-                    ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTask);
-                    if (IsCreateNotEdit)
-                    {
-                        ProjectTaskRepositoryService.Create(projectTaskDto);
-                    }
-                    else
-                    {
-                        ProjectTaskRepositoryService.Update(projectTaskDto);
-                    }
-                }
-                else
-                {
-                    FillEmployeeSelectList();
-                    FillProjectSelectList();
-                    return View(projectTask);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex.Message);
-                return View("Error");
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
-        {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            try
-            {
-                ProjectTaskRepositoryService.Delete(id);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex.Message);
-                return View("Error");
-            }
-            return RedirectToAction(nameof(Index));
+            return new SelectList(EmployeeSelectList, "Id", "FullName");
         }
 
         private class EmployeeSelectListItem

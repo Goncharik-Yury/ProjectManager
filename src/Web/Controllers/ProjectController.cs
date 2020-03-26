@@ -12,7 +12,7 @@ namespace TrainingTask.Controllers
 {
     public class ProjectController : Controller
     {
-        private ILogger Logger;
+        private readonly ILogger logger;
         readonly IRepositoryService<ProjectDto> ProjectRepositoryService;
         readonly IProjectTaskRepositoryService<ProjectTaskDto> ProjectTaskRepositoryService;
         readonly IConvert<ProjectVm, ProjectDto> ConvertToProjectDto;
@@ -28,7 +28,7 @@ namespace TrainingTask.Controllers
             IConvert<ProjectTaskDto, ProjectTaskVm> convertToProjectTaskVm
             )
         {
-            Logger = logger;
+            this.logger = logger;
 
             ProjectRepositoryService = projectRepositoryService;
             ProjectTaskRepositoryService = projectTaskRepositoryService;
@@ -39,39 +39,41 @@ namespace TrainingTask.Controllers
             ConvertToProjectTaskVm = convertToProjectTaskVm;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            logger.LogDebug($"Project.Index is called");
 
             IList<ProjectVm> Projects = ConvertToProjectVm.ConvertAll(ProjectRepositoryService.GetAll());
 
             return View(Projects);
         }
 
-        public IActionResult CreateOrEdit(int id = -1)
+        [HttpGet]
+        public IActionResult Create()
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
-            if (id < 0)
-            {
-                ViewBag.IsCreateNotEdit = "true";
-                return View();
-            }
-            else
-            {
-                ViewBag.IsCreateNotEdit = "false";
-                ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectRepositoryService.GetSingle(id));
-                IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.ConvertAll(ProjectTaskRepositoryService.GetAllByProjectId(ProjectVm.Id));
-                ProjectAllVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);
+            logger.LogDebug($"Project.Create is called");
+            ViewBag.AspAction = "Create";
+            return View("CreateOrEdit");
+        }
 
-                return View(model);
-            }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            logger.LogDebug($"Project.Edit is called");
+            ViewBag.AspAction = "Edit";
+            ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectRepositoryService.GetSingle(id));
+            IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.ConvertAll(ProjectTaskRepositoryService.GetAllByProjectId(ProjectVm.Id));
+            ProjectAllVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);
+
+            return View("CreateOrEdit", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateOrEdit(ProjectAllVm projectAllVm, bool IsCreateNotEdit = false)
+        public IActionResult Create(ProjectAllVm projectAllVm)
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            logger.LogDebug($"Project.Create [post] is called");
             try
             {
                 if (projectAllVm.Projects == null)
@@ -79,14 +81,7 @@ namespace TrainingTask.Controllers
                 if (ModelState.IsValid)
                 {
                     ProjectDto projectDto = ConvertToProjectDto.Convert(projectAllVm.Projects);
-                    if (IsCreateNotEdit)
-                    {
-                        ProjectRepositoryService.Create(projectDto);
-                    }
-                    else
-                    {
-                        ProjectRepositoryService.Update(projectDto);
-                    }
+                    ProjectRepositoryService.Create(projectDto);
                 }
                 else
                 {
@@ -95,7 +90,34 @@ namespace TrainingTask.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.Message);
+                logger.LogError(ex.Message);
+                return View("Error");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(ProjectAllVm projectAllVm)
+        {
+            logger.LogDebug($"Project.Edit [post] is called");
+            try
+            {
+                if (projectAllVm.Projects == null)
+                    throw new NullReferenceException();
+                if (ModelState.IsValid)
+                {
+                    ProjectDto projectDto = ConvertToProjectDto.Convert(projectAllVm.Projects);
+                    ProjectRepositoryService.Update(projectDto);
+                }
+                else
+                {
+                    return View(projectAllVm);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
                 return View("Error");
             }
             return RedirectToAction(nameof(Index));
@@ -105,14 +127,14 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            Logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
+            logger.LogDebug($"{this.GetType().ToString()}.{new StackTrace(false).GetFrame(0).GetMethod().Name} is called");
             try
             {
                 ProjectRepositoryService.Delete(id);
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.Message);
+                logger.LogError(ex.Message);
                 return View("Error");
             }
             return RedirectToAction(nameof(Index));

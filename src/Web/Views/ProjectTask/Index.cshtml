@@ -7,7 +7,7 @@
 <div>
     <h2>Project Tasks</h2>
     <hr />
-    <partial name="Buttons\_CreateButtonPartial" />
+    @Html.ActionLink("Create", "Create", FormMethod.Get, new { @class = "btn btn-info" })
     <br /><br />
     <table class="table">
         <tr>
@@ -71,14 +71,14 @@
                 </td>
 
                 <td class="col-sm-10">
-                    <partial name="Buttons\_EditButtonPartial" , model="@projectTask.Id" />
+                    @Html.ActionLink("Edit", "Edit", new { id = projectTask.Id }, new { @class = "btn btn-info" })
                 </td>
                 <td class="col-sm-10">
-                    <partial name="Buttons\_DeleteButtonPartial" , model="@projectTask.Id" />
+                    <form asp-action="Delete" method="post">
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                        <input type="hidden" value="@projectTask.Id" name="id" />
+                    </form>
                 </td>
-                @*<td class="col-sm-10">
-                        <partial name="Buttons\_CreateButtonPartial" , model="@projectTask.Id" />
-                    </td>*@
             </tr>
         }
     </table>

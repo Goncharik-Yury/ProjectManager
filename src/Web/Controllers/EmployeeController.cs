@@ -12,7 +12,7 @@ namespace TrainingTask.Controllers
 {
     public class EmployeeController : Controller
     {
-        private ILogger Logger;
+        private readonly ILogger logger;
         readonly IRepositoryService<EmployeeDto> EmployeeRepositoryService;
         readonly IConvert<EmployeeVm, EmployeeDto> ConvertToEmployeeDto;
         readonly IConvert<EmployeeDto, EmployeeVm> ConvertToEmployeeVm;
@@ -22,16 +22,17 @@ namespace TrainingTask.Controllers
             IConvert<EmployeeDto, EmployeeVm> convertToEmployeeVm
             )
         {
-            Logger = logger;
+            this.logger = logger;
 
             EmployeeRepositoryService = employeeRepositoryService;
             ConvertToEmployeeDto = convertToEmployeeDto;
             ConvertToEmployeeVm = convertToEmployeeVm;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            Logger.LogDebug($"Employee.Index is called");
+            logger.LogDebug($"Employee.Index is called");
             IList<EmployeeDto> EmployeesDto = EmployeeRepositoryService.GetAll();
             List<EmployeeVm> EmployeesVm = new List<EmployeeVm>();
             foreach (var item in EmployeesDto)
@@ -41,16 +42,18 @@ namespace TrainingTask.Controllers
             return View(EmployeesVm);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
-            Logger.LogDebug($"Employee.Create is called");
+            logger.LogDebug($"Employee.Create is called");
             ViewBag.AspAction = "Create";
             return View("CreateOrEdit");
         }
 
+        [HttpGet]
         public IActionResult Edit(int id)
         {
-            Logger.LogDebug($"Employee.Edit is called");
+            logger.LogDebug($"Employee.Edit is called");
             EmployeeDto EmployeeDto = EmployeeRepositoryService.GetSingle(id);
             EmployeeVm model = ConvertToEmployeeVm.Convert(EmployeeDto);
             ViewBag.AspAction = "Edit";
@@ -61,7 +64,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EmployeeVm employee)
         {
-            Logger.LogDebug($"Employee.Create is called");
+            logger.LogDebug($"Employee.Create is called");
 
             try
             {
@@ -78,18 +81,19 @@ namespace TrainingTask.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.Message);
+                logger.LogError(ex.Message);
                 return View("Error");
             }
             return RedirectToAction(nameof(Index));
 
 
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EmployeeVm employee)
         {
-            Logger.LogDebug($"Employee.Edit is called");
+            logger.LogDebug($"Employee.Edit is called");
             try
             {
                 if (employee == null)
@@ -105,7 +109,7 @@ namespace TrainingTask.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.Message);
+                logger.LogError(ex.Message);
                 return View("Error");
             }
             return RedirectToAction(nameof(Index));
@@ -115,14 +119,14 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            Logger.LogDebug($"Employee.Delete is called");
+            logger.LogDebug($"Employee.Delete is called");
             try
             {
                 EmployeeRepositoryService.Delete(id);
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.Message);
+                logger.LogError(ex.Message);
                 return View("Error");
             }
             return RedirectToAction(nameof(Index));

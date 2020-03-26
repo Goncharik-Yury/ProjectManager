@@ -8,24 +8,27 @@
         @if (@ViewBag.AspAction == "Create")
         {
             ViewData["Title"] = "Create";
-
             <h1>Create</h1>
+
             <form asp-action="Create" method="post">
 
                 <partial name="_EmployeeFormPartial" />
+
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-info" />
                     @Html.ActionLink("Cancel", "Index", new { }, new { @class = "btn btn-info" })
                 </div>
             </form>
         }
-        else
+        else if (@ViewBag.AspAction == "Edit")
         {
             ViewData["Title"] = "Edit";
-
             <h1>Edit</h1>
+
             <form asp-action="Edit" method="post">
+
                 <partial name="_EmployeeFormPartial" />
+
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-info" />
                     @Html.ActionLink("Cancel", "Index", new { }, new { @class = "btn btn-info" })
