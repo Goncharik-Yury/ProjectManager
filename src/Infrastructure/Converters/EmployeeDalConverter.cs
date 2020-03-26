@@ -23,6 +23,7 @@ namespace TrainingTask.Infrastructure.Converters
             {
                 employees.Add(GetRowItem(DataRow));
             }
+
             items.Dispose();
 
             return employees;

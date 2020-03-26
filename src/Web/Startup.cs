@@ -10,7 +10,7 @@ using TrainingTask.ApplicationCore.Dto;
 using TrainingTask.Common;
 using TrainingTask.Infrastructure.Models;
 using TrainingTask.Web.Converters;
-using TrainingTask.Web.Logger;
+using Common.Logger;
 using TrainingTask.Web.ViewModels;
 using TrainingTask.Infrastructure.Repositories;
 using TrainingTask.Infrastructure.SqlDataReaders;
@@ -34,8 +34,6 @@ namespace TrainingTask.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<ILogger, FileLogger>();
 

@@ -27,6 +27,7 @@ namespace TrainingTask.Infrastructure.Converters
                     Description = dr.Field<string>("Description"),
                 });
             }
+
             items.Dispose();
 
             return Projects;

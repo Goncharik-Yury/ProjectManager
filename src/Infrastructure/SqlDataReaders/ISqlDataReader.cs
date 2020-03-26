@@ -8,7 +8,6 @@ namespace TrainingTask.Infrastructure.SqlDataReaders
 {
     public interface ISqlDataReader<T>
     {
-        //string GetConnectionString();
         void ExecuteNonQuery(string sqlQueryString, IList<SqlParameter> queryParameters = null);
         IList<T> GetData(string sqlQueryString, IList<SqlParameter> queryParameters = null);
     }

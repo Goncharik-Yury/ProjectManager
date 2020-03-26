@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Logger\**" />
+    <Content Remove="Logger\**" />
+    <EmbeddedResource Remove="Logger\**" />
+    <None Remove="Logger\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Converters\IConvert.cs" />
     <Compile Remove="ViewModels\ProjectTaskVmWithRelations.cs" />
     <Compile Remove="ViewModels\ProjectVmWithRelations.cs" />

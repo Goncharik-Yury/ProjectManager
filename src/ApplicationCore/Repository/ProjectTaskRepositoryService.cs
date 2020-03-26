@@ -10,12 +10,12 @@ namespace TrainingTask.ApplicationCore.Repository
 {
     public class ProjectTaskRepositoryService : IProjectTaskRepositoryService<ProjectTaskDto>
     {
-        IProjectTaskRepository<ProjectTask> ProjectTaskRepository;
-        IRepositoryService<ProjectDto> ProjectRepositoryService;
-        IRepositoryService<EmployeeDto> EmployeeRepositoryService;
+        private readonly IProjectTaskRepository<ProjectTask> ProjectTaskRepository;
+        private readonly IRepositoryService<ProjectDto> ProjectRepositoryService;
+        private readonly IRepositoryService<EmployeeDto> EmployeeRepositoryService;
 
-        IConvert<ProjectTask, ProjectTaskDto> ProjectTaskDtoConverter;
-        IConvert<ProjectTaskDto, ProjectTask> ProjectTaskConverter;
+        private readonly IConvert<ProjectTask, ProjectTaskDto> ProjectTaskDtoConverter;
+        private readonly IConvert<ProjectTaskDto, ProjectTask> ProjectTaskConverter;
 
         public ProjectTaskRepositoryService(IRepositoryService<ProjectDto> projectRepositoryService, 
             IRepositoryService<EmployeeDto> employeeRepositoryService,
@@ -61,9 +61,9 @@ namespace TrainingTask.ApplicationCore.Repository
             return ProjectTasksDto;
         }
 
-        public ProjectTaskDto GetSingle(int id)
+        public ProjectTaskDto Get(int id)
         {
-            ProjectTask ProjectTask = ProjectTaskRepository.GetSingle(id);
+            ProjectTask ProjectTask = ProjectTaskRepository.Get(id);
             ProjectTaskDto ProjectTaskDto = ProjectTaskDtoConverter.Convert(ProjectTask);
             ProjectTaskDto.ProjectShortName = GetProjectShortName(ProjectTaskDto.ProjectId);
             ProjectTaskDto.EmployeeFullName = GetEmployeeFullName(ProjectTaskDto.EmployeeId);
@@ -79,13 +79,13 @@ namespace TrainingTask.ApplicationCore.Repository
 
         private string GetProjectShortName(int id)
         {
-            return ProjectRepositoryService.GetSingle(id).ShortName;
+            return ProjectRepositoryService.Get(id).ShortName;
         }
 
         private string GetEmployeeFullName(int? id)
         {
             if (id == null) return "";
-            EmployeeDto EmployeeDto = EmployeeRepositoryService.GetSingle((int)id);
+            EmployeeDto EmployeeDto = EmployeeRepositoryService.Get((int)id);
             string EmployeeFullName = $"{EmployeeDto.LastName} {EmployeeDto.FirstName} {EmployeeDto.Patronymic}";
 
             return EmployeeFullName;

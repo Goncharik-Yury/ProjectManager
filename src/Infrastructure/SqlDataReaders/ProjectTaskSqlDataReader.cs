@@ -9,15 +9,7 @@ namespace TrainingTask.Infrastructure.SqlDataReaders
 {
     public class ProjectTaskSqlDataReader : SqlDataReader<ProjectTask>
     {
-        public ProjectTaskSqlDataReader(string connectionString) : base(connectionString)
-        {
-        }
-
-        //protected override string ConnectionString
-        //{
-        //    get => ConnectionString;
-        //    set => ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf;Integrated Security=True;Connect Timeout=30";
-        //}
+        public ProjectTaskSqlDataReader(string connectionString) : base(connectionString) { }
         protected override ProjectTask DataParse(SqlDataReader sqlDataReader)
         {
             ProjectTask ProjectTasks = new ProjectTask

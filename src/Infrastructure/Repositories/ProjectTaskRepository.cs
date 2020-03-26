@@ -12,8 +12,8 @@ namespace TrainingTask.Infrastructure.Repositories
 {
     public class ProjectTaskRepository : IProjectTaskRepository<ProjectTask>
     {
-        ISqlDataReader<ProjectTask> ProjectTaskSqlDataReader;
-        IConvertDal<ProjectTask, DataTable> Converter;
+        private readonly ISqlDataReader<ProjectTask> ProjectTaskSqlDataReader;
+        private readonly IConvertDal<ProjectTask, DataTable> Converter;
 
         public ProjectTaskRepository(ISqlDataReader<ProjectTask> projectTaskSqlDataReader)
         {
@@ -34,6 +34,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@ProjectId", item.ProjectId),
                 new SqlParameter("@EmployeeId", item.EmployeeId)
             };
+
             ProjectTaskSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
@@ -44,6 +45,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
+
             ProjectTaskSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
@@ -68,7 +70,7 @@ namespace TrainingTask.Infrastructure.Repositories
             return Projects;
         }
 
-        public ProjectTask GetSingle(int id)
+        public ProjectTask Get(int id)
         {
             string SqlQueryString = $"SELECT * FROM ProjectTask WHERE Id = @Id";
             List<SqlParameter> QueryParameters = new List<SqlParameter>
@@ -94,6 +96,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@ProjectId", item.ProjectId),
                 new SqlParameter("@EmployeeId", item.EmployeeId)
             };
+
             ProjectTaskSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
@@ -101,6 +104,7 @@ namespace TrainingTask.Infrastructure.Repositories
         {
             return Converter.ConvertAll(dataTable).FirstOrDefault();
         }
+
         private IList<ProjectTask> ConvertToProjectTasksList(DataTable dataTable)
         {
             return Converter.ConvertAll(dataTable);

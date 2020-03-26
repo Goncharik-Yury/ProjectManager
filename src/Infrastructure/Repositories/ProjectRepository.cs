@@ -12,8 +12,8 @@ namespace TrainingTask.Infrastructure.Repositories
 {
     public class ProjectRepository : IRepository<Project>
     {
-        ISqlDataReader<Project> ProjectSqlDataReader;
-        IConvertDal<Project, DataTable> Converter;
+        private readonly ISqlDataReader<Project> ProjectSqlDataReader;
+        private readonly IConvertDal<Project, DataTable> Converter;
 
         public ProjectRepository(ISqlDataReader<Project> projectSqlDataReader)
         {
@@ -42,6 +42,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
+
             ProjectSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
@@ -51,7 +52,7 @@ namespace TrainingTask.Infrastructure.Repositories
             return ProjectSqlDataReader.GetData(SqlQueryString);
         }
 
-        public Project GetSingle(int id)
+        public Project Get(int id)
         {
             string SqlQueryString = $"SELECT * FROM Project where Id = @Id";
 
@@ -59,6 +60,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
+
             Project Project = ProjectSqlDataReader.GetData(SqlQueryString, QueryParameters).FirstOrDefault();
             return Project;
         }
@@ -74,6 +76,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@Description", item.Description),
                 new SqlParameter("@Id", item.Id)
             };
+
             ProjectSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
     }

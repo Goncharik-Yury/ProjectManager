@@ -62,7 +62,7 @@ namespace TrainingTask.Controllers
         {
             logger.LogDebug($"Project.Edit is called");
             ViewBag.AspAction = "Edit";
-            ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectRepositoryService.GetSingle(id));
+            ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectRepositoryService.Get(id));
             IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.ConvertAll(ProjectTaskRepositoryService.GetAllByProjectId(ProjectVm.Id));
             ProjectAllVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);
 

@@ -18,10 +18,10 @@ namespace TrainingTask.Controllers
         IRepositoryService<ProjectDto> ProjectRepositoryService;
         IRepositoryService<EmployeeDto> EmployeeRepositoryService;
 
-        readonly IConvert<ProjectTaskVm, ProjectTaskDto> ConvertToProjectTaskDto;
-        readonly IConvert<ProjectTaskDto, ProjectTaskVm> ConvertToProjectTaskVm;
+        private readonly IConvert<ProjectTaskVm, ProjectTaskDto> ConvertToProjectTaskDto;
+        private readonly IConvert<ProjectTaskDto, ProjectTaskVm> ConvertToProjectTaskVm;
 
-        string[] ProjectTaskStatuses = { "NotStarted", "InProcess", "Completed", "Delayed" };
+        private readonly string[] ProjectTaskStatuses = { "NotStarted", "InProcess", "Completed", "Delayed" };
 
         public ProjectTaskController(
             ILogger logger,
@@ -75,7 +75,7 @@ namespace TrainingTask.Controllers
             ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
 
             ViewBag.AspAction = "Edit";
-            ProjectTaskVm model = ConvertToProjectTaskVm.Convert(ProjectTaskRepositoryService.GetSingle(id));
+            ProjectTaskVm model = ConvertToProjectTaskVm.Convert(ProjectTaskRepositoryService.Get(id));
             return View("CreateOrEdit", model);
         }
 

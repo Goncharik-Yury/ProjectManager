@@ -12,7 +12,7 @@ namespace TrainingTask.Infrastructure.Repositories
 {
     public class EmployeeRepository : IRepository<Employee>
     {
-        ISqlDataReader<Employee> EmployeeSqlDataReader;
+        private readonly ISqlDataReader<Employee> EmployeeSqlDataReader;
 
         public EmployeeRepository(ISqlDataReader<Employee> employeeSqlDataReader)
         {
@@ -40,10 +40,11 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
+
             EmployeeSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
 
-        public Employee GetSingle(int id)
+        public Employee Get(int id)
         {
             string SqlQueryString = $"SELECT * FROM Employee where Id = @Id";
 
@@ -51,6 +52,7 @@ namespace TrainingTask.Infrastructure.Repositories
             {
                 new SqlParameter("@Id", id)
             };
+
             IList<Employee> Employees = EmployeeSqlDataReader.GetData(SqlQueryString, QueryParameters);
  
             return Employees.FirstOrDefault();
@@ -73,6 +75,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@Position", item.Position),
                 new SqlParameter("@Id", item.Id)
             };
+
             EmployeeSqlDataReader.ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
     }

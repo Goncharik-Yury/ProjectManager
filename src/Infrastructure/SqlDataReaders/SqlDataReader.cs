@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -12,12 +13,8 @@ namespace TrainingTask.Infrastructure.SqlDataReaders
         {
             ConnectionString = connectionString;
         }
+
         public string ConnectionString { get; set; }
-        //protected string ConnectionString
-        //{
-        //    get { }
-        //    set { }
-        //}
 
         public void ExecuteNonQuery(string sqlQueryString, IList<SqlParameter> queryParameters = null)
         {
@@ -35,6 +32,7 @@ namespace TrainingTask.Infrastructure.SqlDataReaders
                             {
                                 Parameter.Value = "";
                             }
+
                             CommandToExecute.Parameters.Add(Parameter);
                         }
                     }
@@ -72,11 +70,14 @@ namespace TrainingTask.Infrastructure.SqlDataReaders
                         {
                             DataAll.Add(DataParse(Reader));
                         }
+
                         Reader.Close();
                         return DataAll;
                     }
+
                     return null;
                 }
+
                 catch (Exception ex)
                 {
                     throw; // TODO: realize correct

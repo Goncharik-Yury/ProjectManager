@@ -13,9 +13,9 @@ namespace TrainingTask.Controllers
     public class EmployeeController : Controller
     {
         private readonly ILogger logger;
-        readonly IRepositoryService<EmployeeDto> EmployeeRepositoryService;
-        readonly IConvert<EmployeeVm, EmployeeDto> ConvertToEmployeeDto;
-        readonly IConvert<EmployeeDto, EmployeeVm> ConvertToEmployeeVm;
+        private readonly IRepositoryService<EmployeeDto> EmployeeRepositoryService;
+        private readonly IConvert<EmployeeVm, EmployeeDto> ConvertToEmployeeDto;
+        private readonly IConvert<EmployeeDto, EmployeeVm> ConvertToEmployeeVm;
         public EmployeeController(ILogger logger,
             IRepositoryService<EmployeeDto> employeeRepositoryService,
             IConvert<EmployeeVm, EmployeeDto> convertToEmployeeDto,
@@ -39,6 +39,7 @@ namespace TrainingTask.Controllers
             {
                 EmployeesVm.Add(ConvertToEmployeeVm.Convert(item));
             }
+
             return View(EmployeesVm);
         }
 
@@ -54,7 +55,7 @@ namespace TrainingTask.Controllers
         public IActionResult Edit(int id)
         {
             logger.LogDebug($"Employee.Edit is called");
-            EmployeeDto EmployeeDto = EmployeeRepositoryService.GetSingle(id);
+            EmployeeDto EmployeeDto = EmployeeRepositoryService.Get(id);
             EmployeeVm model = ConvertToEmployeeVm.Convert(EmployeeDto);
             ViewBag.AspAction = "Edit";
             return View("CreateOrEdit", model);
@@ -84,6 +85,7 @@ namespace TrainingTask.Controllers
                 logger.LogError(ex.Message);
                 return View("Error");
             }
+
             return RedirectToAction(nameof(Index));
 
 
@@ -112,6 +114,7 @@ namespace TrainingTask.Controllers
                 logger.LogError(ex.Message);
                 return View("Error");
             }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -129,6 +132,7 @@ namespace TrainingTask.Controllers
                 logger.LogError(ex.Message);
                 return View("Error");
             }
+
             return RedirectToAction(nameof(Index));
         }
     }

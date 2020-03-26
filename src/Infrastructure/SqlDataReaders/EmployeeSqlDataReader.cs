@@ -9,22 +9,7 @@ namespace TrainingTask.Infrastructure.SqlDataReaders
 {
     public class EmployeeSqlDataReader : SqlDataReader<Employee>
     {
-        public EmployeeSqlDataReader(string connectionString) : base(connectionString)
-        {
-        }
-
-        //protected override string ConnectionString { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        //public EmployeeSqlDataReader(string connectionString)
-        //{
-        //    this.connectionString = connectionString;
-        //}
-
-        //protected override string ConnectionString
-        //{
-        //    get => ConnectionString;
-        //    set => ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\SeleSt\Programs\Projects\Database\TestTaskDB.mdf;Integrated Security=True;Connect Timeout=30";
-        //}
+        public EmployeeSqlDataReader(string connectionString) : base(connectionString) { }
 
         protected override Employee DataParse(SqlDataReader sqlDataReader)
         {

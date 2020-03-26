@@ -7,7 +7,7 @@ namespace TrainingTask.ApplicationCore.Repository
     public interface IRepositoryService<TDto> where TDto : class
     {
         IList<TDto> GetAll();
-        TDto GetSingle(int id);
+        TDto Get(int id);
         void Create(TDto item);
         void Update(TDto item);
         void Delete(int id);

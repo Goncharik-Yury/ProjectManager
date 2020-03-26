@@ -28,6 +28,6 @@ namespace TrainingTask.Web.ViewModels
         [Required(ErrorMessage = "Choose ProjectId")]
         public int ProjectId { get; set; }
         [Required(ErrorMessage = "Choose EmployeeId")]
-        public int? EmployeeId { get; set; } // TODO: why it cant write null in null allowed field in DB?
+        public int? EmployeeId { get; set; }
     }
 }
