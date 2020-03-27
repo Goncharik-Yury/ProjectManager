@@ -13,7 +13,6 @@ using TrainingTask.Web.Converters;
 using Common.Logger;
 using TrainingTask.Web.ViewModels;
 using TrainingTask.Infrastructure.Repositories;
-using TrainingTask.Infrastructure.SqlDataReaders;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -50,17 +49,13 @@ namespace TrainingTask.Web
             services.AddSingleton<IConvert<ProjectTask, ProjectTaskDto>, ApplicationCore.Converters.ProjectTaskDtoConverter>();
             services.AddSingleton<IConvert<ProjectTaskDto, ProjectTask>, ApplicationCore.Converters.ProjectTaskConverter>();
 
-            services.AddSingleton<IRepositoryService<EmployeeDto>, EmployeeRepositoryService>();
-            services.AddSingleton<IRepositoryService<ProjectDto>, ProjectRepositoryService>();
-            services.AddSingleton<IProjectTaskRepositoryService<ProjectTaskDto>, ProjectTaskRepositoryService>();
+            services.AddScoped<IService<EmployeeDto>, EmployeeService>();
+            services.AddScoped<IService<ProjectDto>, ProjectService>();
+            services.AddScoped<IProjectTaskService<ProjectTaskDto>, ProjectTaskService>();
 
-            services.AddSingleton<IRepository<Employee>>(x => new EmployeeRepository(ConnectionString));
-            services.AddSingleton<IRepository<Project>>(x => new ProjectRepository(ConnectionString));
-            services.AddSingleton<IProjectTaskRepository<ProjectTask>>(x => new ProjectTaskRepository(ConnectionString));
-
-            //services.AddSingleton<ISqlDataReader<Employee>>(x => new EmployeeReader(ConnectionString));
-            //services.AddSingleton<ISqlDataReader<Project>>(x => new ProjectReader(ConnectionString));
-            //services.AddSingleton<ISqlDataReader<ProjectTask>>(x => new ProjectTaskReader(ConnectionString));
+            services.AddScoped<IRepository<Employee>>(x => new EmployeeRepository(ConnectionString));
+            services.AddScoped<IRepository<Project>>(x => new ProjectRepository(ConnectionString));
+            services.AddScoped<IProjectTaskRepository<ProjectTask>>(x => new ProjectTaskRepository(ConnectionString));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

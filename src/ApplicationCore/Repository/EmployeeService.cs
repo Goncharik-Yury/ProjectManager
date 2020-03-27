@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace TrainingTask.ApplicationCore.Repository
 {
-    public class EmployeeRepositoryService : IRepositoryService<EmployeeDto>
+    public class EmployeeService : IService<EmployeeDto>
     {
         private readonly ILogger logger;
 
@@ -18,7 +18,7 @@ namespace TrainingTask.ApplicationCore.Repository
         private readonly IConvert<Employee, EmployeeDto> EmployeeDtoConverter;
         private readonly IConvert<EmployeeDto, Employee> EmployeeConverter;
 
-        public EmployeeRepositoryService(ILogger logger, IRepository<Employee> employeeRepository, IConvert<Employee, EmployeeDto> employeeDtoConverter, IConvert<EmployeeDto, Employee> employeeConverter)
+        public EmployeeService(ILogger logger, IRepository<Employee> employeeRepository, IConvert<Employee, EmployeeDto> employeeDtoConverter, IConvert<EmployeeDto, Employee> employeeConverter)
         {
             this.logger = logger;
             EmployeeRepository = employeeRepository;

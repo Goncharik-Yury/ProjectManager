@@ -25,7 +25,7 @@ namespace TrainingTask.Web.Converters
             };
         }
 
-        public IList<ProjectTaskVm> ConvertAll(IList<ProjectTaskDto> items)
+        public IList<ProjectTaskVm> Convert(IList<ProjectTaskDto> items)
         {
             if (items == null)
                 return null;

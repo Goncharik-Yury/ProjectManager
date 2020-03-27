@@ -19,7 +19,7 @@ namespace TrainingTask.Web.Converters
             };
         }
 
-        public IList<ProjectDto> ConvertAll(IList<ProjectVm> items)
+        public IList<ProjectDto> Convert(IList<ProjectVm> items)
         {
             List<ProjectDto> ProjectsDto = new List<ProjectDto>();
             foreach (var item in items)

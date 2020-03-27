@@ -14,9 +14,9 @@ namespace TrainingTask.Controllers
     public class ProjectTaskController : Controller
     {
         private readonly ILogger logger;
-        IProjectTaskRepositoryService<ProjectTaskDto> ProjectTaskRepositoryService;
-        IRepositoryService<ProjectDto> ProjectRepositoryService;
-        IRepositoryService<EmployeeDto> EmployeeRepositoryService;
+        IProjectTaskService<ProjectTaskDto> ProjectTaskRepositoryService;
+        IService<ProjectDto> ProjectRepositoryService;
+        IService<EmployeeDto> EmployeeRepositoryService;
 
         private readonly IConvert<ProjectTaskVm, ProjectTaskDto> ConvertToProjectTaskDto;
         private readonly IConvert<ProjectTaskDto, ProjectTaskVm> ConvertToProjectTaskVm;
@@ -25,9 +25,9 @@ namespace TrainingTask.Controllers
 
         public ProjectTaskController(
             ILogger logger,
-            IProjectTaskRepositoryService<ProjectTaskDto> projectTaskRepositoryService,
-            IRepositoryService<ProjectDto> projectRepositoryService,
-            IRepositoryService<EmployeeDto> employeeRepositoryService,
+            IProjectTaskService<ProjectTaskDto> projectTaskRepositoryService,
+            IService<ProjectDto> projectRepositoryService,
+            IService<EmployeeDto> employeeRepositoryService,
         IConvert<ProjectTaskVm, ProjectTaskDto> convertToProjectTaskDto,
             IConvert<ProjectTaskDto, ProjectTaskVm> convertToProjectTaskVm
             )
@@ -46,7 +46,7 @@ namespace TrainingTask.Controllers
         public IActionResult Index()
         {
             logger.LogDebug($"ProjectTask.Index [post] is called");
-            IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.ConvertAll(ProjectTaskRepositoryService.GetAll());
+            IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskRepositoryService.GetAll());
             return View(ProjectTasksVm);
         }
 
@@ -192,6 +192,7 @@ namespace TrainingTask.Controllers
             public int Id { get; set; }
             public string FullName { get; set; }
         }
+
         private class ProjectSelectListItem
         {
             public int Id { get; set; }

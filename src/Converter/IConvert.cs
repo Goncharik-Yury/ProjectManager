@@ -6,6 +6,6 @@ namespace TrainingTask.Common
     public interface IConvert<TIn, TOut>
     {
         TOut Convert(TIn item);
-        IList<TOut> ConvertAll(IList<TIn> items);
+        IList<TOut> Convert(IList<TIn> items);
     }
 }

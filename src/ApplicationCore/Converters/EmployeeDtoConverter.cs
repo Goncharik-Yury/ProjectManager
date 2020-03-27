@@ -20,7 +20,7 @@ namespace TrainingTask.ApplicationCore.Converters
                 Position = item.Position
             };
         }
-        public IList<EmployeeDto> ConvertAll(IList<Employee> items)
+        public IList<EmployeeDto> Convert(IList<Employee> items)
         {
             List<EmployeeDto> EmployeesDto = new List<EmployeeDto>();
             foreach (var item in items)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
-using TrainingTask.Infrastructure.SqlDataReaders;
+using TrainingTask.Infrastructure.Repositories;
 using TrainingTask.Infrastructure.Models;
 using System.Linq;
 using TrainingTask.Common;
@@ -39,14 +39,8 @@ namespace TrainingTask.Infrastructure.Repositories
 
         public void Create(Project item)
         {
-            List<SqlParameter> QueryParameters = new List<SqlParameter>
-            {
-                new SqlParameter("@Name", item.Name),
-                new SqlParameter("@ShortName", item.ShortName),
-                new SqlParameter("@Description", item.Description)
-            };
-
             string SqlQueryString = $"INSERT INTO Project (Name, ShortName, Description) VALUES (@Name, @ShortName, @Description)";
+            List<SqlParameter> QueryParameters = GetEntityParameters(item);
 
             ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
@@ -87,13 +81,21 @@ namespace TrainingTask.Infrastructure.Repositories
 
             List<SqlParameter> QueryParameters = new List<SqlParameter>
             {
-                new SqlParameter("@Name", item.Name),
-                new SqlParameter("@ShortName", item.ShortName),
-                new SqlParameter("@Description", item.Description),
                 new SqlParameter("@Id", item.Id)
             };
+            QueryParameters.AddRange(GetEntityParameters(item));
 
             ExecuteNonQuery(SqlQueryString, QueryParameters);
+        }
+
+        private List<SqlParameter> GetEntityParameters(Project item)
+        {
+            return new List<SqlParameter>
+            {
+                new SqlParameter("@Name", item.Name),
+                new SqlParameter("@ShortName", item.ShortName),
+                new SqlParameter("@Description", item.Description)
+            };
         }
     }
 }

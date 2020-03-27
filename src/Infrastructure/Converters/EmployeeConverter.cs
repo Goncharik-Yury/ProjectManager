@@ -14,7 +14,7 @@ namespace TrainingTask.Infrastructure.Converters
             throw new NotImplementedException();
         }
 
-        public IList<Employee> ConvertAll(IList<SqlDataReader> items)
+        public IList<Employee> Convert(IList<SqlDataReader> items)
         {
             throw new NotImplementedException();
         }

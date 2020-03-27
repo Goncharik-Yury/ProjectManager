@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
-using TrainingTask.Infrastructure.SqlDataReaders;
 using TrainingTask.Infrastructure.Models;
 using System.Linq;
 using TrainingTask.Common;
@@ -44,16 +43,8 @@ namespace TrainingTask.Infrastructure.Repositories
         public void Create(ProjectTask item)
         {
             string SqlQueryString = $"INSERT INTO ProjectTask (Name, TimeToComplete, BeginDate, EndDate, Status, ProjectId, EmployeeId) VALUES (@Name, @TimeToComplete, @BeginDate, @EndDate, @Status, @ProjectId, @EmployeeId)";
-            List<SqlParameter> QueryParameters = new List<SqlParameter>
-            {
-                new SqlParameter("@Name", item.Name),
-                new SqlParameter("@TimeToComplete", item.TimeToComplete),
-                new SqlParameter("@BeginDate", item.BeginDate),
-                new SqlParameter("@EndDate", item.EndDate),
-                new SqlParameter("@Status", item.Status),
-                new SqlParameter("@ProjectId", item.ProjectId),
-                new SqlParameter("@EmployeeId", item.EmployeeId)
-            };
+            List<SqlParameter> QueryParameters = GetEntityParameters(item);
+
 
             ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
@@ -107,7 +98,17 @@ namespace TrainingTask.Infrastructure.Repositories
             string SqlQueryString = $"UPDATE ProjectTask SET Name = @Name, TimeToComplete = @TimeToComplete, BeginDate = @BeginDate, EndDate = @EndDate, Status = @Status, EmployeeId = @EmployeeId, ProjectId = @ProjectId WHERE Id = @Id";
             List<SqlParameter> QueryParameters = new List<SqlParameter>
             {
-                new SqlParameter("@Id", item.Id),
+                new SqlParameter("@Id", item.Id)
+            };
+            QueryParameters.AddRange(GetEntityParameters(item));
+
+            ExecuteNonQuery(SqlQueryString, QueryParameters);
+        }
+
+        private List<SqlParameter> GetEntityParameters(ProjectTask item)
+        {
+            return new List<SqlParameter>
+            {
                 new SqlParameter("@Name", item.Name),
                 new SqlParameter("@TimeToComplete", item.TimeToComplete),
                 new SqlParameter("@BeginDate", item.BeginDate),
@@ -116,8 +117,6 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@ProjectId", item.ProjectId),
                 new SqlParameter("@EmployeeId", item.EmployeeId)
             };
-
-            ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
     }
 }

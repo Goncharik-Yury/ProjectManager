@@ -19,7 +19,7 @@ namespace TrainingTask.ApplicationCore.Converters
                 Description = item.Description
             };
         }
-        public IList<Project> ConvertAll(IList<ProjectDto> items)
+        public IList<Project> Convert(IList<ProjectDto> items)
         {
             List<Project> ProjectsDto = new List<Project>();
             foreach (var item in items)

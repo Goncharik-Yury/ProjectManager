@@ -21,7 +21,7 @@ namespace TrainingTask.ApplicationCore.Converters
                 EmployeeId = item.EmployeeId
             };
         }
-        public IList<ProjectTaskDto> ConvertAll(IList<ProjectTask> items)
+        public IList<ProjectTaskDto> Convert(IList<ProjectTask> items)
         {
             List<ProjectTaskDto> ProjectTasksDto = new List<ProjectTaskDto>();
             if (items == null)

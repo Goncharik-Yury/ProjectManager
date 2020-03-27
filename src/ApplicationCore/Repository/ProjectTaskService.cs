@@ -8,17 +8,17 @@ using TrainingTask.Infrastructure.Repositories;
 
 namespace TrainingTask.ApplicationCore.Repository
 {
-    public class ProjectTaskRepositoryService : IProjectTaskRepositoryService<ProjectTaskDto>
+    public class ProjectTaskService : IProjectTaskService<ProjectTaskDto>
     {
         private readonly IProjectTaskRepository<ProjectTask> ProjectTaskRepository;
-        private readonly IRepositoryService<ProjectDto> ProjectRepositoryService;
-        private readonly IRepositoryService<EmployeeDto> EmployeeRepositoryService;
+        private readonly IService<ProjectDto> ProjectRepositoryService;
+        private readonly IService<EmployeeDto> EmployeeRepositoryService;
 
         private readonly IConvert<ProjectTask, ProjectTaskDto> ProjectTaskDtoConverter;
         private readonly IConvert<ProjectTaskDto, ProjectTask> ProjectTaskConverter;
 
-        public ProjectTaskRepositoryService(IRepositoryService<ProjectDto> projectRepositoryService, 
-            IRepositoryService<EmployeeDto> employeeRepositoryService,
+        public ProjectTaskService(IService<ProjectDto> projectRepositoryService, 
+            IService<EmployeeDto> employeeRepositoryService,
             IProjectTaskRepository<ProjectTask> projectTaskRepository,
             IConvert<ProjectTask, ProjectTaskDto> projectTaskDtoConverter,
             IConvert<ProjectTaskDto, ProjectTask> projectTaskConverter
@@ -94,7 +94,7 @@ namespace TrainingTask.ApplicationCore.Repository
         public IList<ProjectTaskDto> GetAllByProjectId(int id)
         {
             IList<ProjectTask> ProjectTask = ProjectTaskRepository.GetAllByProjectId(id);
-            return ProjectTaskDtoConverter.ConvertAll(ProjectTask);
+            return ProjectTaskDtoConverter.Convert(ProjectTask);
         }
     }
 }

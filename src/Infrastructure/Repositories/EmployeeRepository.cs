@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Linq;
-using TrainingTask.Infrastructure.SqlDataReaders;
+using TrainingTask.Infrastructure.Repositories;
 using TrainingTask.Infrastructure.Models;
 using Microsoft.Extensions.Logging;
 using TrainingTask.Common;
@@ -43,13 +43,7 @@ namespace TrainingTask.Infrastructure.Repositories
         public void Create(Employee item)
         {
             string SqlQueryString = $"INSERT INTO Employee (LastName, FirstName, Patronymic , Position) VALUES (@LastName, @FirstName, @Patronymic, @Position)";
-            List<SqlParameter> QueryParameters = new List<SqlParameter>
-            {
-                new SqlParameter("@LastName", item.LastName),
-                new SqlParameter("@FirstName", item.FirstName),
-                new SqlParameter("@Patronymic", item.Patronymic),
-                new SqlParameter("@Position", item.Position)
-            };
+            List<SqlParameter> QueryParameters = GetEntityParameters(item);
 
             ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
@@ -90,14 +84,22 @@ namespace TrainingTask.Infrastructure.Repositories
             string SqlQueryString = $"UPDATE Employee SET LastName = @LastName, FirstName = @FirstName, Patronymic  = @Patronymic, Position = @Position WHERE id = @Id";
             List<SqlParameter> QueryParameters = new List<SqlParameter>
             {
+                new SqlParameter("@Id", item.Id)
+            };
+            QueryParameters.AddRange(GetEntityParameters(item));
+
+            ExecuteNonQuery(SqlQueryString, QueryParameters);
+        }
+
+        private List<SqlParameter> GetEntityParameters(Employee item)
+        {
+            return new List<SqlParameter>
+            {
                 new SqlParameter("@LastName", item.LastName),
                 new SqlParameter("@FirstName", item.FirstName),
                 new SqlParameter("@Patronymic", item.Patronymic),
-                new SqlParameter("@Position", item.Position),
-                new SqlParameter("@Id", item.Id)
+                new SqlParameter("@Position", item.Position)
             };
-
-            ExecuteNonQuery(SqlQueryString, QueryParameters);
         }
     }
 }

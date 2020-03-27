@@ -22,7 +22,7 @@ namespace TrainingTask.Web.Converters
             };
         }
 
-        public IList<EmployeeDto> ConvertAll(IList<EmployeeVm> items)
+        public IList<EmployeeDto> Convert(IList<EmployeeVm> items)
         {
             List<EmployeeDto> EmployeesDto = new List<EmployeeDto>();
             foreach (var item in items)

@@ -13,11 +13,11 @@ namespace TrainingTask.Controllers
     public class EmployeeController : Controller
     {
         private readonly ILogger logger;
-        private readonly IRepositoryService<EmployeeDto> EmployeeRepositoryService;
+        private readonly IService<EmployeeDto> EmployeeRepositoryService;
         private readonly IConvert<EmployeeVm, EmployeeDto> ConvertToEmployeeDto;
         private readonly IConvert<EmployeeDto, EmployeeVm> ConvertToEmployeeVm;
         public EmployeeController(ILogger logger,
-            IRepositoryService<EmployeeDto> employeeRepositoryService,
+            IService<EmployeeDto> employeeRepositoryService,
             IConvert<EmployeeVm, EmployeeDto> convertToEmployeeDto,
             IConvert<EmployeeDto, EmployeeVm> convertToEmployeeVm
             )

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TrainingTask.ApplicationCore.Repository
 {
-    public interface IProjectTaskRepositoryService<TDto> : IRepositoryService<TDto> where TDto : class
+    public interface IProjectTaskService<TDto> : IService<TDto> where TDto : class
     {
         IList<TDto> GetAllByProjectId(int id);
     }

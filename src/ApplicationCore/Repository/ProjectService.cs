@@ -9,14 +9,14 @@ using TrainingTask.Infrastructure.Repositories;
 
 namespace TrainingTask.ApplicationCore.Repository
 {
-    public class ProjectRepositoryService : IRepositoryService<ProjectDto>
+    public class ProjectService : IService<ProjectDto>
     {
         private readonly IRepository<Project> ProjectRepository;
         private readonly IConvert<Project, ProjectDto> ProjectDtoConverter;
         private readonly IConvert<ProjectDto, Project> ProjectConverter;
         private readonly ILogger logger;
 
-        public ProjectRepositoryService(IRepository<Project> projectRepository, IConvert<Project, ProjectDto> projectDtoConverter, IConvert<ProjectDto, Project> projectConverter, ILogger logger)
+        public ProjectService(IRepository<Project> projectRepository, IConvert<Project, ProjectDto> projectDtoConverter, IConvert<ProjectDto, Project> projectConverter, ILogger logger)
         {
             ProjectRepository = projectRepository;
             ProjectDtoConverter = projectDtoConverter;
@@ -48,7 +48,7 @@ namespace TrainingTask.ApplicationCore.Repository
         {
             logger.LogDebug(this.GetType() + ".GetAll is called");
             IList<Project> Projects = ProjectRepository.GetAll();
-            IList<ProjectDto> ProjectsDto = ProjectDtoConverter.ConvertAll(Projects);
+            IList<ProjectDto> ProjectsDto = ProjectDtoConverter.Convert(Projects);
             return ProjectsDto;
         }
 
