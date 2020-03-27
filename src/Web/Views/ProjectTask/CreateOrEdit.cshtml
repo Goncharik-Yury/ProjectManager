@@ -5,9 +5,9 @@
 <div class="row">
     <div class="col-md-4">
 
-        @if (@ViewBag.AspAction == "Create")
+        @if (Model == null)
         {
-            ViewData["Title"] = "Edit";
+            ViewData["Title"] = "Create";
             <h1>Create</h1>
 
             <form asp-action="Create" method="post">
@@ -20,12 +20,12 @@
                 </div>
             </form>
         }
-        else if (@ViewBag.AspAction == "Edit")
+        else
         {
             ViewData["Title"] = "Edit";
             <h1>Edit</h1>
 
-            <form asp-action="Create" method="post">
+            <form asp-action="Edit" method="post">
 
                 <partial name="_ProjectTaskFormPartial" />
 

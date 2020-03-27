@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
 using TrainingTask.ApplicationCore.Dto;
-using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TrainingTask.ApplicationCore.Repository;
@@ -54,13 +53,9 @@ namespace TrainingTask.Controllers
         public IActionResult Create()
         {
             logger.LogDebug($"ProjectTask.Create [get] is called");
-
             ViewBag.EmployeeSelectList = FillEmployeeSelectList();
             ViewBag.ProjectSelectList = GetProjectSelectList();
-
             ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
-
-            ViewBag.AspAction = "Create";
             return View("CreateOrEdit");
         }
 
@@ -68,13 +63,9 @@ namespace TrainingTask.Controllers
         public IActionResult Edit(int id)
         {
             logger.LogDebug($"ProjectTask.Edit [get] is called");
-
             ViewBag.EmployeeSelectList = FillEmployeeSelectList();
             ViewBag.ProjectSelectList = GetProjectSelectList();
-
             ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
-
-            ViewBag.AspAction = "Edit";
             ProjectTaskVm model = ConvertToProjectTaskVm.Convert(ProjectTaskService.Get(id));
             return View("CreateOrEdit", model);
         }
@@ -155,6 +146,7 @@ namespace TrainingTask.Controllers
                 logger.LogError(ex.Message);
                 return View("Error");
             }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -170,6 +162,7 @@ namespace TrainingTask.Controllers
                     ShortName = item.ShortName
                 });
             }
+
             return new SelectList(ProjectSelectList, "Id", "ShortName");
         }
         private SelectList FillEmployeeSelectList()
@@ -184,19 +177,8 @@ namespace TrainingTask.Controllers
                     FullName = $"{item.LastName} {item.FirstName} {item.Patronymic}"
                 });
             }
+
             return new SelectList(EmployeeSelectList, "Id", "FullName");
-        }
-
-        private class EmployeeSelectListItem
-        {
-            public int Id { get; set; }
-            public string FullName { get; set; }
-        }
-
-        private class ProjectSelectListItem
-        {
-            public int Id { get; set; }
-            public string ShortName { get; set; }
         }
     }
 }

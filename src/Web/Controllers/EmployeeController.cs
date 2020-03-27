@@ -47,7 +47,6 @@ namespace TrainingTask.Controllers
         public IActionResult Create()
         {
             logger.LogDebug($"Employee.Create is called");
-            ViewBag.AspAction = "Create";
             return View("CreateOrEdit");
         }
 
@@ -57,7 +56,6 @@ namespace TrainingTask.Controllers
             logger.LogDebug($"Employee.Edit is called");
             EmployeeDto EmployeeDto = EmployeeService.Get(id);
             EmployeeVm model = ConvertToEmployeeVm.Convert(EmployeeDto);
-            ViewBag.AspAction = "Edit";
             return View("CreateOrEdit", model);
         }
 

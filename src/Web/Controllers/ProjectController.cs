@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using TrainingTask.Web.ViewModels;
 using TrainingTask.ApplicationCore.Dto;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using TrainingTask.ApplicationCore.Repository;
 using TrainingTask.Common;
 
@@ -53,7 +52,6 @@ namespace TrainingTask.Controllers
         public IActionResult Create()
         {
             logger.LogDebug($"Project.Create is called");
-            ViewBag.AspAction = "Create";
             return View("CreateOrEdit");
         }
 
@@ -61,7 +59,6 @@ namespace TrainingTask.Controllers
         public IActionResult Edit(int id)
         {
             logger.LogDebug($"Project.Edit is called");
-            ViewBag.AspAction = "Edit";
             ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectService.Get(id));
             IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskService.GetAllByProjectId(ProjectVm.Id));
             ProjectAllVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);

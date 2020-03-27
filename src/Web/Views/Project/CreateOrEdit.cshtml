@@ -4,7 +4,7 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        @if (ViewBag.AspAction == "Create")
+        @if (Model == null)
         {
             ViewData["Title"] = "Create";
             <h1>Create</h1>
@@ -17,7 +17,7 @@
                 </div>
             </form>
         }
-        else if (@ViewBag.AspAction == "Edit")
+        else
         {
             ViewData["Title"] = "Edit";
             <h1>Edit</h1>
