@@ -68,7 +68,7 @@ namespace TrainingTask.Controllers
             try
             {
                 if (employee == null)
-                    throw new NullReferenceException();
+                    throw new ArgumentException();
                 if (ModelState.IsValid)
                 {
                     EmployeeService.Create(ConvertToEmployeeDto.Convert(employee));
@@ -97,7 +97,7 @@ namespace TrainingTask.Controllers
             try
             {
                 if (employee == null)
-                    throw new NullReferenceException();
+                    throw new ArgumentException();
                 if (ModelState.IsValid)
                 {
                     EmployeeService.Update(ConvertToEmployeeDto.Convert(employee));

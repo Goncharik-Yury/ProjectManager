@@ -78,7 +78,7 @@ namespace TrainingTask.Controllers
             try
             {
                 if (projectTask == null)
-                    throw new NullReferenceException();
+                    throw new ArgumentException();
                 ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
                 if (ModelState.IsValid)
                 {
@@ -109,7 +109,7 @@ namespace TrainingTask.Controllers
             try
             {
                 if (projectTask == null)
-                    throw new NullReferenceException();
+                    throw new ArgumentException();
                 ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
                 if (ModelState.IsValid)
                 {

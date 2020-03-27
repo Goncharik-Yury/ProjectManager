@@ -20,11 +20,11 @@ namespace TrainingTask.Web
 {
     public class Startup
     {
-        private readonly string ConnectionString;
+        private readonly string connectionString;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            ConnectionString = Configuration["ConnectionStrings:TrainingTaskDB"];
+            connectionString = Configuration["ConnectionStrings:TrainingTaskDB"];
         }
 
         public IConfiguration Configuration { get; }
@@ -53,9 +53,9 @@ namespace TrainingTask.Web
             services.AddScoped<IService<ProjectDto>, ProjectService>();
             services.AddScoped<IProjectTaskService<ProjectTaskDto>, ProjectTaskService>();
 
-            services.AddScoped<IRepository<Employee>>(x => new EmployeeRepository(ConnectionString));
-            services.AddScoped<IRepository<Project>>(x => new ProjectRepository(ConnectionString));
-            services.AddScoped<IProjectTaskRepository<ProjectTask>>(x => new ProjectTaskRepository(ConnectionString));
+            services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepository(connectionString, serviceProvider.GetService<ILogger>());
+            services.AddScoped<IRepository<Project>>(serviceProvider => new ProjectRepository(connectionString, serviceProvider.GetService<ILogger>()));
+            services.AddScoped<IProjectTaskRepository<ProjectTask>>(serviceProvider => new ProjectTaskRepository(connectionString, serviceProvider.GetService<ILogger>()));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

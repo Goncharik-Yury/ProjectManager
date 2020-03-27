@@ -6,6 +6,7 @@ using System.Text;
 using TrainingTask.Infrastructure.Models;
 using System.Linq;
 using TrainingTask.Common;
+using Microsoft.Extensions.Logging;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
@@ -14,10 +15,12 @@ namespace TrainingTask.Infrastructure.Repositories
         protected override string ConnectionString { get; }
 
         Func<SqlDataReader, List<ProjectTask>> converter = ConvertToProjectTask;
-        public ProjectTaskRepository(string connectionString)
+
+        public ProjectTaskRepository(string connectionString, ILogger logger) : base(logger)
         {
             ConnectionString = connectionString;
         }
+
         static List<ProjectTask> ConvertToProjectTask(SqlDataReader sqlDataReader)
         {
             List<ProjectTask> ProjectTasks = new List<ProjectTask>();
@@ -42,18 +45,21 @@ namespace TrainingTask.Infrastructure.Repositories
 
         public void Create(ProjectTask item)
         {
+            logger.LogDebug(GetType() + ".Create is called");
             string SqlQueryString = $"INSERT INTO ProjectTask (Name, TimeToComplete, BeginDate, EndDate, Status, ProjectId, EmployeeId) VALUES (@Name, @TimeToComplete, @BeginDate, @EndDate, @Status, @ProjectId, @EmployeeId)";
             ExecuteNonQuery(SqlQueryString, GetCreateParameters(item));
         }
 
         public void Delete(int id)
         {
+            logger.LogDebug(GetType() + ".Delete is called");
             string SqlQueryString = $"DELETE FROM ProjectTask WHERE id = @Id";
             ExecuteNonQuery(SqlQueryString, GetIdParameter(id));
         }
 
         public IList<ProjectTask> GetAll()
         {
+            logger.LogDebug(GetType() + ".GetAll is called");
             string SqlQueryString = "SELECT * FROM ProjectTask";
             IList<ProjectTask> ProjectTasksList = GetData(SqlQueryString, converter);
             return ProjectTasksList;
@@ -61,6 +67,7 @@ namespace TrainingTask.Infrastructure.Repositories
 
         public IList<ProjectTask> GetAllByProjectId(int id)
         {
+            logger.LogDebug(GetType() + ".GetAllByProjectId is called");
             string SqlQueryString = $"SELECT * FROM ProjectTask WHERE ProjectId = @ProjectId";
             IList<ProjectTask> Projects = GetData(SqlQueryString, converter, GetProjectIdParameter(id));
             return Projects;
@@ -68,6 +75,7 @@ namespace TrainingTask.Infrastructure.Repositories
 
         public ProjectTask Get(int id)
         {
+            logger.LogDebug(GetType() + ".Get is called");
             string SqlQueryString = $"SELECT * FROM ProjectTask WHERE Id = @Id";
             ProjectTask ProjectTask = GetData(SqlQueryString, converter, GetIdParameter(id)).FirstOrDefault();
             return ProjectTask;
@@ -75,6 +83,7 @@ namespace TrainingTask.Infrastructure.Repositories
 
         public void Update(ProjectTask item)
         {
+            logger.LogDebug(GetType() + ".Update is called");
             string SqlQueryString = $"UPDATE ProjectTask SET Name = @Name, TimeToComplete = @TimeToComplete, BeginDate = @BeginDate, EndDate = @EndDate, Status = @Status, EmployeeId = @EmployeeId, ProjectId = @ProjectId WHERE Id = @Id";
             ExecuteNonQuery(SqlQueryString, GetUpdateParameters(item));
         }

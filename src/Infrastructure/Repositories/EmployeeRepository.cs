@@ -5,15 +5,18 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Linq;
 using TrainingTask.Infrastructure.Models;
+using Microsoft.Extensions.Logging;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
     public class EmployeeRepository : BaseRepository<Employee>, IRepository<Employee>
     {
+
         protected override string ConnectionString { get; }
 
         Func<SqlDataReader, List<Employee>> converter = ConvertToEmployee;
-        public EmployeeRepository(string connectionString)
+
+        public EmployeeRepository(string connectionString, ILogger logger ) : base(logger)
         {
             ConnectionString = connectionString;
         }
@@ -39,18 +42,21 @@ namespace TrainingTask.Infrastructure.Repositories
 
         public void Create(Employee item)
         {
+            logger.LogDebug(GetType() + ".Create is called");
             string SqlQueryString = $"INSERT INTO Employee (LastName, FirstName, Patronymic , Position) VALUES (@LastName, @FirstName, @Patronymic, @Position)";
             ExecuteNonQuery(SqlQueryString, GetCreateParameters(item));
         }
 
         public void Delete(int id)
         {
+            logger.LogDebug(GetType() + ".Delete is called");
             string SqlQueryString = $"DELETE FROM Employee WHERE id = @Id";
             ExecuteNonQuery(SqlQueryString, GetIdParameter(id));
         }
 
         public Employee Get(int id)
         {
+            logger.LogDebug(GetType() + ".Get is called");
             string SqlQueryString = $"SELECT * FROM Employee where Id = @Id";
             IList<Employee> Employees = GetData(SqlQueryString, converter, GetIdParameter(id));
             return Employees.FirstOrDefault();
@@ -58,12 +64,14 @@ namespace TrainingTask.Infrastructure.Repositories
 
         public IList<Employee> GetAll()
         {
+            logger.LogDebug(GetType() + ".GetAll is called");
             string SqlQueryString = $"SELECT * FROM Employee";
             return GetData(SqlQueryString, converter);
         }
 
         public void Update(Employee item)
         {
+            logger.LogDebug(GetType() + ".Update is called");
             string SqlQueryString = $"UPDATE Employee SET LastName = @LastName, FirstName = @FirstName, Patronymic  = @Patronymic, Position = @Position WHERE id = @Id";
             ExecuteNonQuery(SqlQueryString, GetUpdateParameters(item));
         }

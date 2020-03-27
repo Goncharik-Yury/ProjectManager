@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using TrainingTask.Infrastructure.Models;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
@@ -13,10 +14,12 @@ namespace TrainingTask.Infrastructure.Repositories
         protected override string ConnectionString { get; }
 
         Func<SqlDataReader, List<Project>> converter = ConvertToProject;
-        public ProjectRepository(string connectionString)
+
+        public ProjectRepository(string connectionString, ILogger logger) : base(logger)
         {
             ConnectionString = connectionString;
         }
+
         static List<Project> ConvertToProject(SqlDataReader sqlDataReader)
         {
             List<Project> Projects = new List<Project>();
@@ -36,24 +39,28 @@ namespace TrainingTask.Infrastructure.Repositories
 
         public void Create(Project item)
         {
+            logger.LogDebug(GetType() + ".Create is called");
             string SqlQueryString = $"INSERT INTO Project (Name, ShortName, Description) VALUES (@Name, @ShortName, @Description)";
             ExecuteNonQuery(SqlQueryString, GetCreateParameters(item));
         }
 
         public void Delete(int id)
         {
+            logger.LogDebug(GetType() + ".Delete is called");
             string SqlQueryString = $"DELETE FROM Project WHERE Id = @Id";
             ExecuteNonQuery(SqlQueryString, GetIdParameter(id));
         }
 
         public IList<Project> GetAll()
         {
+            logger.LogDebug(GetType() + ".GetAll is called");
             string SqlQueryString = "SELECT * FROM Project";
             return GetData(SqlQueryString, converter);
         }
 
         public Project Get(int id)
         {
+            logger.LogDebug(GetType() + ".Get is called");
             string SqlQueryString = $"SELECT * FROM Project where Id = @Id";
             Project Project = GetData(SqlQueryString, converter, GetIdParameter(id)).FirstOrDefault();
             return Project;
@@ -61,6 +68,7 @@ namespace TrainingTask.Infrastructure.Repositories
 
         public void Update(Project item)
         {
+            logger.LogDebug(GetType() + ".Update is called");
             string SqlQueryString = $"UPDATE Project SET Name = @Name, ShortName = @ShortName, Description = @Description WHERE Id = @Id";
             ExecuteNonQuery(SqlQueryString, GetUpdateParameters(item));
         }

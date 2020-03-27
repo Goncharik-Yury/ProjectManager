@@ -62,7 +62,6 @@ namespace TrainingTask.Controllers
             ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectService.Get(id));
             IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskService.GetAllByProjectId(ProjectVm.Id));
             ProjectAllVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);
-
             return View("CreateOrEdit", model);
         }
 
@@ -74,7 +73,7 @@ namespace TrainingTask.Controllers
             try
             {
                 if (projectAllVm.Projects == null)
-                    throw new NullReferenceException();
+                    throw new ArgumentException();
                 if (ModelState.IsValid)
                 {
                     ProjectDto projectDto = ConvertToProjectDto.Convert(projectAllVm.Projects);
@@ -97,6 +96,8 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(ProjectAllVm projectAllVm)
         {
+            if (projectAllVm.Projects == null)
+                throw new ArgumentException();
             logger.LogDebug($"Project.Edit [post] is called");
             try
             {
