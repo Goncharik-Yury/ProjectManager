@@ -61,7 +61,7 @@ namespace TrainingTask.Infrastructure.Repositories
         public IList<ProjectTask> GetAll()
         {
             string SqlQueryString = "SELECT * FROM ProjectTask";
-            IList<ProjectTask> ProjectTasksList = GetData(SqlQueryString, converter, null);
+            IList<ProjectTask> ProjectTasksList = GetData(SqlQueryString, converter);
 
             return ProjectTasksList;
         }

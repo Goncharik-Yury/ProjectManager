@@ -21,7 +21,7 @@ namespace TrainingTask.Infrastructure.Repositories
                     using SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
                     if (queryParameters != null)
                     {
-                        queryParameters.ForEach(x => { if (x.Value == null) x.Value = DBNull.Value; });
+                        queryParameters.ForEach(x => { if (x.Value == null) { x.Value = DBNull.Value; } });
                         CommandToExecute.Parameters.AddRange(queryParameters.ToArray());
                     }
                     CommandToExecute.ExecuteNonQuery();
@@ -33,7 +33,7 @@ namespace TrainingTask.Infrastructure.Repositories
             }
         }
 
-        public IList<T> GetData(string sqlQueryString, Func<SqlDataReader, List<T>> converter, IList<SqlParameter> queryParameters)
+        public IList<T> GetData(string sqlQueryString, Func<SqlDataReader, List<T>> converter, List<SqlParameter> queryParameters = null)
         {
             using (SqlConnection DBConnection = new SqlConnection(ConnectionString))
             {
@@ -41,18 +41,9 @@ namespace TrainingTask.Infrastructure.Repositories
                 SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
                 if (queryParameters != null)
                 {
-                    //CommandToExecute.Parameters.AddRange(queryParameters.ToArray());
-                    foreach (var Parameter in queryParameters)
-                    {
-                        if (Parameter.Value == null)
-                        {
-                            Parameter.Value = DBNull.Value;
-                        }
-
-                        CommandToExecute.Parameters.Add(Parameter);
-                    }
+                    queryParameters.ForEach(x => { if (x.Value == null) { x.Value = DBNull.Value; } });
+                    CommandToExecute.Parameters.AddRange(queryParameters.ToArray());
                 }
-
 
                 SqlDataReader Reader = CommandToExecute.ExecuteReader();
                 List<T> EmployeesList = new List<T>();

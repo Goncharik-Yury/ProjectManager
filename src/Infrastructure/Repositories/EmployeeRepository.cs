@@ -74,7 +74,7 @@ namespace TrainingTask.Infrastructure.Repositories
         public IList<Employee> GetAll()
         {
             string SqlQueryString = $"SELECT * FROM Employee";
-            return GetData(SqlQueryString, converter, null);
+            return GetData(SqlQueryString, converter);
         }
 
         public void Update(Employee item)
