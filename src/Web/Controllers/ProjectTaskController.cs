@@ -14,9 +14,9 @@ namespace TrainingTask.Controllers
     public class ProjectTaskController : Controller
     {
         private readonly ILogger logger;
-        IProjectTaskService<ProjectTaskDto> ProjectTaskRepositoryService;
-        IService<ProjectDto> ProjectRepositoryService;
-        IService<EmployeeDto> EmployeeRepositoryService;
+        IProjectTaskService<ProjectTaskDto> ProjectTaskService;
+        IService<ProjectDto> ProjectService;
+        IService<EmployeeDto> EmployeeService;
 
         private readonly IConvert<ProjectTaskVm, ProjectTaskDto> ConvertToProjectTaskDto;
         private readonly IConvert<ProjectTaskDto, ProjectTaskVm> ConvertToProjectTaskVm;
@@ -25,18 +25,18 @@ namespace TrainingTask.Controllers
 
         public ProjectTaskController(
             ILogger logger,
-            IProjectTaskService<ProjectTaskDto> projectTaskRepositoryService,
-            IService<ProjectDto> projectRepositoryService,
-            IService<EmployeeDto> employeeRepositoryService,
+            IProjectTaskService<ProjectTaskDto> projectTaskService,
+            IService<ProjectDto> projectService,
+            IService<EmployeeDto> employeeService,
         IConvert<ProjectTaskVm, ProjectTaskDto> convertToProjectTaskDto,
             IConvert<ProjectTaskDto, ProjectTaskVm> convertToProjectTaskVm
             )
         {
             this.logger = logger;
 
-            ProjectTaskRepositoryService = projectTaskRepositoryService;
-            ProjectRepositoryService = projectRepositoryService;
-            EmployeeRepositoryService = employeeRepositoryService;
+            ProjectTaskService = projectTaskService;
+            ProjectService = projectService;
+            EmployeeService = employeeService;
 
             ConvertToProjectTaskDto = convertToProjectTaskDto;
             ConvertToProjectTaskVm = convertToProjectTaskVm;
@@ -46,7 +46,7 @@ namespace TrainingTask.Controllers
         public IActionResult Index()
         {
             logger.LogDebug($"ProjectTask.Index [post] is called");
-            IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskRepositoryService.GetAll());
+            IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskService.GetAll());
             return View(ProjectTasksVm);
         }
 
@@ -75,7 +75,7 @@ namespace TrainingTask.Controllers
             ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
 
             ViewBag.AspAction = "Edit";
-            ProjectTaskVm model = ConvertToProjectTaskVm.Convert(ProjectTaskRepositoryService.Get(id));
+            ProjectTaskVm model = ConvertToProjectTaskVm.Convert(ProjectTaskService.Get(id));
             return View("CreateOrEdit", model);
         }
 
@@ -92,7 +92,7 @@ namespace TrainingTask.Controllers
                 if (ModelState.IsValid)
                 {
                     ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTask);
-                    ProjectTaskRepositoryService.Create(projectTaskDto);
+                    ProjectTaskService.Create(projectTaskDto);
                 }
                 else
                 {
@@ -123,7 +123,7 @@ namespace TrainingTask.Controllers
                 if (ModelState.IsValid)
                 {
                     ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTask);
-                    ProjectTaskRepositoryService.Update(projectTaskDto);
+                    ProjectTaskService.Update(projectTaskDto);
                 }
                 else
                 {
@@ -148,7 +148,7 @@ namespace TrainingTask.Controllers
             logger.LogDebug($"ProjectTask.Delete is called");
             try
             {
-                ProjectTaskRepositoryService.Delete(id);
+                ProjectTaskService.Delete(id);
             }
             catch (Exception ex)
             {
@@ -160,7 +160,7 @@ namespace TrainingTask.Controllers
 
         private SelectList GetProjectSelectList()
         {
-            IList<ProjectDto> ProjectsList = ProjectRepositoryService.GetAll();
+            IList<ProjectDto> ProjectsList = ProjectService.GetAll();
             List<ProjectSelectListItem> ProjectSelectList = new List<ProjectSelectListItem>();
             foreach (var item in ProjectsList)
             {
@@ -174,7 +174,7 @@ namespace TrainingTask.Controllers
         }
         private SelectList FillEmployeeSelectList()
         {
-            IList<EmployeeDto> EmployeesList = EmployeeRepositoryService.GetAll();
+            IList<EmployeeDto> EmployeesList = EmployeeService.GetAll();
             List<EmployeeSelectListItem> EmployeeSelectList = new List<EmployeeSelectListItem>();
             foreach (var item in EmployeesList)
             {

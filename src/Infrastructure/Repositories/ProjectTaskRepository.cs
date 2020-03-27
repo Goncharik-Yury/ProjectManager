@@ -23,17 +23,15 @@ namespace TrainingTask.Infrastructure.Repositories
             List<ProjectTask> ProjectTasks = new List<ProjectTask>();
             while (sqlDataReader.Read())
             {
-                ProjectTask ProjectTask = new ProjectTask
-                {
-                    Id = sqlDataReader.GetInt32("Id"),
-                    Name = sqlDataReader.GetString("Name"),
-                    TimeToComplete = sqlDataReader.GetInt32("TimeToComplete"),
-                    BeginDate = sqlDataReader.GetDateTime("BeginDate"),
-                    EndDate = sqlDataReader.GetDateTime("EndDate"),
-                    Status = sqlDataReader.GetString("Status"),
-                    ProjectId = sqlDataReader.GetInt32("ProjectId"),
-                    EmployeeId = sqlDataReader.GetInt32("EmployeeId")
-                };
+                ProjectTask ProjectTask = new ProjectTask();
+                ProjectTask.Id = sqlDataReader.GetInt32("Id");
+                ProjectTask.Name = sqlDataReader.GetString("Name");
+                try { ProjectTask.TimeToComplete = sqlDataReader.GetInt32("TimeToComplete"); } catch { }
+                try { ProjectTask.BeginDate = sqlDataReader.GetDateTime("BeginDate"); } catch { }
+                try { ProjectTask.EndDate = sqlDataReader.GetDateTime("EndDate"); } catch { }
+                ProjectTask.Status = sqlDataReader.GetString("Status");
+                ProjectTask.ProjectId = sqlDataReader.GetInt32("ProjectId");
+                try { ProjectTask.EmployeeId = sqlDataReader.GetInt32("EmployeeId"); } catch { }
 
                 ProjectTasks.Add(ProjectTask);
             }

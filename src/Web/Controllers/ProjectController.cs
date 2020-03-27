@@ -13,15 +13,15 @@ namespace TrainingTask.Controllers
     public class ProjectController : Controller
     {
         private readonly ILogger logger;
-        private readonly IService<ProjectDto> ProjectRepositoryService;
-        private readonly IProjectTaskService<ProjectTaskDto> ProjectTaskRepositoryService;
+        private readonly IService<ProjectDto> ProjectService;
+        private readonly IProjectTaskService<ProjectTaskDto> ProjectTaskService;
         private readonly IConvert<ProjectVm, ProjectDto> ConvertToProjectDto;
         private readonly IConvert<ProjectDto, ProjectVm> ConvertToProjectVm;
         private readonly IConvert<ProjectTaskVm, ProjectTaskDto> ConvertToProjectTaskDto;
         private readonly IConvert<ProjectTaskDto, ProjectTaskVm> ConvertToProjectTaskVm;
 
-        public ProjectController(ILogger logger, IService<ProjectDto> projectRepositoryService,
-            IProjectTaskService<ProjectTaskDto> projectTaskRepositoryService,
+        public ProjectController(ILogger logger, IService<ProjectDto> projectService,
+            IProjectTaskService<ProjectTaskDto> projectTaskService,
             IConvert<ProjectVm, ProjectDto> convertToProjectDto,
             IConvert<ProjectDto, ProjectVm> convertToProjectVm,
             IConvert<ProjectTaskVm, ProjectTaskDto> convertToProjectTaskDto,
@@ -30,8 +30,8 @@ namespace TrainingTask.Controllers
         {
             this.logger = logger;
 
-            ProjectRepositoryService = projectRepositoryService;
-            ProjectTaskRepositoryService = projectTaskRepositoryService;
+            ProjectService = projectService;
+            ProjectTaskService = projectTaskService;
 
             ConvertToProjectDto = convertToProjectDto;
             ConvertToProjectVm = convertToProjectVm;
@@ -44,7 +44,7 @@ namespace TrainingTask.Controllers
         {
             logger.LogDebug($"Project.Index is called");
 
-            IList<ProjectVm> Projects = ConvertToProjectVm.Convert(ProjectRepositoryService.GetAll());
+            IList<ProjectVm> Projects = ConvertToProjectVm.Convert(ProjectService.GetAll());
 
             return View(Projects);
         }
@@ -62,8 +62,8 @@ namespace TrainingTask.Controllers
         {
             logger.LogDebug($"Project.Edit is called");
             ViewBag.AspAction = "Edit";
-            ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectRepositoryService.Get(id));
-            IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskRepositoryService.GetAllByProjectId(ProjectVm.Id));
+            ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectService.Get(id));
+            IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskService.GetAllByProjectId(ProjectVm.Id));
             ProjectAllVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);
 
             return View("CreateOrEdit", model);
@@ -81,7 +81,7 @@ namespace TrainingTask.Controllers
                 if (ModelState.IsValid)
                 {
                     ProjectDto projectDto = ConvertToProjectDto.Convert(projectAllVm.Projects);
-                    ProjectRepositoryService.Create(projectDto);
+                    ProjectService.Create(projectDto);
                 }
                 else
                 {
@@ -108,7 +108,7 @@ namespace TrainingTask.Controllers
                 if (ModelState.IsValid)
                 {
                     ProjectDto projectDto = ConvertToProjectDto.Convert(projectAllVm.Projects);
-                    ProjectRepositoryService.Update(projectDto);
+                    ProjectService.Update(projectDto);
                 }
                 else
                 {
@@ -130,7 +130,7 @@ namespace TrainingTask.Controllers
             logger.LogDebug($"Project.Delete [post] is called");
             try
             {
-                ProjectRepositoryService.Delete(id);
+                ProjectService.Delete(id);
             }
             catch (Exception ex)
             {

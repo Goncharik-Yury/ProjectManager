@@ -17,8 +17,4 @@
     <ProjectReference Include="..\Converter\Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="SqlDataReaders\" />
-  </ItemGroup>
-
 </Project>

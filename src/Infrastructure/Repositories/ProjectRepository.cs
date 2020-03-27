@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
-using TrainingTask.Infrastructure.Repositories;
 using TrainingTask.Infrastructure.Models;
 using System.Linq;
-using TrainingTask.Common;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
@@ -24,13 +22,12 @@ namespace TrainingTask.Infrastructure.Repositories
             List<Project> Projects = new List<Project>();
             while (sqlDataReader.Read())
             {
-                Project project = new Project
-                {
-                    Id = sqlDataReader.GetInt32("Id"),
-                    Name = sqlDataReader.GetString("Name"),
-                    ShortName = sqlDataReader.GetString("ShortName"),
-                    Description = sqlDataReader.GetString("Description"),
-                };
+                Project project = new Project();
+
+                project.Id = sqlDataReader.GetInt32("Id");
+                project.Name = sqlDataReader.GetString("Name");
+                project.ShortName = sqlDataReader.GetString("ShortName");
+                try { project.Description = sqlDataReader.GetString("Description"); } catch { }
 
                 Projects.Add(project);
             }

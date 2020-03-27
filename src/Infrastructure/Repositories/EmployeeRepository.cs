@@ -26,14 +26,12 @@ namespace TrainingTask.Infrastructure.Repositories
             List<Employee> Employees = new List<Employee>();
             while (sqlDataReader.Read())
             {
-                Employee employee = new Employee
-                {
-                    Id = sqlDataReader.GetInt32("Id"),
-                    LastName = sqlDataReader.GetString("LastName"),
-                    FirstName = sqlDataReader.GetString("FirstName"),
-                    Patronymic = sqlDataReader.GetString("Patronymic"),
-                    Position = sqlDataReader.GetString("Position")
-                };
+                Employee employee = new Employee();
+                employee.Id = sqlDataReader.GetInt32("Id");
+                employee.LastName = sqlDataReader.GetString("LastName");
+                employee.FirstName = sqlDataReader.GetString("FirstName");
+                employee.Position = sqlDataReader.GetString("Position");
+                try { employee.Patronymic = sqlDataReader.GetString("Patronymic"); } catch { }
 
                 Employees.Add(employee);
             }

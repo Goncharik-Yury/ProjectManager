@@ -8,18 +8,21 @@ namespace Common.Logger
 {
     public class FileLogger : ILogger
     {
-        private static readonly string FilePath;
+        private readonly string filePath;
+        private readonly string directoryPath;
 
-        static FileLogger()
+        public FileLogger(/*string directoryPath*/)
         {
-            string DirectoryPath = $"../../Logs/";
-            FilePath = DirectoryPath + $"{DateTime.Now.ToString("yyyy.MM.dd")}.log";
-            DirectoryInfo LogsDirecory = new DirectoryInfo(DirectoryPath);
+            //directoryPath = directoryPath;
+            directoryPath = $"../../Logs/";
+            filePath = directoryPath + $"{DateTime.Now.ToString("yyyy.MM.dd")}.log";
+            DirectoryInfo LogsDirecory = new DirectoryInfo(directoryPath);
             if (!LogsDirecory.Exists)
             {
                 LogsDirecory.Create();
             }
         }
+
         public IDisposable BeginScope<TState>(TState state)
         {
             return null;
@@ -34,7 +37,7 @@ namespace Common.Logger
         {
             string TextToLog = $"{logLevel} | {DateTime.Now} | {formatter(state, exception)}{Environment.NewLine}";
 
-            File.AppendAllText(FilePath, TextToLog);
+            File.AppendAllText(filePath, TextToLog);
         }
     }
 }

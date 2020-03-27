@@ -19,7 +19,11 @@ namespace TrainingTask.Infrastructure.Repositories
                 {
                     DBConnection.Open();
                     using SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
-                    CommandToExecute.Parameters.AddRange(queryParameters.ToArray());
+                    if (queryParameters != null)
+                    {
+                        queryParameters.ForEach(x => { if (x.Value == null) x.Value = DBNull.Value; });
+                        CommandToExecute.Parameters.AddRange(queryParameters.ToArray());
+                    }
                     CommandToExecute.ExecuteNonQuery();
                 }
                 catch (Exception ex)
@@ -37,8 +41,18 @@ namespace TrainingTask.Infrastructure.Repositories
                 SqlCommand CommandToExecute = new SqlCommand(sqlQueryString, DBConnection);
                 if (queryParameters != null)
                 {
-                    CommandToExecute.Parameters.AddRange(queryParameters.ToArray());
+                    //CommandToExecute.Parameters.AddRange(queryParameters.ToArray());
+                    foreach (var Parameter in queryParameters)
+                    {
+                        if (Parameter.Value == null)
+                        {
+                            Parameter.Value = DBNull.Value;
+                        }
+
+                        CommandToExecute.Parameters.Add(Parameter);
+                    }
                 }
+
 
                 SqlDataReader Reader = CommandToExecute.ExecuteReader();
                 List<T> EmployeesList = new List<T>();

@@ -13,18 +13,18 @@ namespace TrainingTask.Controllers
     public class EmployeeController : Controller
     {
         private readonly ILogger logger;
-        private readonly IService<EmployeeDto> EmployeeRepositoryService;
+        private readonly IService<EmployeeDto> EmployeeService;
         private readonly IConvert<EmployeeVm, EmployeeDto> ConvertToEmployeeDto;
         private readonly IConvert<EmployeeDto, EmployeeVm> ConvertToEmployeeVm;
         public EmployeeController(ILogger logger,
-            IService<EmployeeDto> employeeRepositoryService,
+            IService<EmployeeDto> employeeService,
             IConvert<EmployeeVm, EmployeeDto> convertToEmployeeDto,
             IConvert<EmployeeDto, EmployeeVm> convertToEmployeeVm
             )
         {
             this.logger = logger;
 
-            EmployeeRepositoryService = employeeRepositoryService;
+            EmployeeService = employeeService;
             ConvertToEmployeeDto = convertToEmployeeDto;
             ConvertToEmployeeVm = convertToEmployeeVm;
         }
@@ -33,7 +33,7 @@ namespace TrainingTask.Controllers
         public IActionResult Index()
         {
             logger.LogDebug($"Employee.Index is called");
-            IList<EmployeeDto> EmployeesDto = EmployeeRepositoryService.GetAll();
+            IList<EmployeeDto> EmployeesDto = EmployeeService.GetAll();
             List<EmployeeVm> EmployeesVm = new List<EmployeeVm>();
             foreach (var item in EmployeesDto)
             {
@@ -55,7 +55,7 @@ namespace TrainingTask.Controllers
         public IActionResult Edit(int id)
         {
             logger.LogDebug($"Employee.Edit is called");
-            EmployeeDto EmployeeDto = EmployeeRepositoryService.Get(id);
+            EmployeeDto EmployeeDto = EmployeeService.Get(id);
             EmployeeVm model = ConvertToEmployeeVm.Convert(EmployeeDto);
             ViewBag.AspAction = "Edit";
             return View("CreateOrEdit", model);
@@ -73,7 +73,7 @@ namespace TrainingTask.Controllers
                     throw new NullReferenceException();
                 if (ModelState.IsValid)
                 {
-                    EmployeeRepositoryService.Create(ConvertToEmployeeDto.Convert(employee));
+                    EmployeeService.Create(ConvertToEmployeeDto.Convert(employee));
                 }
                 else
                 {
@@ -102,7 +102,7 @@ namespace TrainingTask.Controllers
                     throw new NullReferenceException();
                 if (ModelState.IsValid)
                 {
-                    EmployeeRepositoryService.Update(ConvertToEmployeeDto.Convert(employee));
+                    EmployeeService.Update(ConvertToEmployeeDto.Convert(employee));
                 }
                 else
                 {
@@ -125,7 +125,7 @@ namespace TrainingTask.Controllers
             logger.LogDebug($"Employee.Delete is called");
             try
             {
-                EmployeeRepositoryService.Delete(id);
+                EmployeeService.Delete(id);
             }
             catch (Exception ex)
             {
