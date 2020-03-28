@@ -61,27 +61,27 @@ namespace TrainingTask.Controllers
             logger.LogDebug($"Project.Edit is called");
             ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectService.Get(id));
             IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskService.GetAllByProjectId(ProjectVm.Id));
-            ProjectAllVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);
+            ProjectsVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);
             return View("CreateOrEdit", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ProjectAllVm projectAllVm)
+        public IActionResult Create(ProjectsVm ProjectsVm)
         {
             logger.LogDebug($"Project.Create [post] is called");
             try
             {
-                if (projectAllVm.Projects == null)
+                if (ProjectsVm.Projects == null)
                     throw new ArgumentException();
                 if (ModelState.IsValid)
                 {
-                    ProjectDto projectDto = ConvertToProjectDto.Convert(projectAllVm.Projects);
+                    ProjectDto projectDto = ConvertToProjectDto.Convert(ProjectsVm.Projects);
                     ProjectService.Create(projectDto);
                 }
                 else
                 {
-                    return View(projectAllVm);
+                    return View(ProjectsVm);
                 }
             }
             catch (Exception ex)
@@ -94,23 +94,23 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(ProjectAllVm projectAllVm)
+        public IActionResult Edit(ProjectsVm ProjectsVm)
         {
-            if (projectAllVm.Projects == null)
+            if (ProjectsVm.Projects == null)
                 throw new ArgumentException();
             logger.LogDebug($"Project.Edit [post] is called");
             try
             {
-                if (projectAllVm.Projects == null)
+                if (ProjectsVm.Projects == null)
                     throw new NullReferenceException();
                 if (ModelState.IsValid)
                 {
-                    ProjectDto projectDto = ConvertToProjectDto.Convert(projectAllVm.Projects);
+                    ProjectDto projectDto = ConvertToProjectDto.Convert(ProjectsVm.Projects);
                     ProjectService.Update(projectDto);
                 }
                 else
                 {
-                    return View(projectAllVm);
+                    return View(ProjectsVm);
                 }
             }
             catch (Exception ex)
@@ -138,9 +138,9 @@ namespace TrainingTask.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private ProjectAllVm ComposeProjectVm(ProjectVm projectsVm, IList<ProjectTaskVm> projectTasksVm)
+        private ProjectsVm ComposeProjectVm(ProjectVm projectsVm, IList<ProjectTaskVm> projectTasksVm)
         {
-            ProjectAllVm ProjectAndTask = new ProjectAllVm()
+            ProjectsVm ProjectAndTask = new ProjectsVm()
             {
                 Projects = projectsVm,
                 ProjectTasks = projectTasksVm
