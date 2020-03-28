@@ -9,12 +9,9 @@ namespace Common.Logger
     public class FileLogger : ILogger
     {
         private readonly string filePath;
-        private readonly string directoryPath;
 
-        public FileLogger(/*string directoryPath*/)
+        public FileLogger(string directoryPath)
         {
-            //directoryPath = directoryPath;
-            directoryPath = $"../../Logs/";
             filePath = directoryPath + $"{DateTime.Now.ToString("yyyy.MM.dd")}.log";
             DirectoryInfo LogsDirecory = new DirectoryInfo(directoryPath);
             if (!LogsDirecory.Exists)

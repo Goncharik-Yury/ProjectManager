@@ -21,10 +21,12 @@ namespace TrainingTask.Web
     public class Startup
     {
         private readonly string connectionString;
+        private readonly string LogsPath;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
             connectionString = Configuration["ConnectionStrings:TrainingTaskDB"];
+            LogsPath = Configuration["LoggerPaths:FileLogger"];
         }
 
         public IConfiguration Configuration { get; }
@@ -33,7 +35,7 @@ namespace TrainingTask.Web
         {
             services.AddControllersWithViews();
 
-            services.AddSingleton<ILogger, FileLogger>();
+            services.AddSingleton<ILogger>(x => new FileLogger(LogsPath));
 
             services.AddSingleton<IConvert<EmployeeVm, EmployeeDto>, Web.Converters.EmployeeDtoConverter>();
             services.AddSingleton<IConvert<EmployeeDto, EmployeeVm>, EmployeeVmConverter>();
@@ -53,7 +55,7 @@ namespace TrainingTask.Web
             services.AddScoped<IService<ProjectDto>, ProjectService>();
             services.AddScoped<IProjectTaskService<ProjectTaskDto>, ProjectTaskService>();
 
-            services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepository(connectionString, serviceProvider.GetService<ILogger>());
+            services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepository(connectionString, serviceProvider.GetService<ILogger>()));
             services.AddScoped<IRepository<Project>>(serviceProvider => new ProjectRepository(connectionString, serviceProvider.GetService<ILogger>()));
             services.AddScoped<IProjectTaskRepository<ProjectTask>>(serviceProvider => new ProjectTaskRepository(connectionString, serviceProvider.GetService<ILogger>()));
         }
