@@ -40,7 +40,7 @@ namespace TrainingTask.Infrastructure.Repositories
             }
         }
 
-        public IList<T> GetData(string sqlQueryString, Func<SqlDataReader, List<T>> converter, List<SqlParameter> queryParameters = null)
+        public IList<T> GetData(string sqlQueryString, Func<SqlDataReader, IList<T>> converter, List<SqlParameter> queryParameters = null)
         {
             logger.LogDebug(GetType() + ".GetData is called");
             using (SqlConnection DBConnection = new SqlConnection(ConnectionString))
@@ -53,7 +53,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 }
 
                 SqlDataReader Reader = CommandToExecute.ExecuteReader();
-                List<T> EmployeesList = new List<T>();
+                IList<T> EmployeesList = new List<T>();
                 if (Reader.HasRows)
                 {
                     EmployeesList = converter(Reader);

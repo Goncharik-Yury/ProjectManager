@@ -15,6 +15,8 @@ using TrainingTask.Web.ViewModels;
 using TrainingTask.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Data.SqlClient;
+using TrainingTask.Infrastructure.Converters;
 
 namespace TrainingTask.Web
 {
@@ -55,9 +57,13 @@ namespace TrainingTask.Web
             services.AddScoped<IService<ProjectDto>, ProjectService>();
             services.AddScoped<IProjectTaskService<ProjectTaskDto>, ProjectTaskService>();
 
-            services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepository(connectionString, serviceProvider.GetService<ILogger>()));
-            services.AddScoped<IRepository<Project>>(serviceProvider => new ProjectRepository(connectionString, serviceProvider.GetService<ILogger>()));
-            services.AddScoped<IProjectTaskRepository<ProjectTask>>(serviceProvider => new ProjectTaskRepository(connectionString, serviceProvider.GetService<ILogger>()));
+            services.AddScoped<IConvertDb<SqlDataReader, Employee>, EmployeeConverterDb>();
+            services.AddScoped<IConvertDb<SqlDataReader, Project>, ProjectConverterDb>();
+            services.AddScoped<IConvertDb<SqlDataReader, ProjectTask>, ProjectTaskConverterDb>();
+
+            services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepository(connectionString, serviceProvider.GetService<IConvertDb<SqlDataReader, Employee>>(), serviceProvider.GetService<ILogger>()));
+            services.AddScoped<IRepository<Project>>(serviceProvider => new ProjectRepository(connectionString, serviceProvider.GetService<IConvertDb<SqlDataReader, Project>>(), serviceProvider.GetService<ILogger>()));
+            services.AddScoped<IProjectTaskRepository<ProjectTask>>(serviceProvider => new ProjectTaskRepository(connectionString, serviceProvider.GetService<IConvertDb<SqlDataReader, ProjectTask>>(), serviceProvider.GetService<ILogger>()));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

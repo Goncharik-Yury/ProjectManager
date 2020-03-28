@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq;
 using TrainingTask.Infrastructure.Models;
 using Microsoft.Extensions.Logging;
+using TrainingTask.Infrastructure.Converters;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
@@ -13,31 +14,12 @@ namespace TrainingTask.Infrastructure.Repositories
     {
 
         protected override string ConnectionString { get; }
+        private readonly Func<SqlDataReader, IList<Employee>> employeeConverterDelegate;
 
-        Func<SqlDataReader, List<Employee>> converter = ConvertToEmployee;
-
-        public EmployeeRepository(string connectionString, ILogger logger ) : base(logger)
+        public EmployeeRepository(string connectionString, IConvertDb<SqlDataReader, Employee> employeeConverter, ILogger logger) : base(logger)
         {
             ConnectionString = connectionString;
-        }
-
-        static List<Employee> ConvertToEmployee(SqlDataReader sqlDataReader)
-        {
-            List<Employee> Employees = new List<Employee>();
-            while (sqlDataReader.Read())
-            {
-                Employee employee = new Employee
-                {
-                    Id = sqlDataReader.GetInt32("Id"),
-                    LastName = sqlDataReader.GetString("LastName"),
-                    FirstName = sqlDataReader.GetString("FirstName"),
-                    Patronymic = sqlDataReader["Patronymic"] as string,
-                    Position = sqlDataReader.GetString("Position")
-                };
-
-                Employees.Add(employee);
-            }
-            return Employees;
+            employeeConverterDelegate = employeeConverter.Convert;
         }
 
         public void Create(Employee item)
@@ -58,7 +40,7 @@ namespace TrainingTask.Infrastructure.Repositories
         {
             logger.LogDebug(GetType() + ".Get is called");
             string SqlQueryString = $"SELECT * FROM Employee where Id = @Id";
-            IList<Employee> Employees = GetData(SqlQueryString, converter, GetIdParameter(id));
+            IList<Employee> Employees = GetData(SqlQueryString, employeeConverterDelegate, GetIdParameter(id));
             return Employees.FirstOrDefault();
         }
 
@@ -66,7 +48,7 @@ namespace TrainingTask.Infrastructure.Repositories
         {
             logger.LogDebug(GetType() + ".GetAll is called");
             string SqlQueryString = $"SELECT * FROM Employee";
-            return GetData(SqlQueryString, converter);
+            return GetData(SqlQueryString, employeeConverterDelegate);
         }
 
         public void Update(Employee item)

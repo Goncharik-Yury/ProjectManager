@@ -7,40 +7,19 @@ using TrainingTask.Infrastructure.Models;
 using System.Linq;
 using TrainingTask.Common;
 using Microsoft.Extensions.Logging;
+using TrainingTask.Infrastructure.Converters;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
     public class ProjectTaskRepository : BaseRepository<ProjectTask>, IProjectTaskRepository<ProjectTask>
     {
         protected override string ConnectionString { get; }
+        private readonly Func<SqlDataReader, IList<ProjectTask>> projectTaskConverterDelegate;
 
-        Func<SqlDataReader, List<ProjectTask>> converter = ConvertToProjectTask;
-
-        public ProjectTaskRepository(string connectionString, ILogger logger) : base(logger)
+        public ProjectTaskRepository(string connectionString, IConvertDb<SqlDataReader, ProjectTask> projectTaskConverter, ILogger logger) : base(logger)
         {
             ConnectionString = connectionString;
-        }
-
-        static List<ProjectTask> ConvertToProjectTask(SqlDataReader sqlDataReader)
-        {
-            List<ProjectTask> ProjectTasks = new List<ProjectTask>();
-            while (sqlDataReader.Read())
-            {
-                ProjectTask ProjectTask = new ProjectTask
-                {
-                    Id = sqlDataReader.GetInt32("Id"),
-                    Name = sqlDataReader.GetString("Name"),
-                    TimeToComplete = sqlDataReader["TimeToComplete"] as int?,
-                    BeginDate = sqlDataReader["BeginDate"] as DateTime?,
-                    EndDate = sqlDataReader["EndDate"] as DateTime?,
-                    Status = sqlDataReader.GetString("Status"),
-                    ProjectId = sqlDataReader.GetInt32("ProjectId"),
-                    EmployeeId = sqlDataReader["EmployeeId"] as int?
-                };
-
-                ProjectTasks.Add(ProjectTask);
-            }
-            return ProjectTasks;
+            projectTaskConverterDelegate = projectTaskConverter.Convert;
         }
 
         public void Create(ProjectTask item)
@@ -61,7 +40,7 @@ namespace TrainingTask.Infrastructure.Repositories
         {
             logger.LogDebug(GetType() + ".GetAll is called");
             string SqlQueryString = "SELECT * FROM ProjectTask";
-            IList<ProjectTask> ProjectTasksList = GetData(SqlQueryString, converter);
+            IList<ProjectTask> ProjectTasksList = GetData(SqlQueryString, projectTaskConverterDelegate);
             return ProjectTasksList;
         }
 
@@ -69,7 +48,7 @@ namespace TrainingTask.Infrastructure.Repositories
         {
             logger.LogDebug(GetType() + ".GetAllByProjectId is called");
             string SqlQueryString = $"SELECT * FROM ProjectTask WHERE ProjectId = @ProjectId";
-            IList<ProjectTask> Projects = GetData(SqlQueryString, converter, GetProjectIdParameter(id));
+            IList<ProjectTask> Projects = GetData(SqlQueryString, projectTaskConverterDelegate, GetProjectIdParameter(id));
             return Projects;
         }
 
@@ -77,7 +56,7 @@ namespace TrainingTask.Infrastructure.Repositories
         {
             logger.LogDebug(GetType() + ".Get is called");
             string SqlQueryString = $"SELECT * FROM ProjectTask WHERE Id = @Id";
-            ProjectTask ProjectTask = GetData(SqlQueryString, converter, GetIdParameter(id)).FirstOrDefault();
+            ProjectTask ProjectTask = GetData(SqlQueryString, projectTaskConverterDelegate, GetIdParameter(id)).FirstOrDefault();
             return ProjectTask;
         }
 

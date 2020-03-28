@@ -6,18 +6,19 @@ using System.Text;
 using TrainingTask.Infrastructure.Models;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using TrainingTask.Infrastructure.Converters;
 
 namespace TrainingTask.Infrastructure.Repositories
 {
     public class ProjectRepository : BaseRepository<Project>, IRepository<Project>
     {
         protected override string ConnectionString { get; }
+        private readonly Func<SqlDataReader, IList<Project>> projectConverterDelegate;
 
-        Func<SqlDataReader, List<Project>> converter = ConvertToProject;
-
-        public ProjectRepository(string connectionString, ILogger logger) : base(logger)
+        public ProjectRepository(string connectionString, IConvertDb<SqlDataReader, Project> projectConverter, ILogger logger) : base(logger)
         {
             ConnectionString = connectionString;
+            projectConverterDelegate = projectConverter.Convert;
         }
 
         static List<Project> ConvertToProject(SqlDataReader sqlDataReader)
@@ -55,14 +56,14 @@ namespace TrainingTask.Infrastructure.Repositories
         {
             logger.LogDebug(GetType() + ".GetAll is called");
             string SqlQueryString = "SELECT * FROM Project";
-            return GetData(SqlQueryString, converter);
+            return GetData(SqlQueryString, projectConverterDelegate);
         }
 
         public Project Get(int id)
         {
             logger.LogDebug(GetType() + ".Get is called");
             string SqlQueryString = $"SELECT * FROM Project where Id = @Id";
-            Project Project = GetData(SqlQueryString, converter, GetIdParameter(id)).FirstOrDefault();
+            Project Project = GetData(SqlQueryString, projectConverterDelegate, GetIdParameter(id)).FirstOrDefault();
             return Project;
         }
 
