@@ -77,7 +77,7 @@ namespace TrainingTask.Infrastructure.Repositories
                 new SqlParameter("@EndDate", SqlDbType.Date){Value = item.EndDate ?? (object)DBNull.Value},
                 new SqlParameter("@Status", item.Status),
                 new SqlParameter("@ProjectId", item.ProjectId),
-                new SqlParameter("@EmployeeId", SqlDbType.Int){Value = item.EmployeeId ?? (object)DBNull.Value},
+                new SqlParameter("@EmployeeId", item.EmployeeId)
             };
         }
 

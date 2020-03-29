@@ -22,12 +22,10 @@ namespace TrainingTask.Web.ViewModels
         [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
         [Display(Name = "Employee full name")]
-        [MaxLength(50, ErrorMessage = "Status should not be longer than 50 simbols")]
         public string EmployeeFullName { get; set; }
         public string Status { get; set; }
         [Required(ErrorMessage = "Choose ProjectId")]
         public int ProjectId { get; set; }
-        [Required(ErrorMessage = "Choose EmployeeId")]
-        public int? EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
     }
 }

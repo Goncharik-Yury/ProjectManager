@@ -46,14 +46,14 @@ namespace TrainingTask.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            logger.LogDebug($"Employee.Create is called");
+            logger.LogDebug($"Employee.Create [get] is called");
             return View("CreateOrEdit");
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            logger.LogDebug($"Employee.Edit is called");
+            logger.LogDebug($"Employee.Edit [get] is called");
             EmployeeDto EmployeeDto = EmployeeService.Get(id);
             EmployeeVm model = ConvertToEmployeeVm.Convert(EmployeeDto);
             return View("CreateOrEdit", model);
@@ -63,7 +63,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EmployeeVm employee)
         {
-            logger.LogDebug($"Employee.Create is called");
+            logger.LogDebug($"Employee.Create [post] is called");
 
             try
             {
@@ -93,7 +93,7 @@ namespace TrainingTask.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EmployeeVm employee)
         {
-            logger.LogDebug($"Employee.Edit is called");
+            logger.LogDebug($"Employee.Edit [post] is called");
             try
             {
                 if (employee == null)

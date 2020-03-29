@@ -89,7 +89,7 @@ namespace TrainingTask.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Employee}/{action=Index}/{id?}");
+                    pattern: "{controller=ProjectTask}/{action=Index}/{id?}");
             });
 
 

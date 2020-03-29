@@ -13,12 +13,10 @@ namespace TrainingTask.Web.Converters
             return new ProjectTaskVm
             {
                 Id = item.Id,
-                ProjectShortName = item.ProjectShortName,
                 Name = item.Name,
                 TimeToComplete = item.TimeToComplete,
                 BeginDate = item.BeginDate,
                 EndDate = item.EndDate,
-                EmployeeFullName = item.EmployeeFullName,
                 Status = item.Status,
                 ProjectId = item.ProjectId,
                 EmployeeId = item.EmployeeId

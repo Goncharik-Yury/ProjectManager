@@ -23,7 +23,7 @@ namespace TrainingTask.Infrastructure.Converters
                     EndDate = sqlDataReader["EndDate"] as DateTime?,
                     Status = sqlDataReader.GetString("Status"),
                     ProjectId = sqlDataReader.GetInt32("ProjectId"),
-                    EmployeeId = sqlDataReader["EmployeeId"] as int?
+                    EmployeeId = sqlDataReader.GetInt32("EmployeeId")
                 };
 
 

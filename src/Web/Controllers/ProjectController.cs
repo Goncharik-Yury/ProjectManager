@@ -51,14 +51,14 @@ namespace TrainingTask.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            logger.LogDebug($"Project.Create is called");
+            logger.LogDebug($"Project.Create [get] is called");
             return View("CreateOrEdit");
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            logger.LogDebug($"Project.Edit is called");
+            logger.LogDebug($"Project.Edit [get] is called");
             ProjectVm ProjectVm = ConvertToProjectVm.Convert(ProjectService.Get(id));
             IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskService.GetAllByProjectId(ProjectVm.Id));
             ProjectsVm model = ComposeProjectVm(ProjectVm, ProjectTasksVm);

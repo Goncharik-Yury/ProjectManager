@@ -22,14 +22,8 @@ namespace TrainingTask.Controllers
 
         private readonly string[] ProjectTaskStatuses = { "NotStarted", "InProcess", "Completed", "Delayed" };
 
-        public ProjectTaskController(
-            ILogger logger,
-            IProjectTaskService<ProjectTaskDto> projectTaskService,
-            IService<ProjectDto> projectService,
-            IService<EmployeeDto> employeeService,
-        IConvert<ProjectTaskVm, ProjectTaskDto> convertToProjectTaskDto,
-            IConvert<ProjectTaskDto, ProjectTaskVm> convertToProjectTaskVm
-            )
+        public ProjectTaskController(ILogger logger, IProjectTaskService<ProjectTaskDto> projectTaskService, IService<ProjectDto> projectService, IService<EmployeeDto> employeeService, IConvert<ProjectTaskVm, ProjectTaskDto> convertToProjectTaskDto,
+            IConvert<ProjectTaskDto, ProjectTaskVm> convertToProjectTaskVm)
         {
             this.logger = logger;
 
@@ -44,8 +38,9 @@ namespace TrainingTask.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            logger.LogDebug($"ProjectTask.Index [post] is called");
+            logger.LogDebug($"ProjectTask.Index is called");
             IList<ProjectTaskVm> ProjectTasksVm = ConvertToProjectTaskVm.Convert(ProjectTaskService.GetAll());
+            FillProjectTasksVm(ProjectTasksVm);
             return View(ProjectTasksVm);
         }
 
@@ -53,43 +48,41 @@ namespace TrainingTask.Controllers
         public IActionResult Create()
         {
             logger.LogDebug($"ProjectTask.Create [get] is called");
-            ViewBag.EmployeeSelectList = FillEmployeeSelectList();
-            ViewBag.ProjectSelectList = GetProjectSelectList();
-            ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
-            return View("CreateOrEdit");
+            IList<EmployeeDto> employeesDto = EmployeeService.GetAll();
+            IList<ProjectDto> projectesDto = ProjectService.GetAll();
+            ProjectTaskFilledVm model = ComposeProjectTaskVm(null, GetEmployeeSelectList(employeesDto), GetProjectSelectList(projectesDto), ProjectTaskStatuses);
+            return View("CreateOrEdit", model);
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
             logger.LogDebug($"ProjectTask.Edit [get] is called");
-            ViewBag.EmployeeSelectList = FillEmployeeSelectList();
-            ViewBag.ProjectSelectList = GetProjectSelectList();
-            ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
-            ProjectTaskVm model = ConvertToProjectTaskVm.Convert(ProjectTaskService.Get(id));
+            IList<EmployeeDto> employeesDto = EmployeeService.GetAll();
+            IList<ProjectDto> projectesDto = ProjectService.GetAll();
+            ProjectTaskVm ProjectTaskVm = ConvertToProjectTaskVm.Convert(ProjectTaskService.Get(id));
+            FillProjectTaskVm(ProjectTaskVm);
+            ProjectTaskFilledVm model = ComposeProjectTaskVm(ProjectTaskVm, GetEmployeeSelectList(employeesDto), GetProjectSelectList(projectesDto), ProjectTaskStatuses);
             return View("CreateOrEdit", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ProjectTaskVm projectTask)
+        public IActionResult Create(ProjectTaskFilledVm projectTaskFilledVm)
         {
             logger.LogDebug($"ProjectTask.Create [post] is called");
             try
             {
-                if (projectTask == null)
+                if (projectTaskFilledVm == null)
                     throw new ArgumentException();
-                ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
                 if (ModelState.IsValid)
                 {
-                    ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTask);
+                    ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTaskFilledVm.ProjectTasks);
                     ProjectTaskService.Create(projectTaskDto);
                 }
                 else
                 {
-                    ViewBag.EmployeeSelectList = FillEmployeeSelectList();
-                    ViewBag.ProjectSelectList = GetProjectSelectList();
-                    return View(projectTask);
+                    return View(projectTaskFilledVm);
                 }
             }
             catch (Exception ex)
@@ -103,24 +96,21 @@ namespace TrainingTask.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(ProjectTaskVm projectTask)
+        public IActionResult Edit(ProjectTaskFilledVm projectTaskFilledVm)
         {
             logger.LogDebug($"ProjectTask.Edit [post] is called");
             try
             {
-                if (projectTask == null)
+                if (projectTaskFilledVm == null)
                     throw new ArgumentException();
-                ViewBag.ProjectTaskStatuses = ProjectTaskStatuses;
                 if (ModelState.IsValid)
                 {
-                    ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTask);
+                    ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTaskFilledVm.ProjectTasks);
                     ProjectTaskService.Update(projectTaskDto);
                 }
                 else
                 {
-                    ViewBag.EmployeeSelectList = FillEmployeeSelectList();
-                    ViewBag.ProjectSelectList = GetProjectSelectList();
-                    return View(projectTask);
+                    return View(projectTaskFilledVm);
                 }
             }
             catch (Exception ex)
@@ -150,11 +140,10 @@ namespace TrainingTask.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private SelectList GetProjectSelectList()
+        private SelectList GetProjectSelectList(IList<ProjectDto> projectesDto)
         {
-            IList<ProjectDto> ProjectsList = ProjectService.GetAll();
             List<ProjectSelectListItem> ProjectSelectList = new List<ProjectSelectListItem>();
-            foreach (var item in ProjectsList)
+            foreach (var item in projectesDto)
             {
                 ProjectSelectList.Add(new ProjectSelectListItem
                 {
@@ -165,11 +154,11 @@ namespace TrainingTask.Controllers
 
             return new SelectList(ProjectSelectList, "Id", "ShortName");
         }
-        private SelectList FillEmployeeSelectList()
+
+        private SelectList GetEmployeeSelectList(IList<EmployeeDto> employeesDto)
         {
-            IList<EmployeeDto> EmployeesList = EmployeeService.GetAll();
             List<EmployeeSelectListItem> EmployeeSelectList = new List<EmployeeSelectListItem>();
-            foreach (var item in EmployeesList)
+            foreach (var item in employeesDto)
             {
                 EmployeeSelectList.Add(new EmployeeSelectListItem
                 {
@@ -179,6 +168,34 @@ namespace TrainingTask.Controllers
             }
 
             return new SelectList(EmployeeSelectList, "Id", "FullName");
+        }
+
+        private ProjectTaskFilledVm ComposeProjectTaskVm(ProjectTaskVm projectTasksVm, SelectList employeeSelectList, SelectList projectSelectList, string[] projectTaskStatuses)
+        {
+            ProjectTaskFilledVm projectTaskFilledVm = new ProjectTaskFilledVm()
+            {
+                ProjectTasks = projectTasksVm,
+                EmployeeSelectList = employeeSelectList,
+                ProjectSelectList = projectSelectList,
+                ProjectTaskStatuses = projectTaskStatuses,
+            };
+            return projectTaskFilledVm;
+        }
+
+        private void FillProjectTasksVm(IList<ProjectTaskVm> projectTasksVm)
+        {
+            foreach (var item in projectTasksVm)
+            {
+                FillProjectTaskVm(item);
+            }
+        }
+
+        private void FillProjectTaskVm(ProjectTaskVm item)
+        {
+            var employee = EmployeeService.Get(item.EmployeeId);
+            var project = ProjectService.Get(item.ProjectId);
+            item.EmployeeFullName = $"{employee.LastName} {employee.FirstName} {employee.Patronymic}";
+            item.ProjectShortName = $"{project.ShortName}";
         }
     }
 }

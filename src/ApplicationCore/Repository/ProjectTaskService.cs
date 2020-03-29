@@ -11,23 +11,12 @@ namespace TrainingTask.ApplicationCore.Repository
     public class ProjectTaskService : IProjectTaskService<ProjectTaskDto>
     {
         private readonly IProjectTaskRepository<ProjectTask> ProjectTaskRepository;
-        private readonly IService<ProjectDto> ProjectService;
-        private readonly IService<EmployeeDto> EmployeeService;
-
         private readonly IConvert<ProjectTask, ProjectTaskDto> ProjectTaskDtoConverter;
         private readonly IConvert<ProjectTaskDto, ProjectTask> ProjectTaskConverter;
 
-        public ProjectTaskService(IService<ProjectDto> projectService, 
-            IService<EmployeeDto> employeeService,
-            IProjectTaskRepository<ProjectTask> projectTaskRepository,
-            IConvert<ProjectTask, ProjectTaskDto> projectTaskDtoConverter,
-            IConvert<ProjectTaskDto, ProjectTask> projectTaskConverter
-            )
+        public ProjectTaskService(IProjectTaskRepository<ProjectTask> projectTaskRepository, IConvert<ProjectTask, ProjectTaskDto> projectTaskDtoConverter, IConvert<ProjectTaskDto, ProjectTask> projectTaskConverter)
         {
             ProjectTaskRepository = projectTaskRepository;
-            ProjectService = projectService;
-            EmployeeService = employeeService;
-
             ProjectTaskDtoConverter = projectTaskDtoConverter;
             ProjectTaskConverter = projectTaskConverter;
         }
@@ -46,18 +35,7 @@ namespace TrainingTask.ApplicationCore.Repository
         public IList<ProjectTaskDto> GetAll()
         {
             IList<ProjectTask> ProjectTasks = ProjectTaskRepository.GetAll();
-            List<ProjectTaskDto> ProjectTasksDto = new List<ProjectTaskDto>();
-            foreach (var item in ProjectTasks)
-            {
-                ProjectTasksDto.Add(ProjectTaskDtoConverter.Convert(item));
-            }
-
-            foreach (var item in ProjectTasksDto)
-            {
-                item.ProjectShortName = GetProjectShortName(item.ProjectId);
-                item.EmployeeFullName = GetEmployeeFullName(item.EmployeeId);
-            }
-
+            IList<ProjectTaskDto> ProjectTasksDto = ProjectTaskDtoConverter.Convert(ProjectTasks);
             return ProjectTasksDto;
         }
 
@@ -65,9 +43,6 @@ namespace TrainingTask.ApplicationCore.Repository
         {
             ProjectTask ProjectTask = ProjectTaskRepository.Get(id);
             ProjectTaskDto ProjectTaskDto = ProjectTaskDtoConverter.Convert(ProjectTask);
-            ProjectTaskDto.ProjectShortName = GetProjectShortName(ProjectTaskDto.ProjectId);
-            ProjectTaskDto.EmployeeFullName = GetEmployeeFullName(ProjectTaskDto.EmployeeId);
-
             return ProjectTaskDto;
         }
 
@@ -75,20 +50,6 @@ namespace TrainingTask.ApplicationCore.Repository
         {
             ProjectTask ProjectTask = ProjectTaskConverter.Convert(item);
             ProjectTaskRepository.Update(ProjectTask);
-        }
-
-        private string GetProjectShortName(int id)
-        {
-            return ProjectService.Get(id).ShortName;
-        }
-
-        private string GetEmployeeFullName(int? id)
-        {
-            if (id == null) return "";
-            EmployeeDto EmployeeDto = EmployeeService.Get((int)id);
-            string EmployeeFullName = $"{EmployeeDto.LastName} {EmployeeDto.FirstName} {EmployeeDto.Patronymic}";
-
-            return EmployeeFullName;
         }
 
         public IList<ProjectTaskDto> GetAllByProjectId(int id)
