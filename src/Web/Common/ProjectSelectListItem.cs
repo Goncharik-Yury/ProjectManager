@@ -1,4 +1,4 @@
-﻿namespace TrainingTask.Controllers
+﻿namespace TrainingTask.Web.Common
 {
     public class ProjectSelectListItem
     {

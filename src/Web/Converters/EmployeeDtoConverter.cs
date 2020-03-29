@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TrainingTask.ApplicationCore.Dto;
 using TrainingTask.Common;
+using TrainingTask.Web.Common;
 using TrainingTask.Web.ViewModels;
 
 namespace TrainingTask.Web.Converters
@@ -18,7 +17,7 @@ namespace TrainingTask.Web.Converters
                 LastName = item.LastName,
                 FirstName = item.FirstName,
                 Patronymic = item.Patronymic,
-                Position = item.Position
+                Position = item.Position.ToString()
             };
         }
 

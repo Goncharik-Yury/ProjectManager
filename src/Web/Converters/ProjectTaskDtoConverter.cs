@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TrainingTask.ApplicationCore.Dto;
 using TrainingTask.Common;
+using TrainingTask.Web.Common;
 using TrainingTask.Web.ViewModels;
 
 namespace TrainingTask.Web.Converters
@@ -19,7 +18,7 @@ namespace TrainingTask.Web.Converters
                 TimeToComplete = item.TimeToComplete,
                 BeginDate = item.BeginDate,
                 EndDate = item.EndDate,
-                Status = item.Status,
+                Status = item.Status.ToString(),
                 ProjectId = item.ProjectId,
                 EmployeeId = item.EmployeeId
             };

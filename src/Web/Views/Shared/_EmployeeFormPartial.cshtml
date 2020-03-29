@@ -18,6 +18,6 @@
 </div>
 <div class="form-group">
     <label asp-for="Position" class="control-label"></label>
-    <input asp-for="Position" class="form-control" />
+    <select asp-for="Position" asp-items="Html.GetEnumSelectList<EmployeePosition>()" class="form-control"></select>
     <span asp-validation-for="Position" class="text-danger"></span>
 </div>

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using TrainingTask.Controllers;
+using TrainingTask.Web.Common;
 
 namespace TrainingTask.Web.ViewModels
 {
@@ -23,7 +24,7 @@ namespace TrainingTask.Web.ViewModels
         public DateTime? EndDate { get; set; }
         [Display(Name = "Employee full name")]
         public string EmployeeFullName { get; set; }
-        public string Status { get; set; }
+        public ProjectTaskStatus Status { get; set; }
         [Required(ErrorMessage = "Choose ProjectId")]
         public int ProjectId { get; set; }
         public int EmployeeId { get; set; }

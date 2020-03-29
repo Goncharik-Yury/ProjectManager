@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-
+using TrainingTask.Web.Common;
 
 namespace TrainingTask.Web.ViewModels
 {
@@ -22,9 +22,8 @@ namespace TrainingTask.Web.ViewModels
 
         public string Patronymic { get; set; }
         [Display(Name = "Position")]
-        [Required(ErrorMessage = "Enter the position")]
-        [MaxLength(50, ErrorMessage = "Position should not be longer than 50 simbols")]
+        [Required(ErrorMessage = "Chose the position")]
 
-        public string Position { get; set; }
+        public EmployeePosition Position { get; set; }
     }
 }

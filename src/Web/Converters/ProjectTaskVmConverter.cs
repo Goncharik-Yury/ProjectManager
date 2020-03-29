@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using TrainingTask.ApplicationCore.Dto;
 using TrainingTask.Common;
+using TrainingTask.Controllers;
+using TrainingTask.Web.Common;
 using TrainingTask.Web.ViewModels;
 
 namespace TrainingTask.Web.Converters
@@ -17,7 +19,7 @@ namespace TrainingTask.Web.Converters
                 TimeToComplete = item.TimeToComplete,
                 BeginDate = item.BeginDate,
                 EndDate = item.EndDate,
-                Status = item.Status,
+                Status = (ProjectTaskStatus)Enum.Parse(typeof(ProjectTaskStatus), item.Status),
                 ProjectId = item.ProjectId,
                 EmployeeId = item.EmployeeId
             };

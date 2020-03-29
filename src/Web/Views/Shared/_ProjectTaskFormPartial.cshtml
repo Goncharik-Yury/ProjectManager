@@ -23,16 +23,19 @@
 </div>
 <div class="form-group">
     <label asp-for="@Model.ProjectTasks.Status" class="control-label"></label>
-    @Html.DropDownList("ProjectTasks.Status", new SelectList(Model.ProjectTaskStatuses), new { @class = "form-control" })
+    <select asp-for="@Model.ProjectTasks.Status" asp-items="Html.GetEnumSelectList<ProjectTaskStatus>()" class="form-control"></select>
     <span asp-validation-for="@Model.ProjectTasks.Status" class="text-danger"></span>
+
 </div>
 <div class="form-group">
     <label asp-for="@Model.ProjectTasks.ProjectId" class="control-label"></label>
-    @Html.DropDownList("ProjectTasks.ProjectId", Model.ProjectSelectList as IEnumerable<SelectListItem>, new { @class = "form-control" })
+    @Html.DropDownList("ProjectTasks.ProjectId", Model.ProjectSelectList as IEnumerable<SelectListItem>,
+    new { @class = "form-control" })
     <span asp-validation-for="@Model.ProjectTasks.ProjectId" class="text-danger"></span>
 </div>
 <div class="form-group">
     <label asp-for="@Model.ProjectTasks.EmployeeId" class="control-label"></label>
-    @Html.DropDownList("ProjectTasks.EmployeeId", Model.EmployeeSelectList as IEnumerable<SelectListItem>, new { @class = "form-control" })
+    @Html.DropDownList("ProjectTasks.EmployeeId", Model.EmployeeSelectList as IEnumerable<SelectListItem>,
+    new { @class = "form-control" })
     <span asp-validation-for="@Model.ProjectTasks.EmployeeId" class="text-danger"></span>
 </div>
