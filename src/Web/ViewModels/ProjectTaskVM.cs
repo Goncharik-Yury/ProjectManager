@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TrainingTask.Controllers;
-using TrainingTask.Web.Common;
+using ProjectManager.Controllers;
+using ProjectManager.Web.Common;
 
-namespace TrainingTask.Web.ViewModels
+namespace ProjectManager.Web.ViewModels
 {
     public class ProjectTaskVm
     {

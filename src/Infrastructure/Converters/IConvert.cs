@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TrainingTask.Infrastructure.Converters
+namespace ProjectManager.Infrastructure.Converters
 {
     public interface IConvertDb<TIn, TOut>
     {

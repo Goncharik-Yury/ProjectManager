@@ -1,24 +1,24 @@
 
-using TrainingTask.ApplicationCore.Repository;
+using ProjectManager.ApplicationCore.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using TrainingTask.ApplicationCore.Dto;
-using TrainingTask.Common;
-using TrainingTask.Infrastructure.Models;
-using TrainingTask.Web.Converters;
+using ProjectManager.ApplicationCore.Dto;
+using ProjectManager.Common;
+using ProjectManager.Infrastructure.Models;
+using ProjectManager.Web.Converters;
 using Common.Logger;
-using TrainingTask.Web.ViewModels;
-using TrainingTask.Infrastructure.Repositories;
+using ProjectManager.Web.ViewModels;
+using ProjectManager.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Data.SqlClient;
-using TrainingTask.Infrastructure.Converters;
+using ProjectManager.Infrastructure.Converters;
 
-namespace TrainingTask.Web
+namespace ProjectManager.Web
 {
     public class Startup
     {
@@ -27,7 +27,7 @@ namespace TrainingTask.Web
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            connectionString = Configuration["ConnectionStrings:TrainingTaskDB"];
+            connectionString = Configuration["ConnectionStrings:ProjectManagerDB"];
             LogsPath = Configuration["LoggerPaths:FileLogger"];
         }
 
@@ -89,7 +89,9 @@ namespace TrainingTask.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=ProjectTask}/{action=Index}/{id?}");
+                    //pattern: "{controller=Project}/{action=Index}/{id?}");
+                    pattern: "{controller=Project}/{action=Edit}/{id=2}");
+
             });
 
 

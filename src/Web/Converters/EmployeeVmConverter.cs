@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TrainingTask.ApplicationCore.Dto;
-using TrainingTask.Common;
-using TrainingTask.Web.Common;
-using TrainingTask.Web.ViewModels;
+using ProjectManager.ApplicationCore.Dto;
+using ProjectManager.Common;
+using ProjectManager.Web.Common;
+using ProjectManager.Web.ViewModels;
 
-namespace TrainingTask.Web.Converters
+namespace ProjectManager.Web.Converters
 {
     public class EmployeeVmConverter : IConvert<EmployeeDto, EmployeeVm>
     {

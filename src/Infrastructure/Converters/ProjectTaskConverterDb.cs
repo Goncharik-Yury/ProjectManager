@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
-using TrainingTask.Infrastructure.Models;
+using ProjectManager.Infrastructure.Models;
 
-namespace TrainingTask.Infrastructure.Converters
+namespace ProjectManager.Infrastructure.Converters
 {
     public class ProjectTaskConverterDb : IConvertDb<SqlDataReader, ProjectTask>
     {

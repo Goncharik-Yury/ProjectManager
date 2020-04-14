@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using TrainingTask.ApplicationCore.Dto;
-using TrainingTask.Common;
-using TrainingTask.Infrastructure.Models;
+using ProjectManager.ApplicationCore.Dto;
+using ProjectManager.Common;
+using ProjectManager.Infrastructure.Models;
 
-namespace TrainingTask.ApplicationCore.Converters
+namespace ProjectManager.ApplicationCore.Converters
 {
     public class ProjectTaskDtoConverter : IConvert<ProjectTask, ProjectTaskDto>
     {

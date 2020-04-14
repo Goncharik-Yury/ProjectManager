@@ -4,11 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Linq;
-using TrainingTask.Infrastructure.Models;
+using ProjectManager.Infrastructure.Models;
 using Microsoft.Extensions.Logging;
-using TrainingTask.Infrastructure.Converters;
+using ProjectManager.Infrastructure.Converters;
 
-namespace TrainingTask.Infrastructure.Repositories
+namespace ProjectManager.Infrastructure.Repositories
 {
     public class EmployeeRepository : BaseRepository<Employee>, IRepository<Employee>
     {

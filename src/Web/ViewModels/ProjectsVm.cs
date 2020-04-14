@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TrainingTask.Web.ViewModels
+namespace ProjectManager.Web.ViewModels
 {
     public class ProjectsVm
     {

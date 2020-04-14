@@ -1,5 +1,5 @@
 ﻿
-namespace TrainingTask.ApplicationCore.Dto
+namespace ProjectManager.ApplicationCore.Dto
 {
     public class EmployeeDto
     {

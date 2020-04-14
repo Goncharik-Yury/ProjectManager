@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TrainingTask.Infrastructure.Repositories
+namespace ProjectManager.Infrastructure.Repositories
 {
     public interface IProjectTaskRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {

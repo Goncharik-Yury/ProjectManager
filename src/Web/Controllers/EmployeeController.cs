@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TrainingTask.Web.ViewModels;
+using ProjectManager.Web.ViewModels;
 using Microsoft.Extensions.Logging;
-using TrainingTask.ApplicationCore.Repository;
-using TrainingTask.ApplicationCore.Dto;
-using TrainingTask.Common;
+using ProjectManager.ApplicationCore.Repository;
+using ProjectManager.ApplicationCore.Dto;
+using ProjectManager.Common;
 
-namespace TrainingTask.Controllers
+namespace ProjectManager.Controllers
 {
     public class EmployeeController : Controller
     {

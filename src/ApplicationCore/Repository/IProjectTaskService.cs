@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TrainingTask.ApplicationCore.Repository
+namespace ProjectManager.ApplicationCore.Repository
 {
     public interface IProjectTaskService<TDto> : IService<TDto> where TDto : class
     {

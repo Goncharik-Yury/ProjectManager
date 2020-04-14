@@ -1,14 +1,14 @@
-﻿using TrainingTask.ApplicationCore.Converters;
+﻿using ProjectManager.ApplicationCore.Converters;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TrainingTask.ApplicationCore.Dto;
-using TrainingTask.Common;
-using TrainingTask.Infrastructure.Models;
-using TrainingTask.Infrastructure.Repositories;
+using ProjectManager.ApplicationCore.Dto;
+using ProjectManager.Common;
+using ProjectManager.Infrastructure.Models;
+using ProjectManager.Infrastructure.Repositories;
 using Microsoft.Extensions.Logging;
 
-namespace TrainingTask.ApplicationCore.Repository
+namespace ProjectManager.ApplicationCore.Repository
 {
     public class EmployeeService : IService<EmployeeDto>
     {

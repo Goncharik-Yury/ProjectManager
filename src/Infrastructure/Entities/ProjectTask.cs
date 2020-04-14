@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 
-namespace TrainingTask.Infrastructure.Models
+namespace ProjectManager.Infrastructure.Models
 {
     public class ProjectTask
     {

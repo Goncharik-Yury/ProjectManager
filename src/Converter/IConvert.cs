@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TrainingTask.Common
+namespace ProjectManager.Common
 {
     public interface IConvert<TIn, TOut>
     {

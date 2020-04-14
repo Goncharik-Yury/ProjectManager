@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TrainingTask.ApplicationCore.Dto
+namespace ProjectManager.ApplicationCore.Dto
 {
     public class ProjectTaskDto
     {

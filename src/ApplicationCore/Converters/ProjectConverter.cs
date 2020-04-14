@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using TrainingTask.ApplicationCore.Dto;
-using TrainingTask.Common;
-using TrainingTask.Infrastructure.Models;
+using ProjectManager.ApplicationCore.Dto;
+using ProjectManager.Common;
+using ProjectManager.Infrastructure.Models;
 
-namespace TrainingTask.ApplicationCore.Converters
+namespace ProjectManager.ApplicationCore.Converters
 {
     public class ProjectConverter : IConvert<ProjectDto, Project>
     {

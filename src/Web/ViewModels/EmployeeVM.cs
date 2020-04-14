@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using TrainingTask.Web.Common;
+using ProjectManager.Web.Common;
 
-namespace TrainingTask.Web.ViewModels
+namespace ProjectManager.Web.ViewModels
 {
     public class EmployeeVm
     {

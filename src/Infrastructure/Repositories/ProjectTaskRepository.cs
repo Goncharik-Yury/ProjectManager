@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
-using TrainingTask.Infrastructure.Models;
+using ProjectManager.Infrastructure.Models;
 using System.Linq;
-using TrainingTask.Common;
+using ProjectManager.Common;
 using Microsoft.Extensions.Logging;
-using TrainingTask.Infrastructure.Converters;
+using ProjectManager.Infrastructure.Converters;
 
-namespace TrainingTask.Infrastructure.Repositories
+namespace ProjectManager.Infrastructure.Repositories
 {
     public class ProjectTaskRepository : BaseRepository<ProjectTask>, IProjectTaskRepository<ProjectTask>
     {

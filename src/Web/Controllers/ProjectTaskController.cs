@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using TrainingTask.Web.ViewModels;
-using TrainingTask.ApplicationCore.Dto;
+using ProjectManager.Web.ViewModels;
+using ProjectManager.ApplicationCore.Dto;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TrainingTask.ApplicationCore.Repository;
-using TrainingTask.Common;
-using TrainingTask.Web.Common;
+using ProjectManager.ApplicationCore.Repository;
+using ProjectManager.Common;
+using ProjectManager.Web.Common;
+using System.Text.RegularExpressions;
 
-namespace TrainingTask.Controllers
+namespace ProjectManager.Controllers
 {
     public class ProjectTaskController : Controller
     {
@@ -46,14 +47,43 @@ namespace TrainingTask.Controllers
             return View(ProjectTasksVm);
         }
 
+        //[HttpGet]
+        //public IActionResult CreateWithRedirect(string RedirectAction, string RedirectController, string RedirectId)
+        //{
+
+        //}
+
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(string RedirectAction, string RedirectController, string RedirectId)
         {
+            //var RequestPath = Request.Path;
+            //var RouteDataRoute = RouteData.Values;
+
+            //referer
+            //var w = HttpContext.Request.QueryString;
+            //var e = HttpContext.Request.RouteValues;
+            //var r = HttpContext.Request.PathBase;
             logger.LogDebug($"ProjectTask.Create [get] is called");
             IList<EmployeeDto> employeesDto = EmployeeService.GetAll();
             IList<ProjectDto> projectesDto = ProjectService.GetAll();
             ProjectTaskFilledVm model = ComposeProjectTaskVm(null, GetEmployeeSelectList(employeesDto), GetProjectSelectList(projectesDto), ProjectTaskStatuses);
-            return View("CreateOrEdit", model);
+
+            //string actionName = this.ControllerContext.RouteData.Values["action"].ToString();
+            //string controllerName = this.ControllerContext.RouteData.Values["controller"].ToString();
+            //var q = RouteData.Values["controller"];
+
+            var Redirection = View("CreateOrEdit", model);
+            string referer = HttpContext.Request.Headers["referer"];
+            Regex regex = new Regex(@"/Project/");
+            MatchCollection matches = regex.Matches(referer);
+            if (matches.Count > 0)
+            {
+                return RedirectToAction("Edit", "Project", (object)"2");
+            }
+            else
+            {
+                return View("CreateOrEdit", model);
+            }
         }
 
         [HttpGet]

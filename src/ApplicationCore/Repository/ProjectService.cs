@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TrainingTask.ApplicationCore.Dto;
-using TrainingTask.Common;
-using TrainingTask.Infrastructure.Models;
-using TrainingTask.Infrastructure.Repositories;
+using ProjectManager.ApplicationCore.Dto;
+using ProjectManager.Common;
+using ProjectManager.Infrastructure.Models;
+using ProjectManager.Infrastructure.Repositories;
 
-namespace TrainingTask.ApplicationCore.Repository
+namespace ProjectManager.ApplicationCore.Repository
 {
     public class ProjectService : IService<ProjectDto>
     {

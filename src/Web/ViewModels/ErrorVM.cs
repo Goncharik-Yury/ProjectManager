@@ -1,6 +1,6 @@
 using System;
 
-namespace TrainingTask.Web.ViewModels
+namespace ProjectManager.Web.ViewModels
 {
     public class ErrorVm
     {

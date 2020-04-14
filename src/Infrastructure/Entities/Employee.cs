@@ -1,4 +1,4 @@
-﻿namespace TrainingTask.Infrastructure.Models
+﻿namespace ProjectManager.Infrastructure.Models
 {
     public class Employee
     {

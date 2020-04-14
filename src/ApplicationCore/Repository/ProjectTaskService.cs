@@ -1,12 +1,12 @@
-﻿using TrainingTask.ApplicationCore.Converters;
+﻿using ProjectManager.ApplicationCore.Converters;
 using System;
 using System.Collections.Generic;
-using TrainingTask.ApplicationCore.Dto;
-using TrainingTask.Common;
-using TrainingTask.Infrastructure.Models;
-using TrainingTask.Infrastructure.Repositories;
+using ProjectManager.ApplicationCore.Dto;
+using ProjectManager.Common;
+using ProjectManager.Infrastructure.Models;
+using ProjectManager.Infrastructure.Repositories;
 
-namespace TrainingTask.ApplicationCore.Repository
+namespace ProjectManager.ApplicationCore.Repository
 {
     public class ProjectTaskService : IProjectTaskService<ProjectTaskDto>
     {

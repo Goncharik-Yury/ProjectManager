@@ -5,7 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace TrainingTask.Infrastructure.Repositories
+namespace ProjectManager.Infrastructure.Repositories
 {
     public abstract class BaseRepository<T>
     {
