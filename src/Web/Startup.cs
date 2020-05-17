@@ -89,8 +89,8 @@ namespace ProjectManager.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    //pattern: "{controller=Project}/{action=Index}/{id?}");
-                    pattern: "{controller=Project}/{action=Edit}/{id=2}");
+                    pattern: "{controller=Project}/{action=index}/{id?}");
+                //pattern: "{controller=Project}/{action=Edit}/{id=2}");
 
             });
 
