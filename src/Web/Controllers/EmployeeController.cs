@@ -68,7 +68,7 @@ namespace ProjectManager.Controllers
             try
             {
                 if (employee == null)
-                    throw new ArgumentException();
+                    throw new ArgumentException("Variable shuld not be null", nameof(employee));
                 if (ModelState.IsValid)
                 {
                     EmployeeService.Create(ConvertToEmployeeDto.Convert(employee));
@@ -97,7 +97,7 @@ namespace ProjectManager.Controllers
             try
             {
                 if (employee == null)
-                    throw new ArgumentException();
+                    throw new ArgumentException("Variable shuld not be null", nameof(employee));
                 if (ModelState.IsValid)
                 {
                     EmployeeService.Update(ConvertToEmployeeDto.Convert(employee));

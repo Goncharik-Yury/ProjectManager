@@ -41,7 +41,7 @@ namespace ProjectManager.ApplicationCore.Repository
 
         public ProjectTaskDto Get(int id)
         {
-            ProjectTask ProjectTask = ProjectTaskRepository.Get(id);
+            ProjectTask ProjectTask = ProjectTaskRepository.GetSingle(id);
             ProjectTaskDto ProjectTaskDto = ProjectTaskDtoConverter.Convert(ProjectTask);
             return ProjectTaskDto;
         }

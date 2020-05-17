@@ -36,7 +36,7 @@ namespace ProjectManager.Infrastructure.Repositories
             ExecuteNonQuery(SqlQueryString, GetIdParameter(id));
         }
 
-        public Employee Get(int id)
+        public Employee GetSingle(int id)
         {
             logger.LogDebug(GetType() + ".Get is called");
             string SqlQueryString = $"SELECT * FROM Employee where Id = @Id";

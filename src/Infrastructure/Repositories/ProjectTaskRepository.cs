@@ -52,7 +52,7 @@ namespace ProjectManager.Infrastructure.Repositories
             return Projects;
         }
 
-        public ProjectTask Get(int id)
+        public ProjectTask GetSingle(int id)
         {
             logger.LogDebug(GetType() + ".Get is called");
             string SqlQueryString = $"SELECT * FROM ProjectTask WHERE Id = @Id";

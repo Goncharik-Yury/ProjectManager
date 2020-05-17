@@ -40,7 +40,7 @@ namespace ProjectManager.ApplicationCore.Repository
         public ProjectDto Get(int id)
         {
             logger.LogDebug(this.GetType() + ".Get is called");
-            Project Project = ProjectRepository.Get(id);
+            Project Project = ProjectRepository.GetSingle(id);
             return ProjectDtoConverter.Convert(Project);
         }
 

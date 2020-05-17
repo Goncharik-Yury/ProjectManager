@@ -59,7 +59,7 @@ namespace ProjectManager.Infrastructure.Repositories
             return GetData(SqlQueryString, projectConverterDelegate);
         }
 
-        public Project Get(int id)
+        public Project GetSingle(int id)
         {
             logger.LogDebug(GetType() + ".Get is called");
             string SqlQueryString = $"SELECT * FROM Project where Id = @Id";

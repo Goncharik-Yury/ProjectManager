@@ -106,7 +106,7 @@ namespace ProjectManager.Controllers
             try
             {
                 if (projectTaskFilledVm == null)
-                    throw new ArgumentException();
+                    throw new ArgumentException("Variable shuld not be null", nameof(projectTaskFilledVm));
                 if (ModelState.IsValid)
                 {
                     ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTaskFilledVm.ProjectTasks);
@@ -134,7 +134,7 @@ namespace ProjectManager.Controllers
             try
             {
                 if (projectTaskFilledVm == null)
-                    throw new ArgumentException();
+                    throw new ArgumentException("Variable shuld not be null", nameof(projectTaskFilledVm));
                 if (ModelState.IsValid)
                 {
                     ProjectTaskDto projectTaskDto = ConvertToProjectTaskDto.Convert(projectTaskFilledVm.ProjectTasks);

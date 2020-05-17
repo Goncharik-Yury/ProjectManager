@@ -42,7 +42,7 @@ namespace ProjectManager.ApplicationCore.Repository
         public EmployeeDto Get(int id)
         {
             logger.LogDebug(this.GetType() + ".Get is called");
-            Employee Employee = EmployeeRepository.Get(id);
+            Employee Employee = EmployeeRepository.GetSingle(id);
             EmployeeDto EmployeeDto = EmployeeDtoConverter.Convert(Employee);
             return EmployeeDto;
         }
