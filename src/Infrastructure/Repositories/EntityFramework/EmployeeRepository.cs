@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManager.Infrastructure.EntityFramework
 {
-    public class EmployeeRepositoryEf : BaseDbContextEf<Employee>, IRepository<Employee>
+    public class EmployeeRepository : BaseDbContext<Employee>, IRepository<Employee>
     {
         protected override string ConnectionString { get; }
         private DbSet<Employee> entityContext { get; set; }
-        public EmployeeRepositoryEf(string connectionString, ILogger logger) : base(logger)
+        public EmployeeRepository(string connectionString, ILogger logger) : base(logger)
         {
             ConnectionString = connectionString;
         }
@@ -29,28 +29,28 @@ namespace ProjectManager.Infrastructure.EntityFramework
         {
             Logger.LogDebug(GetType() + ".Delete is called");
             Employee employeeToDelete = new Employee() { Id = id };
-            Entity.Remove(employeeToDelete);
+            Table.Remove(employeeToDelete);
             SaveChanges();
         }
 
         public Employee GetSingle(int id)
         {
             Logger.LogDebug(GetType() + ".Get is called");
-            Employee employee = Entity.FirstOrDefault(item => item.Id == id);
+            Employee employee = Table.FirstOrDefault(item => item.Id == id);
             return employee;
         }
 
         public IList<Employee> GetAll()
         {
             Logger.LogDebug(GetType() + ".GetAll is called");
-            List<Employee> qemployeesList = Entity.ToList();
+            List<Employee> qemployeesList = Table.ToList();
             return qemployeesList;
         }
 
         public void Update(Employee item)
         {
             Logger.LogDebug(GetType() + ".Update is called");
-            Entry(Entity.FirstOrDefault(itemq => itemq.Id == item.Id)).CurrentValues.SetValues(item);
+            Entry(Table.FirstOrDefault(itemq => itemq.Id == item.Id)).CurrentValues.SetValues(item);
             SaveChanges();
         }
 

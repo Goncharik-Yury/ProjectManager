@@ -66,7 +66,7 @@ namespace ProjectManager.Controllers
             logger.LogDebug($"ProjectTask.Create [get] is called");
             IList<EmployeeDto> employeesDto = EmployeeService.GetAll();
             IList<ProjectDto> projectesDto = ProjectService.GetAll();
-            ProjectTaskFilledVm model = ComposeProjectTaskVm(null, GetEmployeeSelectList(employeesDto), GetProjectSelectList(projectesDto), ProjectTaskStatuses);
+            ProjectTaskFilledVm model = ComposeProjectTaskVm(null, GetEmployeeSelectList(employeesDto), GetProjectSelectList(projectesDto));
 
             //string actionName = this.ControllerContext.RouteData.Values["action"].ToString();
             //string controllerName = this.ControllerContext.RouteData.Values["controller"].ToString();
@@ -94,7 +94,7 @@ namespace ProjectManager.Controllers
             IList<ProjectDto> projectesDto = ProjectService.GetAll();
             ProjectTaskVm ProjectTaskVm = ConvertToProjectTaskVm.Convert(ProjectTaskService.Get(id));
             FillProjectTaskVm(ProjectTaskVm);
-            ProjectTaskFilledVm model = ComposeProjectTaskVm(ProjectTaskVm, GetEmployeeSelectList(employeesDto), GetProjectSelectList(projectesDto), ProjectTaskStatuses);
+            ProjectTaskFilledVm model = ComposeProjectTaskVm(ProjectTaskVm, GetEmployeeSelectList(employeesDto), GetProjectSelectList(projectesDto));
             return View("CreateOrEdit", model);
         }
 
@@ -202,14 +202,13 @@ namespace ProjectManager.Controllers
             return new SelectList(EmployeeSelectList, "Id", "FullName");
         }
 
-        private ProjectTaskFilledVm ComposeProjectTaskVm(ProjectTaskVm projectTasksVm, SelectList employeeSelectList, SelectList projectSelectList, string[] projectTaskStatuses)
+        private ProjectTaskFilledVm ComposeProjectTaskVm(ProjectTaskVm projectTasksVm, SelectList employeeSelectList, SelectList projectSelectList)
         {
             ProjectTaskFilledVm projectTaskFilledVm = new ProjectTaskFilledVm()
             {
                 ProjectTasks = projectTasksVm,
                 EmployeeSelectList = employeeSelectList,
                 ProjectSelectList = projectSelectList,
-                ProjectTaskStatuses = projectTaskStatuses,
             };
             return projectTaskFilledVm;
         }

@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManager.Infrastructure.EntityFramework
 {
-    public class ProjectRepositoryEf : BaseDbContextEf<Project>, IRepository<Project>
+    public class ProjectRepository : BaseDbContext<Project>, IRepository<Project>
     {
         protected override string ConnectionString { get; }
         private DbSet<Project> entityContext { get; set; }
-        public ProjectRepositoryEf(string connectionString, ILogger logger) : base(logger)
+        public ProjectRepository(string connectionString, ILogger logger) : base(logger)
         {
             ConnectionString = connectionString;
         }
@@ -29,28 +29,28 @@ namespace ProjectManager.Infrastructure.EntityFramework
         {
             Logger.LogDebug(GetType() + ".Delete is called");
             Project projectToDelete = new Project() { Id = id };
-            Entity.Remove(projectToDelete);
+            Table.Remove(projectToDelete);
             SaveChanges();
         }
 
         public Project GetSingle(int id)
         {
             Logger.LogDebug(GetType() + ".Get is called");
-            Project project = Entity.FirstOrDefault(item => item.Id == id);
+            Project project = Table.FirstOrDefault(item => item.Id == id);
             return project;
         }
 
         public IList<Project> GetAll()
         {
             Logger.LogDebug(GetType() + ".GetAll is called");
-            List<Project> projectsList = Entity.ToList();
+            List<Project> projectsList = Table.ToList();
             return projectsList;
         }
 
         public void Update(Project item)
         {
             Logger.LogDebug(GetType() + ".Update is called");
-            Entry(Entity.FirstOrDefault(itemq => itemq.Id == item.Id)).CurrentValues.SetValues(item);
+            Entry(Table.FirstOrDefault(itemq => itemq.Id == item.Id)).CurrentValues.SetValues(item);
             SaveChanges();
         }
     }

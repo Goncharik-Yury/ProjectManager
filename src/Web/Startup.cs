@@ -19,18 +19,21 @@ using System;
 using System.Data.SqlClient;
 using ProjectManager.Infrastructure.Converters;
 using ProjectManager.Infrastructure.EntityFramework;
+using ProjectManager.Web.Common;
 
 namespace ProjectManager.Web
 {
     public class Startup
     {
         private readonly string connectionString;
-        private readonly string LogsPath;
+        private readonly string logsPath;
+        private readonly string databaseAccessTechnology;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
             connectionString = Configuration["ConnectionStrings:ProjectManagerDB"];
-            LogsPath = Configuration["LoggerPaths:FileLogger"];
+            logsPath = Configuration["LoggerPaths:FileLogger"];
+            databaseAccessTechnology = Configuration["DatabaseAccessTechnology:TechnologyType"];
         }
 
         public IConfiguration Configuration { get; }
@@ -39,7 +42,7 @@ namespace ProjectManager.Web
         {
             services.AddControllersWithViews();
 
-            services.AddSingleton<ILogger>(x => new FileLogger(LogsPath));
+            services.AddSingleton<ILogger>(x => new FileLogger(logsPath));
 
             services.AddSingleton<IConvert<EmployeeVm, EmployeeDto>, Web.Converters.EmployeeDtoConverter>();
             services.AddSingleton<IConvert<EmployeeDto, EmployeeVm>, EmployeeVmConverter>();
@@ -63,40 +66,7 @@ namespace ProjectManager.Web
             services.AddScoped<IConvertDb<SqlDataReader, Project>, ProjectConverterDb>();
             services.AddScoped<IConvertDb<SqlDataReader, ProjectTask>, ProjectTaskConverterDb>();
 
-            string dbType = "EF"; // TODO: move to methods
-            if (dbType == "EF")
-            {
-                services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepositoryEf(
-                    connectionString,
-                    serviceProvider.GetService<ILogger>()
-                    ));
-                services.AddScoped<IRepository<Project>>(serviceProvider => new ProjectRepositoryEf(
-                    connectionString,
-                    serviceProvider.GetService<ILogger>()
-                    ));
-                services.AddScoped<IProjectTaskRepository<ProjectTask>>(serviceProvider => new ProjectTaskRepositoryEf(
-                    connectionString,
-                    serviceProvider.GetService<ILogger>()
-                    ));
-            }
-            else if (dbType == "ADO")
-            {
-                services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepository(
-                    connectionString,
-                    serviceProvider.GetService<IConvertDb<SqlDataReader, Employee>>(),
-                    serviceProvider.GetService<ILogger>()
-                    ));
-                services.AddScoped<IRepository<Project>>(serviceProvider => new ProjectRepository(
-                    connectionString,
-                    serviceProvider.GetService<IConvertDb<SqlDataReader, Project>>(),
-                    serviceProvider.GetService<ILogger>()
-                    ));
-                services.AddScoped<IProjectTaskRepository<ProjectTask>>(serviceProvider => new ProjectTaskRepository(
-                    connectionString,
-                    serviceProvider.GetService<IConvertDb<SqlDataReader, ProjectTask>>(),
-                    serviceProvider.GetService<ILogger>()
-                    ));
-            }
+            LoadDatabaseAccessTechnology(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -128,6 +98,43 @@ namespace ProjectManager.Web
             });
 
 
+        }
+
+        private void LoadDatabaseAccessTechnology(IServiceCollection services)
+        {
+            if (databaseAccessTechnology == DatabaseAccessTechnology.EntityFramework.ToString())
+            {
+                services.AddScoped((Func<IServiceProvider, IRepository<Employee>>)(serviceProvider => new Infrastructure.EntityFramework.EmployeeRepository(
+                    connectionString,
+                    serviceProvider.GetService<ILogger>()
+                    )));
+                services.AddScoped((Func<IServiceProvider, IRepository<Project>>)(serviceProvider => new Infrastructure.EntityFramework.ProjectRepository(
+                    connectionString,
+                    serviceProvider.GetService<ILogger>()
+                    )));
+                services.AddScoped((Func<IServiceProvider, IProjectTaskRepository<ProjectTask>>)(serviceProvider => new Infrastructure.EntityFramework.ProjectTaskRepository(
+                    connectionString,
+                    serviceProvider.GetService<ILogger>()
+                    )));
+            }
+            else if (databaseAccessTechnology == DatabaseAccessTechnology.ADO.ToString())
+            {
+                services.AddScoped((Func<IServiceProvider, IRepository<Employee>>)(serviceProvider => new Infrastructure.Repositories.Ado.EmployeeRepository(
+                    connectionString,
+                    serviceProvider.GetService<IConvertDb<SqlDataReader, Employee>>(),
+                    serviceProvider.GetService<ILogger>()
+                    )));
+                services.AddScoped((Func<IServiceProvider, IRepository<Project>>)(serviceProvider => new Infrastructure.Repositories.Ado.ProjectRepository(
+                    connectionString,
+                    serviceProvider.GetService<IConvertDb<SqlDataReader, Project>>(),
+                    serviceProvider.GetService<ILogger>()
+                    )));
+                services.AddScoped((Func<IServiceProvider, IProjectTaskRepository<ProjectTask>>)(serviceProvider => new Infrastructure.Repositories.Ado.ProjectTaskRepository(
+                    connectionString,
+                    serviceProvider.GetService<IConvertDb<SqlDataReader, ProjectTask>>(),
+                    serviceProvider.GetService<ILogger>()
+                    )));
+            }
         }
     }
 }

@@ -7,19 +7,19 @@ using System.Text;
 
 namespace ProjectManager.Infrastructure.Repositories.EntityFramework
 {
-    public abstract partial class BaseDbContextEf<T> : DbContext, ITableContext<T> where T : class
+    public abstract partial class BaseDbContext<T> : DbContext, ITableContext<T> where T : class
     {
         protected abstract string ConnectionString { get; }
-        public DbSet<T> Entity { get; set; }
+        public DbSet<T> Table { get; set; }
 
         protected readonly ILogger Logger;
 
-        public BaseDbContextEf(DbContextOptions<BaseDbContextEf<T>> options)
+        public BaseDbContext(DbContextOptions<BaseDbContext<T>> options)
             : base(options)
         {
         }
 
-        protected BaseDbContextEf(ILogger logger)
+        protected BaseDbContext(ILogger logger)
         {
             Logger = logger;
         }

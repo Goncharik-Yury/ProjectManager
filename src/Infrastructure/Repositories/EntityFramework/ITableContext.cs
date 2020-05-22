@@ -7,6 +7,6 @@ namespace ProjectManager.Infrastructure.Repositories.EntityFramework
 {
     interface ITableContext<T> : IDisposable where T : class
     {
-        public DbSet<T> Entity { get; set; }
+        public DbSet<T> Table { get; set; }
     }
 }
