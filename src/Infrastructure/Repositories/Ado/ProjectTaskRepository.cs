@@ -9,7 +9,7 @@ using ProjectManager.Common;
 using Microsoft.Extensions.Logging;
 using ProjectManager.Infrastructure.Converters;
 
-namespace ProjectManager.Infrastructure.Repositories
+namespace ProjectManager.Infrastructure.Repositories.Ado
 {
     public class ProjectTaskRepository : BaseRepository<ProjectTask>, IProjectTaskRepository<ProjectTask>
     {

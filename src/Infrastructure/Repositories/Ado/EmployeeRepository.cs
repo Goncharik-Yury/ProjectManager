@@ -8,7 +8,7 @@ using ProjectManager.Infrastructure.Models;
 using Microsoft.Extensions.Logging;
 using ProjectManager.Infrastructure.Converters;
 
-namespace ProjectManager.Infrastructure.Repositories
+namespace ProjectManager.Infrastructure.Repositories.Ado
 {
     public class EmployeeRepository : BaseRepository<Employee>, IRepository<Employee>
     {

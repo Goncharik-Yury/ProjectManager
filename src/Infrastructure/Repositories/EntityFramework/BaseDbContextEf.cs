@@ -1,35 +1,47 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ProjectManager.Infrastructure.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace ProjectManager.Infrastructure.EntityFramework
+namespace ProjectManager.Infrastructure.Repositories.EntityFramework
 {
-    public partial class ProjectManagerDbContext : DbContext
+    public abstract partial class BaseDbContextEf<T> : DbContext, ITableContext<T> where T : class
     {
-        public ProjectManagerDbContext()
-        {
-        }
+        protected abstract string ConnectionString { get; }
+        public DbSet<T> Entity { get; set; }
 
-        public ProjectManagerDbContext(DbContextOptions<ProjectManagerDbContext> options)
+        protected readonly ILogger Logger;
+
+        public BaseDbContextEf(DbContextOptions<BaseDbContextEf<T>> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<Employee> Employee { get; set; }
-        public virtual DbSet<Project> Project { get; set; }
-        public virtual DbSet<ProjectTask> ProjectTask { get; set; }
+        protected BaseDbContextEf(ILogger logger)
+        {
+            Logger = logger;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\seles\\ProjectManagerDB.mdf;Integrated Security=True;Connect Timeout=10");
+                optionsBuilder.UseSqlServer(ConnectionString);
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            ConstructEmployeeTable(modelBuilder);
+            ConstructProjectTable(modelBuilder);
+            ConstructProjectTaskTable(modelBuilder);
+
+            OnModelCreatingPartial(modelBuilder);
+        }
+
+        private void ConstructEmployeeTable(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>(entity =>
             {
@@ -47,7 +59,10 @@ namespace ProjectManager.Infrastructure.EntityFramework
                     .IsRequired()
                     .HasMaxLength(50);
             });
+        }
 
+        private void ConstructProjectTable(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<Project>(entity =>
             {
                 entity.Property(e => e.Name)
@@ -58,7 +73,10 @@ namespace ProjectManager.Infrastructure.EntityFramework
                     .IsRequired()
                     .HasMaxLength(50);
             });
+        }
 
+        private void ConstructProjectTaskTable(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<ProjectTask>(entity =>
             {
                 entity.Property(e => e.BeginDate).HasColumnType("date");
@@ -85,8 +103,6 @@ namespace ProjectManager.Infrastructure.EntityFramework
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProjectTask_Project");
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

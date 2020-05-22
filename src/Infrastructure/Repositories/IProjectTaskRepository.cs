@@ -4,8 +4,8 @@ using System.Text;
 
 namespace ProjectManager.Infrastructure.Repositories
 {
-    public interface IProjectTaskRepository<TEntity> : IRepository<TEntity> where TEntity : class
+    public interface IProjectTaskRepository<T> : IRepository<T> where T : class
     {
-        IList<TEntity> GetAllByProjectId(int id);
+        IList<T> GetAllByProjectId(int id);
     }
 }

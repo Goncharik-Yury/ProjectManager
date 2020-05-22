@@ -8,7 +8,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using ProjectManager.Infrastructure.Converters;
 
-namespace ProjectManager.Infrastructure.Repositories
+namespace ProjectManager.Infrastructure.Repositories.Ado
 {
     public class ProjectRepository : BaseRepository<Project>, IRepository<Project>
     {
@@ -19,23 +19,6 @@ namespace ProjectManager.Infrastructure.Repositories
         {
             ConnectionString = connectionString;
             projectConverterDelegate = projectConverter.Convert;
-        }
-
-        static List<Project> ConvertToProject(SqlDataReader sqlDataReader)
-        {
-            List<Project> Projects = new List<Project>();
-            while (sqlDataReader.Read())
-            {
-                Project project = new Project();
-
-                project.Id = sqlDataReader.GetInt32("Id");
-                project.Name = sqlDataReader.GetString("Name");
-                project.ShortName = sqlDataReader.GetString("ShortName");
-                project.Description = sqlDataReader["Description"] as string;
-
-                Projects.Add(project);
-            }
-            return Projects;
         }
 
         public void Create(Project item)

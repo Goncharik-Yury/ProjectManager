@@ -12,11 +12,13 @@ using ProjectManager.Infrastructure.Models;
 using ProjectManager.Web.Converters;
 using Common.Logger;
 using ProjectManager.Web.ViewModels;
+using ProjectManager.Infrastructure.Repositories.Ado;
 using ProjectManager.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Data.SqlClient;
 using ProjectManager.Infrastructure.Converters;
+using ProjectManager.Infrastructure.EntityFramework;
 
 namespace ProjectManager.Web
 {
@@ -61,9 +63,40 @@ namespace ProjectManager.Web
             services.AddScoped<IConvertDb<SqlDataReader, Project>, ProjectConverterDb>();
             services.AddScoped<IConvertDb<SqlDataReader, ProjectTask>, ProjectTaskConverterDb>();
 
-            services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepository(connectionString, serviceProvider.GetService<IConvertDb<SqlDataReader, Employee>>(), serviceProvider.GetService<ILogger>()));
-            services.AddScoped<IRepository<Project>>(serviceProvider => new ProjectRepository(connectionString, serviceProvider.GetService<IConvertDb<SqlDataReader, Project>>(), serviceProvider.GetService<ILogger>()));
-            services.AddScoped<IProjectTaskRepository<ProjectTask>>(serviceProvider => new ProjectTaskRepository(connectionString, serviceProvider.GetService<IConvertDb<SqlDataReader, ProjectTask>>(), serviceProvider.GetService<ILogger>()));
+            string dbType = "EF"; // TODO: move to methods
+            if (dbType == "EF")
+            {
+                services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepositoryEf(
+                    connectionString,
+                    serviceProvider.GetService<ILogger>()
+                    ));
+                services.AddScoped<IRepository<Project>>(serviceProvider => new ProjectRepositoryEf(
+                    connectionString,
+                    serviceProvider.GetService<ILogger>()
+                    ));
+                services.AddScoped<IProjectTaskRepository<ProjectTask>>(serviceProvider => new ProjectTaskRepositoryEf(
+                    connectionString,
+                    serviceProvider.GetService<ILogger>()
+                    ));
+            }
+            else if (dbType == "ADO")
+            {
+                services.AddScoped<IRepository<Employee>>(serviceProvider => new EmployeeRepository(
+                    connectionString,
+                    serviceProvider.GetService<IConvertDb<SqlDataReader, Employee>>(),
+                    serviceProvider.GetService<ILogger>()
+                    ));
+                services.AddScoped<IRepository<Project>>(serviceProvider => new ProjectRepository(
+                    connectionString,
+                    serviceProvider.GetService<IConvertDb<SqlDataReader, Project>>(),
+                    serviceProvider.GetService<ILogger>()
+                    ));
+                services.AddScoped<IProjectTaskRepository<ProjectTask>>(serviceProvider => new ProjectTaskRepository(
+                    connectionString,
+                    serviceProvider.GetService<IConvertDb<SqlDataReader, ProjectTask>>(),
+                    serviceProvider.GetService<ILogger>()
+                    ));
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -89,8 +122,8 @@ namespace ProjectManager.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Project}/{action=index}/{id?}");
-                //pattern: "{controller=Project}/{action=Edit}/{id=2}");
+                pattern: "{controller=Employee}/{action=index}/{id?}");
+                //pattern: "{controller=Project}/{action=index}/{id?}");
 
             });
 
