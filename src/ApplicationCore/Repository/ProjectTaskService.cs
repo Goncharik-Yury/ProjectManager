@@ -10,11 +10,11 @@ namespace ProjectManager.ApplicationCore.Repository
 {
     public class ProjectTaskService : IProjectTaskService<ProjectTaskDto>
     {
-        private readonly IProjectTaskRepository<ProjectTask> ProjectTaskRepository;
+        private readonly IRepository<ProjectTask> ProjectTaskRepository;
         private readonly IConvert<ProjectTask, ProjectTaskDto> ProjectTaskDtoConverter;
         private readonly IConvert<ProjectTaskDto, ProjectTask> ProjectTaskConverter;
 
-        public ProjectTaskService(IProjectTaskRepository<ProjectTask> projectTaskRepository, IConvert<ProjectTask, ProjectTaskDto> projectTaskDtoConverter, IConvert<ProjectTaskDto, ProjectTask> projectTaskConverter)
+        public ProjectTaskService(IRepository<ProjectTask> projectTaskRepository, IConvert<ProjectTask, ProjectTaskDto> projectTaskDtoConverter, IConvert<ProjectTaskDto, ProjectTask> projectTaskConverter)
         {
             ProjectTaskRepository = projectTaskRepository;
             ProjectTaskDtoConverter = projectTaskDtoConverter;
@@ -54,7 +54,7 @@ namespace ProjectManager.ApplicationCore.Repository
 
         public IList<ProjectTaskDto> GetAllByProjectId(int id)
         {
-            IList<ProjectTask> ProjectTask = ProjectTaskRepository.GetAllByProjectId(id);
+            IList<ProjectTask> ProjectTask = (ProjectTaskRepository as IRepositoryExtention<ProjectTask>).GetAllByProjectId(id);
             return ProjectTaskDtoConverter.Convert(ProjectTask);
         }
     }

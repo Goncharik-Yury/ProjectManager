@@ -21,7 +21,7 @@ namespace ProjectManager.Infrastructure.EntityFramework
         public void Create(Employee item)
         {
             Logger.LogDebug(GetType() + ".Create is called");
-            entityContext.Add(item);
+            Table.Add(item);
             SaveChanges();
         }
 

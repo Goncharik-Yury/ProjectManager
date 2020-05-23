@@ -12,7 +12,7 @@ namespace ProjectManager.Infrastructure.EntityFramework
     public class ProjectRepository : BaseDbContext<Project>, IRepository<Project>
     {
         protected override string ConnectionString { get; }
-        private DbSet<Project> entityContext { get; set; }
+        private DbSet<Employee> entityContext { get; set; }
         public ProjectRepository(string connectionString, ILogger logger) : base(logger)
         {
             ConnectionString = connectionString;
@@ -21,7 +21,7 @@ namespace ProjectManager.Infrastructure.EntityFramework
         public void Create(Project item)
         {
             Logger.LogDebug(GetType() + ".Create is called");
-            entityContext.Add(item);
+            Table.Add(item);
             SaveChanges();
         }
 

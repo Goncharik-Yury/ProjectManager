@@ -10,10 +10,10 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ProjectManager.Infrastructure.EntityFramework
 {
-    public class ProjectTaskRepository : BaseDbContext<ProjectTask>, IProjectTaskRepository<ProjectTask>
+    public class ProjectTaskRepository : BaseDbContext<ProjectTask>, IRepository<ProjectTask>, IRepositoryExtention<ProjectTask>
     {
         protected override string ConnectionString { get; }
-        private DbSet<ProjectTask> entityContext { get; set; }
+        //private DbSet<Employee> entityContext { get; set; }
         public ProjectTaskRepository(string connectionString, ILogger logger) : base(logger)
         {
             ConnectionString = connectionString;
@@ -22,7 +22,7 @@ namespace ProjectManager.Infrastructure.EntityFramework
         public void Create(ProjectTask item)
         {
             Logger.LogDebug(GetType() + ".Create is called");
-            entityContext.Add(item);
+            Table.Add(item);
             SaveChanges();
         }
 

@@ -112,7 +112,7 @@ namespace ProjectManager.Web
                     connectionString,
                     serviceProvider.GetService<ILogger>()
                     )));
-                services.AddScoped((Func<IServiceProvider, IProjectTaskRepository<ProjectTask>>)(serviceProvider => new Infrastructure.EntityFramework.ProjectTaskRepository(
+                services.AddScoped((Func<IServiceProvider, IRepository<ProjectTask>>)(serviceProvider => new Infrastructure.EntityFramework.ProjectTaskRepository(
                     connectionString,
                     serviceProvider.GetService<ILogger>()
                     )));
@@ -129,7 +129,7 @@ namespace ProjectManager.Web
                     serviceProvider.GetService<IConvertDb<SqlDataReader, Project>>(),
                     serviceProvider.GetService<ILogger>()
                     )));
-                services.AddScoped((Func<IServiceProvider, IProjectTaskRepository<ProjectTask>>)(serviceProvider => new Infrastructure.Repositories.Ado.ProjectTaskRepository(
+                services.AddScoped((Func<IServiceProvider, IRepository<ProjectTask>>)(serviceProvider => new Infrastructure.Repositories.Ado.ProjectTaskRepository(
                     connectionString,
                     serviceProvider.GetService<IConvertDb<SqlDataReader, ProjectTask>>(),
                     serviceProvider.GetService<ILogger>()

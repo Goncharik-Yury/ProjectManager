@@ -11,7 +11,7 @@ using ProjectManager.Infrastructure.Converters;
 
 namespace ProjectManager.Infrastructure.Repositories.Ado
 {
-    public class ProjectTaskRepository : BaseRepository<ProjectTask>, IProjectTaskRepository<ProjectTask>
+    public class ProjectTaskRepository : BaseRepository<ProjectTask>, IRepository<ProjectTask>, IRepositoryExtention<ProjectTask>
     {
         protected override string ConnectionString { get; }
         private readonly Func<SqlDataReader, IList<ProjectTask>> projectTaskConverterDelegate;
