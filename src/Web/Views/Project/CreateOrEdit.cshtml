@@ -61,9 +61,9 @@
                     @{ 
                         string RedirectController = this.ViewContext.RouteData.Values["controller"].ToString();
                         string RedirectAction = this.ViewContext.RouteData.Values["action"].ToString();
-                        string RedirectId = this.ViewContext.RouteData.Values["id"].ToString();
+                        //string RedirectId = this.ViewContext.RouteData.Values["id"].ToString();
                     }
-                    @Html.ActionLink("Create", "Create", "ProjectTask", new { RedirectAction, RedirectController, RedirectId }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Create", "Create", "ProjectTask", new { RedirectAction, RedirectController@*, RedirectId*@ }, new { @class = "btn btn-info" })
                 </th>
             </tr>
             @if (@Model?.ProjectTasks != null)
